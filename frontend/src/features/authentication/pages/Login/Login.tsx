@@ -26,6 +26,9 @@ export function Login() {
     const password = e.currentTarget.password.value;
 
     try {
+      console.log("emial",email);
+      console.log("emial",password);
+
       await login(email, password);
       const destination = location.state?.from || "/";
       navigate(destination);

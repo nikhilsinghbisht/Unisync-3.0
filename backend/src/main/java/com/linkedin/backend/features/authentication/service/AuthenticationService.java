@@ -1,26 +1,5 @@
 package com.linkedin.backend.features.authentication.service;
 
-import java.io.IOException;
-import java.security.SecureRandom;
-import java.time.LocalDateTime;
-import java.util.Map;
-import java.util.Optional;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.core.ParameterizedTypeReference;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpMethod;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Service;
-import org.springframework.util.LinkedMultiValueMap;
-import org.springframework.util.MultiValueMap;
-import org.springframework.web.client.RestTemplate;
-import org.springframework.web.multipart.MultipartFile;
 
 import com.linkedin.backend.features.authentication.dto.AuthenticationRequestBody;
 import com.linkedin.backend.features.authentication.dto.AuthenticationResponseBody;
@@ -30,11 +9,25 @@ import com.linkedin.backend.features.authentication.utils.EmailService;
 import com.linkedin.backend.features.authentication.utils.Encoder;
 import com.linkedin.backend.features.authentication.utils.JsonWebToken;
 import com.linkedin.backend.features.storage.service.StorageService;
-
 import io.jsonwebtoken.Claims;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import jakarta.transaction.Transactional;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.core.ParameterizedTypeReference;
+import org.springframework.http.*;
+import org.springframework.stereotype.Service;
+import org.springframework.util.LinkedMultiValueMap;
+import org.springframework.util.MultiValueMap;
+import org.springframework.web.client.RestTemplate;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.io.IOException;
+import java.security.SecureRandom;
+import java.time.LocalDateTime;
+import java.util.Map;
+import java.util.Optional;
 
 @Service
 public class AuthenticationService {
@@ -114,12 +107,12 @@ public class AuthenticationService {
     }
 
     public AuthenticationResponseBody login(AuthenticationRequestBody loginRequestBody) {
-        User user = userRepository.findByEmail(loginRequestBody.email())
+        User user = userRepository.findByEmail(loginRequestBody.getEmail())
                 .orElseThrow(() -> new IllegalArgumentException("User not found."));
-        if (!encoder.matches(loginRequestBody.password(), user.getPassword())) {
+        if (!encoder.matches(loginRequestBody.getPassword(), user.getPassword())) {
             throw new IllegalArgumentException("Password is incorrect.");
         }
-        String token = jsonWebToken.generateToken(loginRequestBody.email());
+        String token = jsonWebToken.generateToken(loginRequestBody.getEmail());
         return new AuthenticationResponseBody(token, "Authentication succeeded.");
     }
 
@@ -170,7 +163,7 @@ public class AuthenticationService {
 
     public AuthenticationResponseBody register(AuthenticationRequestBody registerRequestBody) {
         User user = userRepository.save(new User(
-                registerRequestBody.email(), encoder.encode(registerRequestBody.password())));
+                registerRequestBody.getEmail(), encoder.encode(registerRequestBody.getPassword())));
 
         String emailVerificationToken = generateEmailVerificationToken();
         String hashedToken = encoder.encode(emailVerificationToken);
@@ -186,11 +179,11 @@ public class AuthenticationService {
                 Enter this code to verify your email: %s. The code will expire in %s minutes.""",
                 emailVerificationToken, durationInMinutes);
         try {
-            emailService.sendEmail(registerRequestBody.email(), subject, body);
+            emailService.sendEmail(registerRequestBody.getEmail(), subject, body);
         } catch (Exception e) {
             logger.info("Error while sending email: {}", e.getMessage());
         }
-        String authToken = jsonWebToken.generateToken(registerRequestBody.email());
+        String authToken = jsonWebToken.generateToken(registerRequestBody.getEmail());
         return new AuthenticationResponseBody(authToken, "User registered successfully.");
     }
 
@@ -203,9 +196,10 @@ public class AuthenticationService {
     public void deleteUser(Long userId) {
         User user = entityManager.find(User.class, userId);
         if (user != null) {
-            entityManager.createNativeQuery("DELETE FROM posts_likes WHERE user_id = :userId")
-                    .setParameter("userId", userId)
+            entityManager.createNativeQuery("DELETE FROM posts_likes WHERE user_id = ?")
+                    .setParameter(1, user.getId())
                     .executeUpdate();
+
             entityManager.remove(user);
         }
     }
