@@ -3,7 +3,6 @@ package com.linkedin.backend.features.authentication.service;
 
 import com.linkedin.backend.features.authentication.dto.AuthenticationRequestBody;
 import com.linkedin.backend.features.authentication.dto.AuthenticationResponseBody;
-import com.linkedin.backend.features.authentication.dto.UserDTO;
 import com.linkedin.backend.features.authentication.model.User;
 import com.linkedin.backend.features.authentication.repository.UserRepository;
 import com.linkedin.backend.features.authentication.utils.EmailService;
@@ -245,101 +244,53 @@ public class AuthenticationService {
         }
     }
 
-    public UserDTO updateUserProfile(UserDTO user, String firstName, String lastName, String company,
+    public User updateUserProfile(User user, String firstName, String lastName, String company,
             String position, String location, String about) {
 
-        User userModel = User.builder()
-                .id(user.getId())
-                .email(user.getEmail())
-                .profilePicture(user.getProfilePicture())
-                .coverPicture(user.getCoverPicture())
-                .profileComplete(Boolean.TRUE)
-                .emailVerified(user.getEmailVerified())
-                .build();
 
         if (firstName != null)
-            userModel.setFirstName(firstName);
+            user.setFirstName(firstName);
         if (lastName != null)
-            userModel.setLastName(lastName);
+            user.setLastName(lastName);
         if (company != null)
-            userModel.setCompany(company);
+            user.setCompany(company);
         if (position != null)
-            userModel.setPosition(position);
+            user.setPosition(position);
         if (location != null)
-            userModel.setLocation(location);
+            user.setLocation(location);
         if (about != null)
-            userModel.setAbout(about);
-User  savedUser = userRepository.save(userModel);
-        return UserDTO.builder()
-                .id(savedUser.getId())
-                .email(savedUser.getEmail())
-                .firstName(savedUser.getFirstName())
-                .lastName(savedUser.getLastName())
-                .profilePicture(savedUser.getProfilePicture())
-                .about(savedUser.getAbout())
-                .profileComplete(savedUser.getProfileComplete())
-                .emailVerified(savedUser.getEmailVerified())
-                .company(savedUser.getCompany())
-                .position(savedUser.getPosition())
-                .location(savedUser.getLocation())
-                .profileComplete(savedUser.getProfileComplete())
-                .build();
+            user.setAbout(about);
+        user.setProfileComplete(true);
+        return userRepository.save(user);
+
 
     }
 
-    public UserDTO updateProfilePicture(UserDTO user, MultipartFile profilePicture) throws IOException {
-        User userModel = User.builder().build();
+    public User updateProfilePicture(User user, MultipartFile profilePicture) throws IOException {
         if (profilePicture != null) {
             String profilePictureUrl = storageService.saveImage(profilePicture);
-            userModel.setProfilePicture(profilePictureUrl);
+            user.setProfilePicture(profilePictureUrl);
         } else {
             if (user.getProfilePicture() != null)
                 storageService.deleteFile(user.getProfilePicture());
 
-            userModel.setProfilePicture("");
+            user.setProfilePicture("");
         }
-        User savedUser = userRepository.save(userModel);
-        return UserDTO.builder()
-                .profileComplete(savedUser.getProfileComplete())
-                .id(savedUser.getId())
-                .location(savedUser.getLocation())
-                .profilePicture(savedUser.getProfilePicture())
-                .emailVerified(savedUser.getEmailVerified())
-                .firstName(savedUser.getFirstName())
-                .lastName(savedUser.getLastName())
-                .company(savedUser.getCompany())
-                .position(savedUser.getPosition())
-                .coverPicture(savedUser.getCoverPicture())
-                .about(savedUser.getAbout())
-                .email(savedUser.getEmail())
-                .build();
+
+        return userRepository.save(user);
     }
 
-    public UserDTO updateCoverPicture(UserDTO user, MultipartFile coverPicture) throws IOException {
-        User userModel = userRepository.findByEmail(user.getEmail()).orElseThrow();
+    public User updateCoverPicture(User user, MultipartFile coverPicture) throws IOException {
         if (coverPicture != null) {
             String coverPictureUrl = storageService.saveImage(coverPicture);
-            userModel.setCoverPicture(coverPictureUrl);
+            user.setCoverPicture(coverPictureUrl);
         } else {
             if (user.getCoverPicture() != null)
                 storageService.deleteFile(user.getCoverPicture());
-            userModel.setCoverPicture("");
+            user.setCoverPicture("");
         }
-User savedUser = userRepository.save(userModel);
-        return UserDTO.builder()
-                .profileComplete(savedUser.getProfileComplete())
-                .id(savedUser.getId())
-                .location(savedUser.getLocation())
-                .profilePicture(savedUser.getProfilePicture())
-                .emailVerified(savedUser.getEmailVerified())
-                .firstName(savedUser.getFirstName())
-                .lastName(savedUser.getLastName())
-                .company(savedUser.getCompany())
-                .position(savedUser.getPosition())
-                .coverPicture(savedUser.getCoverPicture())
-                .about(savedUser.getAbout())
-                .email(savedUser.getEmail())
-                .build();
+     return  userRepository.save(user);
+
 
     }
 

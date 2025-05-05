@@ -1,6 +1,5 @@
 package com.linkedin.backend.features.authentication.filter;
 
-import com.linkedin.backend.features.authentication.dto.UserDTO;
 import com.linkedin.backend.features.authentication.model.User;
 import com.linkedin.backend.features.authentication.service.AuthenticationService;
 import com.linkedin.backend.features.authentication.utils.JsonWebToken;
@@ -64,21 +63,7 @@ public class AuthenticationFilter extends HttpFilter {
 
             String email = jsonWebTokenService.getEmailFromToken(token);
             User user = authenticationService.getUser(email);
-            UserDTO userDto = UserDTO.builder()
-                    .id(user.getId())
-                    .email(email)
-                    .firstName(user.getFirstName())
-                    .lastName(user.getLastName())
-                    .position(user.getPosition())
-                    .company(user.getCompany())
-                    .about(user.getAbout())
-                    .coverPicture(user.getCoverPicture())
-                    .profilePicture(user.getProfilePicture())
-                    .emailVerified(user.getEmailVerified())
-                    .location(user.getLocation())
-                    .profileComplete(user.getProfileComplete())
-                    .build();
-            request.setAttribute("authenticatedUser", userDto);
+            request.setAttribute("authenticatedUser", user);
             chain.doFilter(request, response);
         } catch (Exception e) {
             response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);

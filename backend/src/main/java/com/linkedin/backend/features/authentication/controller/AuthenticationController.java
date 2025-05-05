@@ -1,30 +1,18 @@
 package com.linkedin.backend.features.authentication.controller;
 
-import java.io.IOException;
-
-import com.linkedin.backend.features.authentication.dto.UserDTO;
-import org.springframework.http.HttpStatus;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestAttribute;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.multipart.MultipartFile;
-import org.springframework.web.server.ResponseStatusException;
-
 import com.linkedin.backend.dto.Response;
 import com.linkedin.backend.features.authentication.dto.AuthenticationOauthRequestBody;
 import com.linkedin.backend.features.authentication.dto.AuthenticationRequestBody;
 import com.linkedin.backend.features.authentication.dto.AuthenticationResponseBody;
 import com.linkedin.backend.features.authentication.model.User;
 import com.linkedin.backend.features.authentication.service.AuthenticationService;
-
 import jakarta.validation.Valid;
+import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.server.ResponseStatusException;
+
+import java.io.IOException;
 
 @RestController
 @RequestMapping("/api/v1/authentication")
@@ -51,19 +39,19 @@ public class AuthenticationController {
     }
 
     @DeleteMapping("/delete")
-    public Response deleteUser(@RequestAttribute("authenticatedUser") UserDTO user) {
+    public Response deleteUser(@RequestAttribute("authenticatedUser") User user) {
         authenticationUserService.deleteUser(user.getId());
         return new Response("User deleted successfully.");
     }
 
     @PutMapping("/validate-email-verification-token")
-    public Response verifyEmail(@RequestParam String token, @RequestAttribute("authenticatedUser") UserDTO user) {
+    public Response verifyEmail(@RequestParam String token, @RequestAttribute("authenticatedUser") User user) {
         authenticationUserService.validateEmailVerificationToken(token, user.getEmail());
         return new Response("Email verified successfully.");
     }
 
     @GetMapping("/send-email-verification-token")
-    public Response sendEmailVerificationToken(@RequestAttribute("authenticatedUser") UserDTO user) {
+    public Response sendEmailVerificationToken(@RequestAttribute("authenticatedUser") User user) {
         authenticationUserService.sendEmailVerificationToken(user.getEmail());
         return new Response("Email verification token sent successfully.");
     }
@@ -82,8 +70,8 @@ public class AuthenticationController {
     }
 
     @PutMapping("/profile/{id}/info")
-    public  UserDTO updateUserProfile(
-            @RequestAttribute("authenticatedUser") UserDTO user,
+    public  User updateUserProfile(
+            @RequestAttribute("authenticatedUser") User user,
             @PathVariable Long id,
             @RequestParam(required = false) String firstName,
             @RequestParam(required = false) String lastName,
@@ -103,8 +91,8 @@ public class AuthenticationController {
     }
 
     @PutMapping("/profile/{id}/profile-picture")
-    public  UserDTO updateProfilePicture(
-            @RequestAttribute("authenticatedUser") UserDTO user,
+    public  User updateProfilePicture(
+            @RequestAttribute("authenticatedUser") User user,
             @PathVariable Long id,
             @RequestParam(value = "profilePicture", required = false) MultipartFile profilePicture) throws IOException {
 
@@ -117,8 +105,8 @@ public class AuthenticationController {
     }
 
     @PutMapping("/profile/{id}/cover-picture")
-    public  UserDTO updateCoverPicture(
-            @RequestAttribute("authenticatedUser")  UserDTO user,
+    public  User updateCoverPicture(
+            @RequestAttribute("authenticatedUser")  User user,
             @PathVariable Long id,
             @RequestParam(required = false) MultipartFile coverPicture) throws IOException {
 
@@ -131,7 +119,7 @@ public class AuthenticationController {
     }
 
     @GetMapping("/users/me")
-    public UserDTO getUser(@RequestAttribute("authenticatedUser") UserDTO user) {
+    public User getUser(@RequestAttribute("authenticatedUser") User user) {
         return user;
     }
 
