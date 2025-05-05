@@ -1,27 +1,5 @@
 package com.linkedin.backend.features.authentication.service;
 
-import java.io.IOException;
-import java.security.SecureRandom;
-import java.time.LocalDateTime;
-import java.util.Map;
-import java.util.Optional;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.core.ParameterizedTypeReference;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpMethod;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Service;
-import org.springframework.util.LinkedMultiValueMap;
-import org.springframework.util.MultiValueMap;
-import org.springframework.web.client.RestTemplate;
-import org.springframework.web.multipart.MultipartFile;
-
 import com.linkedin.backend.features.authentication.dto.AuthenticationRequestBody;
 import com.linkedin.backend.features.authentication.dto.AuthenticationResponseBody;
 import com.linkedin.backend.features.authentication.model.User;
@@ -30,11 +8,25 @@ import com.linkedin.backend.features.authentication.utils.EmailService;
 import com.linkedin.backend.features.authentication.utils.Encoder;
 import com.linkedin.backend.features.authentication.utils.JsonWebToken;
 import com.linkedin.backend.features.storage.service.StorageService;
-
 import io.jsonwebtoken.Claims;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import jakarta.transaction.Transactional;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.core.ParameterizedTypeReference;
+import org.springframework.http.*;
+import org.springframework.stereotype.Service;
+import org.springframework.util.LinkedMultiValueMap;
+import org.springframework.util.MultiValueMap;
+import org.springframework.web.client.RestTemplate;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.io.IOException;
+import java.security.SecureRandom;
+import java.time.LocalDateTime;
+import java.util.Map;
+import java.util.Optional;
 
 @Service
 public class AuthenticationService {
@@ -64,6 +56,7 @@ public class AuthenticationService {
         this.restTemplate = restTemplate;
         this.storageService = new StorageService();
     }
+
 
     public static String generateEmailVerificationToken() {
         SecureRandom random = new SecureRandom();

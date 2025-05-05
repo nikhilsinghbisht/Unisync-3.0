@@ -12,6 +12,11 @@ java {
         languageVersion = JavaLanguageVersion.of(21)
     }
 }
+tasks.withType<JavaCompile> {
+    options.compilerArgs.add("-parameters")
+}
+
+
 
 repositories {
     mavenCentral()
@@ -22,6 +27,9 @@ dependencies {
     implementation("org.springframework.boot:spring-boot-starter-validation")
     implementation("org.springframework.boot:spring-boot-starter-mail")
     implementation("org.springframework.boot:spring-boot-starter-websocket")
+    compileOnly("org.projectlombok:lombok:1.18.36")
+    annotationProcessor("org.projectlombok:lombok:1.18.34")
+
 
     // Database
     implementation("org.springframework.boot:spring-boot-starter-data-jpa")

@@ -1,4 +1,4 @@
-package com.linkedin.backend.features.authentication.model;
+package  com.linkedin.backend.features.authentication.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.linkedin.backend.features.feed.model.Post;
