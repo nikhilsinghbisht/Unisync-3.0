@@ -4,6 +4,7 @@ import { Button } from "../../../../components/Button/Button";
 import { Loader } from "../../../../components/Loader/Loader";
 import { usePageTitle } from "../../../../hooks/usePageTitle";
 import { request } from "../../../../utils/api";
+const BASE_URL = import.meta.env.VITE_USER_PROFILE_BASE_URL;
 import {
   IUser,
   useAuthentication,
@@ -48,13 +49,19 @@ export function Network() {
   }, []);
 
   useEffect(() => {
-    const subscription = ws?.subscribe("/topic/users/" + user?.id + "/connections/new", (data) => {
-      const connection = JSON.parse(data.body);
-      setInvitations((connections) => [connection, ...connections]);
-      setSuggestions((suggestions) =>
-        suggestions.filter((s) => s.id !== connection.author.id && s.id !== connection.recipient.id)
-      );
-    });
+    const subscription = ws?.subscribe(
+      "/topic/users/" + user?.id + "/connections/new",
+      (data) => {
+        const connection = JSON.parse(data.body);
+        setInvitations((connections) => [connection, ...connections]);
+        setSuggestions((suggestions) =>
+          suggestions.filter(
+            (s) =>
+              s.id !== connection.author.id && s.id !== connection.recipient.id
+          )
+        );
+      }
+    );
 
     return () => subscription?.unsubscribe();
   }, [user?.id, ws]);
@@ -65,7 +72,9 @@ export function Network() {
       (data) => {
         const connection = JSON.parse(data.body);
         setConnections((connections) => [connection, ...connections]);
-        setInvitations((invitations) => invitations.filter((c) => c.id !== connection.id));
+        setInvitations((invitations) =>
+          invitations.filter((c) => c.id !== connection.id)
+        );
       }
     );
 
@@ -77,8 +86,12 @@ export function Network() {
       "/topic/users/" + user?.id + "/connections/remove",
       (data) => {
         const connection = JSON.parse(data.body);
-        setConnections((connections) => connections.filter((c) => c.id !== connection.id));
-        setInvitations((invitations) => invitations.filter((c) => c.id !== connection.id));
+        setConnections((connections) =>
+          connections.filter((c) => c.id !== connection.id)
+        );
+        setInvitations((invitations) =>
+          invitations.filter((c) => c.id !== connection.id)
+        );
       }
     );
 
@@ -90,14 +103,24 @@ export function Network() {
       <div className={classes.sidebar}>
         <Title>Manage my network</Title>
         <div className={classes.buttons}>
-          <NavLink to="invitations" className={({ isActive }) => (isActive ? classes.active : "")}>
-            <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 24 24">
+          <NavLink
+            to="invitations"
+            className={({ isActive }) => (isActive ? classes.active : "")}
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              fill="currentColor"
+              viewBox="0 0 24 24"
+            >
               <path d="M15 13.25V21H9v-7.75A2.25 2.25 0 0 1 11.25 11h1.5A2.25 2.25 0 0 1 15 13.25m5-.25h-1a2 2 0 0 0-2 2v6h5v-6a2 2 0 0 0-2-2M12 3a3 3 0 1 0 3 3 3 3 0 0 0-3-3m7.5 8A2.5 2.5 0 1 0 17 8.5a2.5 2.5 0 0 0 2.5 2.5M5 13H4a2 2 0 0 0-2 2v6h5v-6a2 2 0 0 0-2-2m-.5-7A2.5 2.5 0 1 0 7 8.5 2.5 2.5 0 0 0 4.5 6"></path>
             </svg>
             <span>Invitations</span>
             <span className={classes.stat}>{invitations.length}</span>
           </NavLink>
-          <NavLink to="connections" className={({ isActive }) => (isActive ? classes.active : "")}>
+          <NavLink
+            to="connections"
+            className={({ isActive }) => (isActive ? classes.active : "")}
+          >
             <svg
               xmlns="http://www.w3.org/2000/svg"
               viewBox="0 0 24 24"
@@ -119,16 +142,24 @@ export function Network() {
           {suggestions.length > 0 && (
             <div className={classes.list}>
               {suggestions.map((suggestion) => (
-                <div key={suggestion.id} className={classes.suggestion}>
+                <div
+                  key={suggestion.id}
+                  className={classes.suggestion}
+                >
                   <img
-                    src={suggestion.coverPicture || "/cover.jpeg"}
+                    src={
+                      `${BASE_URL}${suggestion.coverPicture}` || "/cover.jpeg"
+                    }
                     alt=""
                     className={classes.cover}
                   />
                   <button onClick={() => navigate("/profile/" + suggestion.id)}>
                     <img
                       className={classes.avatar}
-                      src={suggestion.profilePicture || "/avatar.svg"}
+                      src={
+                        `${BASE_URL}${suggestion.profilePicture}` ||
+                        "/avatar.svg"
+                      }
                       alt=""
                     />
                   </button>
@@ -146,10 +177,14 @@ export function Network() {
                     className={classes.connect}
                     onClick={() => {
                       request<IConnection>({
-                        endpoint: "/api/v1/networking/connections?recipientId=" + suggestion.id,
+                        endpoint:
+                          "/api/v1/networking/connections?recipientId=" +
+                          suggestion.id,
                         method: "POST",
                         onSuccess: () => {
-                          setSuggestions(suggestions.filter((s) => s.id !== suggestion.id));
+                          setSuggestions(
+                            suggestions.filter((s) => s.id !== suggestion.id)
+                          );
                         },
                         onFailure: (error) => console.log(error),
                       });
