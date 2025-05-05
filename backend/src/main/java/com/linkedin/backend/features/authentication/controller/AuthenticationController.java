@@ -2,6 +2,7 @@ package com.linkedin.backend.features.authentication.controller;
 
 import java.io.IOException;
 
+import com.linkedin.backend.features.authentication.dto.UserDTO;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -50,19 +51,19 @@ public class AuthenticationController {
     }
 
     @DeleteMapping("/delete")
-    public Response deleteUser(@RequestAttribute("authenticatedUser") User user) {
+    public Response deleteUser(@RequestAttribute("authenticatedUser") UserDTO user) {
         authenticationUserService.deleteUser(user.getId());
         return new Response("User deleted successfully.");
     }
 
     @PutMapping("/validate-email-verification-token")
-    public Response verifyEmail(@RequestParam String token, @RequestAttribute("authenticatedUser") User user) {
+    public Response verifyEmail(@RequestParam String token, @RequestAttribute("authenticatedUser") UserDTO user) {
         authenticationUserService.validateEmailVerificationToken(token, user.getEmail());
         return new Response("Email verified successfully.");
     }
 
     @GetMapping("/send-email-verification-token")
-    public Response sendEmailVerificationToken(@RequestAttribute("authenticatedUser") User user) {
+    public Response sendEmailVerificationToken(@RequestAttribute("authenticatedUser") UserDTO user) {
         authenticationUserService.sendEmailVerificationToken(user.getEmail());
         return new Response("Email verification token sent successfully.");
     }
@@ -81,8 +82,8 @@ public class AuthenticationController {
     }
 
     @PutMapping("/profile/{id}/info")
-    public User updateUserProfile(
-            @RequestAttribute("authenticatedUser") User user,
+    public  UserDTO updateUserProfile(
+            @RequestAttribute("authenticatedUser") UserDTO user,
             @PathVariable Long id,
             @RequestParam(required = false) String firstName,
             @RequestParam(required = false) String lastName,
@@ -102,8 +103,8 @@ public class AuthenticationController {
     }
 
     @PutMapping("/profile/{id}/profile-picture")
-    public User updateProfilePicture(
-            @RequestAttribute("authenticatedUser") User user,
+    public  UserDTO updateProfilePicture(
+            @RequestAttribute("authenticatedUser") UserDTO user,
             @PathVariable Long id,
             @RequestParam(value = "profilePicture", required = false) MultipartFile profilePicture) throws IOException {
 
@@ -116,8 +117,8 @@ public class AuthenticationController {
     }
 
     @PutMapping("/profile/{id}/cover-picture")
-    public User updateCoverPicture(
-            @RequestAttribute("authenticatedUser") User user,
+    public  UserDTO updateCoverPicture(
+            @RequestAttribute("authenticatedUser")  UserDTO user,
             @PathVariable Long id,
             @RequestParam(required = false) MultipartFile coverPicture) throws IOException {
 
@@ -130,7 +131,7 @@ public class AuthenticationController {
     }
 
     @GetMapping("/users/me")
-    public User getUser(@RequestAttribute("authenticatedUser") User user) {
+    public UserDTO getUser(@RequestAttribute("authenticatedUser") UserDTO user) {
         return user;
     }
 
