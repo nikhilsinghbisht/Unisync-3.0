@@ -272,6 +272,7 @@ export function Header() {
                     <span>Notications</span>
                   </div>
                 </NavLink>
+                
               </li>
             </ul>
           ) : null}

@@ -5,8 +5,9 @@ import { request } from "../../../utils/api";
 
 interface IAuthenticationResponse {
   token: string;
-  messgage: string;
+  message: string; // Fix typo: 'messgage' to 'message'
 }
+
 export interface IUser {
   id: string;
   email: string;
@@ -37,10 +38,19 @@ export function useAuthentication() {
   return useContext(AuthenticationContext)!;
 }
 
+// Validate email format
+const validateEmail = (email: string): boolean => {
+  // Basic email format: must start with a letter and follow proper email structure
+  const emailRegex = /^[A-Za-z][A-Za-z0-9._%+-]*@gmail\.com$/i;
+  return emailRegex.test(email);
+};
+
+
 export function AuthenticationContextProvider() {
   const location = useLocation();
   const [user, setUser] = useState<IUser | null>(null);
   const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null); // State to store error message
 
   const isOnAuthPage =
     location.pathname === "/authentication/login" ||
@@ -48,6 +58,12 @@ export function AuthenticationContextProvider() {
     location.pathname === "/authentication/request-password-reset";
 
   const login = async (email: string, password: string) => {
+    if (!validateEmail(email)) {
+      throw new Error("Invalid email address. Please check your email format.");
+    }
+    
+    setError(null); // Reset error if email is valid
+
     await request<IAuthenticationResponse>({
       endpoint: "/api/v1/authentication/login",
       method: "POST",
@@ -56,7 +72,7 @@ export function AuthenticationContextProvider() {
         localStorage.setItem("token", token);
       },
       onFailure: (error) => {
-        throw new Error(error);
+        setError("Login failed: " + error);
       },
     });
   };
@@ -70,12 +86,18 @@ export function AuthenticationContextProvider() {
         localStorage.setItem("token", token);
       },
       onFailure: (error) => {
-        throw new Error(error);
+        setError("OAuth login failed: " + error);
       },
     });
   };
 
   const signup = async (email: string, password: string) => {
+    if (!validateEmail(email)) {
+      throw new Error("Invalid email address. Please check your email format.");
+    }
+    
+    setError(null); // Reset error if email is valid
+
     await request<IAuthenticationResponse>({
       endpoint: "/api/v1/authentication/register",
       method: "POST",
@@ -84,7 +106,7 @@ export function AuthenticationContextProvider() {
         localStorage.setItem("token", token);
       },
       onFailure: (error) => {
-        throw new Error(error);
+        setError("Signup failed: " + error);
       },
     });
   };
@@ -126,7 +148,6 @@ export function AuthenticationContextProvider() {
   }
 
   if (user && user.emailVerified && location.pathname == "/authentication/verify-email") {
-    console.log("here1");
     return <Navigate to="/" />;
   }
 
@@ -145,7 +166,6 @@ export function AuthenticationContextProvider() {
     user.profileComplete &&
     location.pathname.includes("/authentication/profile")
   ) {
-    console.log("here2");
     return <Navigate to="/" />;
   }
 
@@ -165,6 +185,8 @@ export function AuthenticationContextProvider() {
       }}
     >
       <Outlet />
+      {/* Display error if there is any */}
+      {error && <div style={{ color: "red" }}>{error}</div>}
     </AuthenticationContext.Provider>
   );
 }
