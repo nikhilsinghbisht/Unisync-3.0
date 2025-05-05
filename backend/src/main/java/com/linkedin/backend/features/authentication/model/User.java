@@ -35,53 +35,41 @@ public class User {
     private String email;
 
     @Builder.Default
-    private Boolean emailVerified = true;
+    private Boolean emailVerified = false;
 
-    @Builder.Default
-    private String emailVerificationToken = null;
+    private String emailVerificationToken;
 
-    @Builder.Default
-    private LocalDateTime emailVerificationTokenExpiryDate = null;
+    private LocalDateTime emailVerificationTokenExpiryDate;
 
     @JsonIgnore
     private String password;
 
-    @Builder.Default
-    private String passwordResetToken = null;
+    private String passwordResetToken;
 
-    @Builder.Default
-    private LocalDateTime passwordResetTokenExpiryDate = null;
+    private LocalDateTime passwordResetTokenExpiryDate;
 
     @FullTextField(analyzer = "standard")
-    @Builder.Default
-    private String firstName = null;
+    private String firstName;
 
     @FullTextField(analyzer = "standard")
-    @Builder.Default
-    private String lastName = null;
+    private String lastName;
 
     @FullTextField(analyzer = "standard")
-    @Builder.Default
-    private String company = null;
+    private String company;
 
     @FullTextField(analyzer = "standard")
-    @Builder.Default
-    private String position = null;
+    private String position;
 
-    @Builder.Default
-    private String location = null;
+    private String location;
 
-    @Builder.Default
-    private String profilePicture = null;
+    private String profilePicture;
 
-    @Builder.Default
-    private String coverPicture = null;
+    private String coverPicture ;
 
     @Builder.Default
     private Boolean profileComplete = false;
 
-    @Builder.Default
-    private String about = null;
+    private String about;
 
     @JsonIgnore
     @OneToMany(mappedBy = "recipient", cascade = CascadeType.ALL, orphanRemoval = true)
