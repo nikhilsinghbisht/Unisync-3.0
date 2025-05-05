@@ -1,9 +1,5 @@
 package com.linkedin.backend.features.messaging.service;
 
-import java.util.List;
-
-import org.springframework.stereotype.Service;
-
 import com.linkedin.backend.features.authentication.model.User;
 import com.linkedin.backend.features.authentication.service.AuthenticationService;
 import com.linkedin.backend.features.messaging.model.Conversation;
@@ -11,8 +7,10 @@ import com.linkedin.backend.features.messaging.model.Message;
 import com.linkedin.backend.features.messaging.repository.ConversationRepository;
 import com.linkedin.backend.features.messaging.repository.MessageRepository;
 import com.linkedin.backend.features.notifications.service.NotificationService;
-
 import jakarta.transaction.Transactional;
+import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 @Service
 public class MessagingService {
