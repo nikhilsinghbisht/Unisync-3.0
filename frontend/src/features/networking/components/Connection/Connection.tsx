@@ -2,6 +2,7 @@ import { Dispatch, SetStateAction, useEffect } from "react";
 import { Button } from "../../../../components/Button/Button";
 import { request } from "../../../../utils/api";
 import { IUser } from "../../../authentication/contexts/AuthenticationContextProvider";
+const BASE_URL = import.meta.env.VITE_USER_PROFILE_BASE_URL;
 
 import { useNavigate } from "react-router-dom";
 import classes from "./Connection.module.scss";
@@ -26,10 +27,16 @@ interface IConnectionProps {
   setConnections: Dispatch<SetStateAction<IConnection[]>>;
 }
 
-export function Connection({ connection, user, setConnections }: IConnectionProps) {
+export function Connection({
+  connection,
+  user,
+  setConnections,
+}: IConnectionProps) {
   const navigate = useNavigate();
   const userToDisplay =
-    connection.author.id === user?.id ? connection.recipient : connection.author;
+    connection.author.id === user?.id
+      ? connection.recipient
+      : connection.author;
 
   useEffect(() => {
     if (connection.recipient.id === user?.id) {
@@ -43,16 +50,21 @@ export function Connection({ connection, user, setConnections }: IConnectionProp
   }, [connection.id, connection.recipient.id, setConnections, user?.id]);
 
   return (
-    <div key={connection.id} className={classes.connection}>
+    <div
+      key={connection.id}
+      className={classes.connection}
+    >
       <button onClick={() => navigate("/profile/" + userToDisplay.id)}>
         <img
           className={classes.avatar}
-          src={userToDisplay.profilePicture || "/avatar.svg"}
+          src={`${BASE_URL}${userToDisplay.profilePicture} ` || "/avatar.svg"}
           alt=""
         />
       </button>
       <button onClick={() => navigate("/profile/" + userToDisplay.id)}>
-        <h3 className={classes.name}>{userToDisplay?.firstName + " " + userToDisplay.lastName}</h3>
+        <h3 className={classes.name}>
+          {userToDisplay?.firstName + " " + userToDisplay.lastName}
+        </h3>
         <p>
           {userToDisplay?.position} at {userToDisplay?.company}
         </p>

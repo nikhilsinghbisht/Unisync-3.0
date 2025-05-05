@@ -21,7 +21,7 @@ private ReferralService referralService;
         return ResponseEntity.ok(referralService.createReferral(referralRequestDTO));
     }
 
-    @GetMapping("/fetch")
+    @GetMapping("/fetch-all")
     public ResponseEntity<List<ReferralRequestDTO>> getAllReferrals() {
         return  ResponseEntity.ok(referralService.fetchReferrals());
     }
