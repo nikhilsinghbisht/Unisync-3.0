@@ -33,7 +33,7 @@ public class User {
     @Email
     @Column(unique = true)
     private String email;
-
+    private String username;
     @Builder.Default
     private Boolean emailVerified = false;
 

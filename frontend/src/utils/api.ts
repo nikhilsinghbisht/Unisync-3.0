@@ -31,7 +31,7 @@ export const request = async <T>({
   }
 
   try {
-
+console.log("LOGGG",BASE_URL)
     const response = await fetch(`${BASE_URL}${endpoint}`, {
       method,
       headers,

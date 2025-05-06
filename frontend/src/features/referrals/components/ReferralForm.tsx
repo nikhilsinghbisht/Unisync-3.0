@@ -7,6 +7,7 @@ export function ReferralForm() {
   const [company, setCompany] = useState("");
   const [position, setPosition] = useState("");
   const [description, setDescription] = useState("");
+  const [jobLink, setJobLink] = useState("");
   const [message, setMessage] = useState("");
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -21,16 +22,18 @@ export function ReferralForm() {
       endpoint: "/api/v1/referrals/add",
       method: "POST",
       body: JSON.stringify({
+        referrerId: user.id,       // renamed from referrer_id
+        jobTitle: position,        // renamed from job_title
         company,
-        job_title: position,        // match backend field
-        notes: description,         // match backend field
-        referrer_id: user.id,       // include required field
+        notes: description,        // same as before
+        jobLink                    // new field added
       }),
       onSuccess: () => {
         setMessage("Referral posted successfully!");
         setCompany("");
         setPosition("");
         setDescription("");
+        setJobLink("");
       },
       onFailure: (err) => {
         console.error("Error posting referral:", err);
@@ -62,6 +65,13 @@ export function ReferralForm() {
           value={description}
           onChange={(e) => setDescription(e.target.value)}
           rows={4}
+          required
+        />
+        <input
+          type="url"
+          placeholder="Job Link"
+          value={jobLink}
+          onChange={(e) => setJobLink(e.target.value)}
           required
         />
         <button type="submit">Submit Referral</button>

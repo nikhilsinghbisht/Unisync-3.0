@@ -22,9 +22,6 @@ import { Profile } from "./features/profile/pages/Profile/Profile";
 import "./index.scss";
 import { ReferralPage } from "./features/referrals/ReferralPage";
 
-
-
-
 const router = createBrowserRouter([
   {
     element: <AuthenticationContextProvider />,
@@ -40,10 +37,6 @@ const router = createBrowserRouter([
           {
             path: "posts/:id",
             element: <PostPage />,
-          },
-          {
-            path: "referrals",
-            element: <ReferralPage />,  
           },
           {
             path: "network",
@@ -85,6 +78,10 @@ const router = createBrowserRouter([
             path: "profile/:id/posts",
             element: <Posts />,
           },
+          {
+            path:"/referral",
+            element:<ReferralPage/>
+          }
         ],
       },
       {
@@ -111,6 +108,7 @@ const router = createBrowserRouter([
             path: "profile/:id",
             element: <LoginProfile />,
           },
+          
         ],
       },
       {
