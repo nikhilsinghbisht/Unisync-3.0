@@ -1,9 +1,14 @@
 # Gradle files
 .gradle
 build
+.idea
 
 # Lucene index files
 lucene
 
 uploads/*
 !uploads/.gitkeep
+
+# IntelliJ IDEA filesdo
+src/main/resources/application.properties
+docker-compose.yml

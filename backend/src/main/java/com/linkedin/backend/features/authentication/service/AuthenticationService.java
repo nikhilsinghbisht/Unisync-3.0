@@ -1,9 +1,6 @@
 package com.linkedin.backend.features.authentication.service;
 
-<<<<<<< HEAD
 
-=======
->>>>>>> d1cb97daad3c7222fd6f80fab03efa23017b171c
 import com.linkedin.backend.features.authentication.dto.AuthenticationRequestBody;
 import com.linkedin.backend.features.authentication.dto.AuthenticationResponseBody;
 import com.linkedin.backend.features.authentication.model.User;
@@ -73,16 +70,18 @@ public class AuthenticationService {
 
     public void sendEmailVerificationToken(String email) {
         Optional<User> user = userRepository.findByEmail(email);
-        if (user.isPresent() && !user.get().getEmailVerified()) {
+        if (user.isPresent() && Boolean.TRUE.equals(!user.get().getEmailVerified())) {
             String emailVerificationToken = generateEmailVerificationToken();
             String hashedToken = encoder.encode(emailVerificationToken);
             user.get().setEmailVerificationToken(hashedToken);
             user.get().setEmailVerificationTokenExpiryDate(LocalDateTime.now().plusMinutes(durationInMinutes));
             userRepository.save(user.get());
             String subject = "Email Verification";
-            String body = String.format("Only one step to take full advantage of LinkedIn.\n\n"
-                    + "Enter this code to verify your email: " + "%s\n\n" + "The code will expire in " + "%s"
-                    + " minutes.",
+            String body = String.format("Only one step to take full advantage of LinkedIn.\n\n" +
+                            "Enter this code to verify your email: " +
+                            "%s\n\n" + "The code will expire in " +
+                            "%s" +
+                            " minutes.",
                     emailVerificationToken, durationInMinutes);
             try {
                 emailService.sendEmail(email, subject, body);
