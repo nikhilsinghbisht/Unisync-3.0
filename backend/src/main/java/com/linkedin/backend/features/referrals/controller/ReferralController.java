@@ -39,4 +39,10 @@ public class ReferralController {
         return ResponseEntity.ok(referrals);
     }
 
+    @PostMapping("/apply")
+    public ResponseEntity<ReferralRequestResponse> applyReferral(@RequestBody ReferralRequestDTO referralRequestDTO) {
+        ReferralRequestResponse referrals = referralService.applyReferral(referralRequestDTO);
+        return ResponseEntity.ok(referrals);
+    }
+
 }
