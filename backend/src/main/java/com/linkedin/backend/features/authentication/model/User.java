@@ -36,10 +36,6 @@ public class User {
 
     private String username;
 
-
-
-
-
     @Builder.Default
     private Boolean emailVerified = false;
 

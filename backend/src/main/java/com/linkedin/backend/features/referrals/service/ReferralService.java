@@ -28,22 +28,21 @@ public class ReferralService {
         this.userRepository = userRepository;
     }
 
-    // 🔹 Create a referral post
     public ReferralRequestResponse createReferral(ReferralRequestDTO requestDTO) {
 
         User referrer = userRepository.findById(requestDTO.getReferrerId())
                 .orElseThrow(() -> new IllegalArgumentException("Referrer user not found"));
 
-        ReferralPost referralPost = new ReferralPost();
-        referralPost.setReferrer(referrer);
-        referralPost.setCompany(requestDTO.getCompany());
-        referralPost.setJobTitle(requestDTO.getJobTitle());
-        referralPost.setJobLink(requestDTO.getJobLink());
-        referralPost.setNotes(requestDTO.getNotes());
-        referralPost.setCreatedAt(LocalDateTime.now());
-        referralPost.setUpdatedAt(LocalDateTime.now());
-        referralPost.setStatus("OPEN");
-
+        ReferralPost referralPost = ReferralPost.builder()
+                .referrer(referrer)
+                .status("OPEN")
+                .createdAt(LocalDateTime.now())
+                .updatedAt(LocalDateTime.now())
+                .company(requestDTO.getCompany())
+                .jobLink(requestDTO.getJobLink())
+                .notes(requestDTO.getNotes())
+                .jobTitle(requestDTO.getJobTitle())
+                .build();
         referralPostRepository.save(referralPost);
 
         return ReferralRequestResponse.builder()
@@ -51,27 +50,27 @@ public class ReferralService {
                 .build();
     }
 
-    // 🔹 Fetch all active referral posts
-    public List<ReferralRequestDTO> fetchReferrals() {
+    public List<ReferralRequestDTO> fetchOpenToApplyReferrals() {
         return referralPostRepository.findByStatus("OPEN")
                 .stream()
                 .map(post -> ReferralRequestDTO.builder()
+                        .postId(post.getId())
                         .referrerId(post.getReferrer().getId())
                         .company(post.getCompany())
                         .jobTitle(post.getJobTitle())
                         .jobLink(post.getJobLink())
                         .notes(post.getNotes())
                         .build())
-                .collect(Collectors.toList());
+                .toList();
     }
 
-    // 🔹 Fetch all posts applied by a specific user
-    public List<ReferralRequestDTO> fetchReferralsAppliedByUser(Long applicantId) {
-        return referralApplicationRepository.findByApplicantId(applicantId)
+    public List<ReferralRequestDTO> fetchReferralsAppliedByUser(Long userId) {
+        return referralApplicationRepository.findByApplicantIdWithDetails(userId)
                 .stream()
                 .map(app -> {
                     ReferralPost post = app.getReferralPost();
                     return ReferralRequestDTO.builder()
+                            .postId(post.getId())
                             .referrerId(post.getReferrer().getId())
                             .company(post.getCompany())
                             .jobTitle(post.getJobTitle())
@@ -79,6 +78,21 @@ public class ReferralService {
                             .notes(post.getNotes())
                             .build();
                 })
-                .collect(Collectors.toList());
+                .toList();
     }
+
+    public List<ReferralRequestDTO> fetchReferralsPostedByUser(Long postedById) {
+        return referralPostRepository.findByReferrerIdWithReferrer(postedById)
+                .stream()
+                .map(post -> ReferralRequestDTO.builder()
+                        .postId(post.getId())
+                        .referrerId(post.getReferrer().getId())
+                        .company(post.getCompany())
+                        .jobTitle(post.getJobTitle())
+                        .jobLink(post.getJobLink())
+                        .notes(post.getNotes())
+                        .build())
+                .toList();
+    }
+
 }

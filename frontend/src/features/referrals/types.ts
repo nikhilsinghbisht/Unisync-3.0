@@ -1,14 +1,15 @@
 export interface Referral {
-    id?: number;
-    company: string;
-    position: string;
-    description: string;
-    postedByUserId: string;
-  }
-  
-  export interface ReferralApplication {
-    applicantUserId: string;
-    resumeLink: string;
-    referralId: number;
-  }
-  
+  postId?: number;
+  referrerId?: number;
+  company?: string;
+  jobTitle?: string;
+  notes?: string;
+  jobLink?: string;
+  applicantId?: Array<number>;
+}
+
+export interface ReferralApplication {
+  applicantUserId: string;
+  resumeLink: string;
+  referralId: number;
+}

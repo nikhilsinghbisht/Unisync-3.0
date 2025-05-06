@@ -8,7 +8,7 @@ export function ReferralList() {
 
   useEffect(() => {
     request<Referral[]>({
-      endpoint: "/api/v1/referrals",
+      endpoint: "/api/v1/referrals/open-to-apply",
       onSuccess: setReferrals,
       onFailure: (error) => {
         console.error("Failed to fetch referrals:", error);
@@ -21,7 +21,7 @@ export function ReferralList() {
       <h2>Available Referrals</h2>
       {referrals.map((r) => (
         <div
-          key={r.id}
+          key={r.postId}
           style={{
             border: "1px solid #ccc",
             padding: "10px",
@@ -29,10 +29,11 @@ export function ReferralList() {
           }}
         >
           <h3>
-            {r.company} - {r.position}
+            {r.company} - {r.jobTitle}
           </h3>
-          <p>{r.description}</p>
-          <ApplyForm referralId={r.id!} />
+          <p>{r.notes}</p>
+          <a href={r.jobLink}></a>
+          <ApplyForm referralId={r.referrerId!} />
         </div>
       ))}
     </div>

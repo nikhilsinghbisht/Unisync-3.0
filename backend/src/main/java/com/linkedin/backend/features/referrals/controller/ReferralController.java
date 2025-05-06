@@ -14,21 +14,28 @@ import java.util.List;
 public class ReferralController {
 
     @Autowired
-private ReferralService referralService;
+    private ReferralService referralService;
 
     @PostMapping("/add")
     public ResponseEntity<ReferralRequestResponse> createReferral(@RequestBody ReferralRequestDTO referralRequestDTO) {
         return ResponseEntity.ok(referralService.createReferral(referralRequestDTO));
     }
 
-    @GetMapping("/fetch-all")
-    public ResponseEntity<List<ReferralRequestDTO>> getAllReferrals() {
-        return  ResponseEntity.ok(referralService.fetchReferrals());
+    @GetMapping("/my-posted/{userId}")
+    public ResponseEntity<List<ReferralRequestDTO>> fetchReferralsPostedByUser(@PathVariable Long userId) {
+        List<ReferralRequestDTO> referrals = referralService.fetchReferralsPostedByUser(userId);
+        return ResponseEntity.ok(referrals);
     }
 
-    @GetMapping("/by-user/{userId}")
-    public ResponseEntity<List<ReferralRequestDTO>> getReferralsByUser(@PathVariable Long userId) {
+    @GetMapping("/my-applied/{userId}")
+    public ResponseEntity<List<ReferralRequestDTO>> fetchReferralsAppliedByUser(@PathVariable Long userId) {
         List<ReferralRequestDTO> referrals = referralService.fetchReferralsAppliedByUser(userId);
+        return ResponseEntity.ok(referrals);
+    }
+
+    @GetMapping("/open-to-apply")
+    public ResponseEntity<List<ReferralRequestDTO>> fetchOpenToApplyReferrals() {
+        List<ReferralRequestDTO> referrals = referralService.fetchOpenToApplyReferrals();
         return ResponseEntity.ok(referrals);
     }
 
