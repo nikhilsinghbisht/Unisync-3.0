@@ -1,9 +1,6 @@
 package com.linkedin.backend.features.authentication.service;
 
-<<<<<<< HEAD
 
-=======
->>>>>>> d1cb97daad3c7222fd6f80fab03efa23017b171c
 import com.linkedin.backend.features.authentication.dto.AuthenticationRequestBody;
 import com.linkedin.backend.features.authentication.dto.AuthenticationResponseBody;
 import com.linkedin.backend.features.authentication.model.User;
