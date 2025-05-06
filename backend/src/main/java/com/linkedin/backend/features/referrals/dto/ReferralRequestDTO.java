@@ -13,7 +13,6 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 public class ReferralRequestDTO {
-
     private Long postId;
     private Long referrerId;
     private String jobTitle;

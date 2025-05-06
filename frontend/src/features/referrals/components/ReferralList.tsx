@@ -51,16 +51,16 @@ function ApplyForm({ referralId }: { referralId: number }) {
     }
 
     await request({
-      endpoint: "/api/v1/referrals/apply", // Make sure this endpoint exists in backend
+      endpoint: "/api/v1/referrals/apply",
       method: "POST",
       body: JSON.stringify({
         referralId,
         resumeLink,
-        userId: user?.id, // Assuming backend uses userId to identify applicant
+        userId: user?.id,
       }),
       onSuccess: () => {
         alert("Applied successfully!");
-        setResumeLink(""); // clear input
+        setResumeLink("");
       },
       onFailure: (error) => {
         console.error("Failed to apply for referral:", error);

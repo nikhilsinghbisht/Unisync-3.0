@@ -4,9 +4,12 @@ import com.linkedin.backend.features.authentication.model.User;
 import com.linkedin.backend.features.authentication.repository.UserRepository;
 import com.linkedin.backend.features.referrals.dto.ReferralRequestDTO;
 import com.linkedin.backend.features.referrals.dto.ReferralRequestResponse;
+import com.linkedin.backend.features.referrals.model.ReferralApplication;
 import com.linkedin.backend.features.referrals.model.ReferralPost;
 import com.linkedin.backend.features.referrals.repository.ReferralApplicationRepository;
 import com.linkedin.backend.features.referrals.repository.ReferralPostRepository;
+import jakarta.persistence.EntityNotFoundException;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -91,8 +94,35 @@ public class ReferralService {
                         .jobTitle(post.getJobTitle())
                         .jobLink(post.getJobLink())
                         .notes(post.getNotes())
+                        .applicantId(
+                                referralApplicationRepository.findByReferrersByPostId(post.getId())
+                        )
                         .build())
                 .toList();
+    }
+
+
+    public ReferralRequestResponse applyReferral(ReferralRequestDTO referralRequestDTO) {
+        ReferralPost referralPost = referralPostRepository.findById(referralRequestDTO.getPostId())
+                .orElseThrow(() -> new EntityNotFoundException("Referral post not found"));
+
+        List<User> applicants = referralRequestDTO.getApplicantId().stream()
+                .map(user -> userRepository.findById(user.getId())
+                        .orElseThrow(() -> new EntityNotFoundException("User not found with ID: " + user.getId()))).toList();
+
+        applicants.stream()
+                .map(applicant -> ReferralApplication.builder()
+                        .referralPost(referralPost)
+                        .applicant(applicant)
+                        .status("PENDING")
+                        .appliedAt(LocalDateTime.now())
+                        .build())
+                .map(referralApplicationRepository::save)
+                .toList();
+
+        return ReferralRequestResponse.builder()
+                .message("Referral applications submitted successfully.")
+                .build();
     }
 
 }
