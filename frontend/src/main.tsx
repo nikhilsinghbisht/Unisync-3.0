@@ -21,6 +21,7 @@ import { Posts } from "./features/profile/pages/Posts/Posts";
 import { Profile } from "./features/profile/pages/Profile/Profile";
 import "./index.scss";
 import { ReferralPage } from "./features/referrals/ReferralPage";
+import TechNews from "./components/TechNewsWidget/TechNews";
 
 const router = createBrowserRouter([
   {
@@ -81,6 +82,10 @@ const router = createBrowserRouter([
           {
             path:"/referral",
             element:<ReferralPage/>
+          },
+          {
+            path:"/news",
+            element:<TechNews/>
           }
         ],
       },
