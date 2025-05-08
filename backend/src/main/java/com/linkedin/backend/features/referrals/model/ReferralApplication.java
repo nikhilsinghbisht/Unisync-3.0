@@ -3,6 +3,7 @@ package com.linkedin.backend.features.referrals.model;
 import com.linkedin.backend.features.authentication.model.User;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -11,6 +12,7 @@ import java.time.LocalDateTime;
 @Entity
 @Table(name = "referral_application")
 @Data
+@Builder
 @AllArgsConstructor
 @NoArgsConstructor
 public class ReferralApplication {
@@ -27,6 +29,8 @@ public class ReferralApplication {
     @JoinColumn(name = "applicant_id", nullable = false)
     private User applicant;
 
+    @Builder.Default
     private String status = "PENDING";
-    private LocalDateTime appliedAt = LocalDateTime.now();
+
+    private LocalDateTime appliedAt;
 }

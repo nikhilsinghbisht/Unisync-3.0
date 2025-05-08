@@ -13,22 +13,49 @@ import java.util.List;
 @RequestMapping("/api/v1/referrals")
 public class ReferralController {
 
-    @Autowired
-private ReferralService referralService;
+    private final ReferralService referralService;
+    public ReferralController(ReferralService referralService) {
+        this.referralService = referralService;
+    }
 
     @PostMapping("/add")
     public ResponseEntity<ReferralRequestResponse> createReferral(@RequestBody ReferralRequestDTO referralRequestDTO) {
         return ResponseEntity.ok(referralService.createReferral(referralRequestDTO));
     }
 
-    @GetMapping("/fetch")
-    public ResponseEntity<List<ReferralRequestDTO>> getAllReferrals() {
-        return  ResponseEntity.ok(referralService.fetchReferrals());
+    @GetMapping("/my-posted/{userId}")
+    public ResponseEntity<List<ReferralRequestDTO>> fetchReferralsPostedByUser(@PathVariable Long userId) {
+        List<ReferralRequestDTO> referrals = referralService.fetchReferralsPostedByUser(userId);
+        return ResponseEntity.ok(referrals);
     }
 
-    @GetMapping("/by-user/{userId}")
-    public ResponseEntity<List<ReferralRequestDTO>> getReferralsByUser(@PathVariable Long userId) {
+    @GetMapping("/my-applied/{userId}")
+    public ResponseEntity<List<ReferralRequestDTO>> fetchReferralsAppliedByUser(@PathVariable Long userId) {
         List<ReferralRequestDTO> referrals = referralService.fetchReferralsAppliedByUser(userId);
+        return ResponseEntity.ok(referrals);
+    }
+
+    @GetMapping("/open-to-apply")
+    public ResponseEntity<List<ReferralRequestDTO>> fetchOpenToApplyReferrals() {
+        List<ReferralRequestDTO> referrals = referralService.fetchOpenToApplyReferrals();
+        return ResponseEntity.ok(referrals);
+    }
+
+    @PostMapping("/apply")
+    public ResponseEntity<ReferralRequestResponse> applyReferral(@RequestBody ReferralRequestDTO referralRequestDTO) {
+        ReferralRequestResponse referrals = referralService.applyReferral(referralRequestDTO);
+        return ResponseEntity.ok(referrals);
+    }
+
+    @GetMapping("/applied")
+    public ResponseEntity<List<ReferralRequestDTO>> appliedReferrals(@RequestParam("userId")Long userId){
+        List<ReferralRequestDTO> referrals = referralService.appliedReferrals(userId);
+        return ResponseEntity.ok(referrals);
+    }
+
+    @GetMapping("/created")
+    public ResponseEntity<List<ReferralRequestDTO>> createdReferrals(@RequestParam("userId")Long userId){
+        List<ReferralRequestDTO> referrals = referralService.createdReferrals(userId);
         return ResponseEntity.ok(referrals);
     }
 

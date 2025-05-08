@@ -1,17 +1,27 @@
 package com.linkedin.backend.features.referrals.repository;
 
+import com.linkedin.backend.features.authentication.model.User;
 import com.linkedin.backend.features.referrals.model.ReferralApplication;
+import com.linkedin.backend.features.referrals.model.ReferralPost;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import java.util.Arrays;
 import java.util.List;
 
 @Repository
 public interface ReferralApplicationRepository extends JpaRepository<ReferralApplication, Long> {
 
-    // Fetch all applications by a given applicant
-    List<ReferralApplication> findByApplicantId(Long applicantId);
+    @Query("SELECT ra FROM ReferralApplication ra JOIN FETCH ra.referralPost rp JOIN FETCH rp.referrer WHERE ra.applicant.id = :applicantId")
+    List<ReferralApplication> findByApplicantIdWithDetails(@Param("applicantId") Long applicantId);
 
-    // Optional: Fetch applications by referral post
-    List<ReferralApplication> findByReferralPostId(Long referralPostId);
+    @Query("SELECT ra.applicant FROM ReferralApplication ra JOIN ra.referralPost rp WHERE rp.id = :postedById")
+    List<User> findByReferrersByPostId(@Param("postedById") Long postedById);
+
+    List<User> findByApplicantId(@Param("applicant")Long applicant);
+
+    @Query("SELECT a FROM ReferralApplication a WHERE a.applicant.id = :applicantId")
+    List<ReferralApplication> getApplicationsByApplicant(@Param("applicantId") Long applicantId);
 }

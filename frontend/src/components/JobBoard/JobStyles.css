@@ -1,0 +1,6 @@
+#job-card{
+    border: 2px solid rgb(0, 0, 0);
+    margin-bottom: 5px;
+    border-radius: 5px;
+    width: "fit-content";
+}
