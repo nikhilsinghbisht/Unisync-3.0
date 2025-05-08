@@ -1,7 +1,8 @@
 import { useEffect, useState } from "react";
-import { request } from "../../../utils/api";
-import { Referral } from "../types";
-import { useAuthentication } from "../../authentication/contexts/AuthenticationContextProvider";
+import { request } from "../../../../utils/api";
+import { Referral} from "../../types";
+import { useAuthentication } from "../../../authentication/contexts/AuthenticationContextProvider";
+import "../form_css/ReferralList.scss"
 
 export function ReferralList() {
   const [referrals, setReferrals] = useState<Referral[]>([]);
@@ -17,35 +18,29 @@ export function ReferralList() {
   }, []);
 
   return (
-    <div>
+    <div className="referral-container">
       <h2>Available Referrals</h2>
       {referrals.map((r) => (
-        <div
-          key={r.postId}
-          style={{
-            border: "1px solid #ccc",
-            padding: "10px",
-            marginBottom: "10px",
-          }}
-        >
-          <h3>
+        <div className="referral-card" key={r.postId}>
+          <h3 className="referral-title">
             {r.company} - {r.jobTitle}
           </h3>
-          <p>{r.notes}</p>
-          <a href={r.jobLink}></a>
-          <ApplyForm referralId={r.referrerId!} />
+          <p className="referral-notes">{r.notes}</p>
+          {r.referrerId !== undefined && r.postId !== undefined && (
+            <ApplyForm referrerId={r.referrerId} postId={r.postId} />
+          )}
         </div>
       ))}
     </div>
   );
 }
 
-function ApplyForm({ referralId }: { referralId: number }) {
-  const [resumeLink, setResumeLink] = useState("");
+function ApplyForm({ referrerId, postId }: { referrerId: number; postId: number }) {
+  const [jobLink, setResumeLink] = useState("");
   const { user } = useAuthentication();
 
   const apply = async () => {
-    if (!resumeLink) {
+    if (!jobLink) {
       alert("Please enter resume link.");
       return;
     }
@@ -54,9 +49,10 @@ function ApplyForm({ referralId }: { referralId: number }) {
       endpoint: "/api/v1/referrals/apply",
       method: "POST",
       body: JSON.stringify({
-        referralId,
-        resumeLink,
-        userId: user?.id,
+        postId,
+        referrerId,
+        jobLink,
+        applicantId: [{ id: user?.id }],
       }),
       onSuccess: () => {
         alert("Applied successfully!");
@@ -70,12 +66,11 @@ function ApplyForm({ referralId }: { referralId: number }) {
   };
 
   return (
-    <div>
+    <div className="apply-form">
       <input
         placeholder="Resume Link"
-        value={resumeLink}
+        value={jobLink}
         onChange={(e) => setResumeLink(e.target.value)}
-        style={{ marginRight: "1rem" }}
       />
       <button onClick={apply}>Apply</button>
     </div>
