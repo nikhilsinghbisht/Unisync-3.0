@@ -1,6 +1,6 @@
 export interface Referral {
-  postId?: number;
-  referrerId?: number;
+  postId: number;
+  referrerId: number;
   company?: string;
   jobTitle?: string;
   notes?: string;
@@ -10,6 +10,7 @@ export interface Referral {
 
 export interface ReferralApplication {
   applicantUserId: string;
-  resumeLink: string;
-  referralId: number;
+  jobLink: string;
+  referrerId: number;
 }
+

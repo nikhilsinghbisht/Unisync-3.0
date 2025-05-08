@@ -1,6 +1,8 @@
 import { useState } from "react";
-import { request } from "../../../utils/api";
-import { useAuthentication } from "../../authentication/contexts/AuthenticationContextProvider";
+import { request } from "../../../../utils/api";
+import { useAuthentication } from "../../../authentication/contexts/AuthenticationContextProvider";
+import "../form_css/ReferralForm.scss"
+
 
 export function ReferralForm() {
   const { user } = useAuthentication();
@@ -22,11 +24,11 @@ export function ReferralForm() {
       endpoint: "/api/v1/referrals/add",
       method: "POST",
       body: JSON.stringify({
-        referrerId: user.id,       // renamed from referrer_id
-        jobTitle: position,        // renamed from job_title
+        referrerId: user.id,
+        jobTitle: position,
         company,
-        notes: description,        // same as before
-        jobLink                    // new field added
+        notes: description,
+        jobLink,
       }),
       onSuccess: () => {
         setMessage("Referral posted successfully!");
@@ -43,9 +45,9 @@ export function ReferralForm() {
   };
 
   return (
-    <div>
+    <div className="referral-container">
       <h2>Post a Referral</h2>
-      <form onSubmit={handleSubmit} style={{ display: "flex", flexDirection: "column", gap: "1rem" }}>
+      <form className="referral-form" onSubmit={handleSubmit}>
         <input
           type="text"
           placeholder="Company"
@@ -76,7 +78,8 @@ export function ReferralForm() {
         />
         <button type="submit">Submit Referral</button>
       </form>
-      {message && <p>{message}</p>}
+      {message && <p className="message">{message}</p>}
+
     </div>
   );
 }
