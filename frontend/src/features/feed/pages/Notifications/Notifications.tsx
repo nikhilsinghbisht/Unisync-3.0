@@ -10,12 +10,16 @@ import { LeftSidebar } from "../../components/LeftSidebar/LeftSidebar";
 import { RightSidebar } from "../../components/RightSidebar/RightSidebar";
 import { TimeAgo } from "../../components/TimeAgo/TimeAgo";
 import classes from "./Notifications.module.scss";
+
 const BASE_URL = import.meta.env.VITE_USER_PROFILE_BASE_URL;
 
 enum NotificationType {
   LIKE = "LIKE",
   COMMENT = "COMMENT",
+  REFERRAL_AVAILABLE = "REFERRAL_AVAILABLE",
+  REFERRAL_FILLED = "REFERRAL_FILLED",
 }
+
 export interface INotification {
   id: number;
   recipient: IUser;
@@ -30,6 +34,7 @@ export function Notifications() {
   usePageTitle("Notifications");
   const [notifications, setNotifications] = useState<INotification[]>([]);
   const { user } = useAuthentication();
+
   useEffect(() => {
     const fetchNotifications = async () => {
       await request<INotification[]>({
@@ -56,13 +61,7 @@ export function Notifications() {
           />
         ))}
         {notifications.length === 0 && (
-          <p
-            style={{
-              padding: "1rem",
-            }}
-          >
-            No notifications
-          </p>
+          <p style={{ padding: "1rem" }}>No notifications</p>
         )}
       </div>
       <div className={classes.right}>
@@ -87,38 +86,61 @@ function Notification({
       method: "PUT",
       onSuccess: () => {
         setNotifications((prev) =>
-          prev.map((notification) =>
-            notification.id === notificationId ? { ...notification, isRead: true } : notification
+          prev.map((n) =>
+            n.id === notificationId ? { ...n, read: true } : n
           )
         );
       },
       onFailure: (error) => console.log(error),
     });
   }
+
+  function getMessage(type: NotificationType): string {
+    switch (type) {
+      case NotificationType.LIKE:
+        return "liked your post.";
+      case NotificationType.COMMENT:
+        return "commented on your post.";
+      case NotificationType.REFERRAL_AVAILABLE:
+        return "posted a new referral opportunity.";
+      case NotificationType.REFERRAL_FILLED:
+        return "closed a referral opportunity.";
+      default:
+        return "sent a notification.";
+    }
+  }
+
+  function handleNavigation() {
+    markNotificationAsRead(notification.id);
+    if (
+      notification.type === NotificationType.REFERRAL_AVAILABLE ||
+      notification.type === NotificationType.REFERRAL_FILLED
+    ) {
+      navigate(`/referrals/${notification.resourceId}`);
+    } else {
+      navigate(`/posts/${notification.resourceId}`);
+    }
+  }
+
   return (
     <button
-      onClick={() => {
-        markNotificationAsRead(notification.id);
-        navigate(`/posts/${notification.resourceId}`);
-      }}
+      onClick={handleNavigation}
       className={
         notification.read ? classes.notification : `${classes.notification} ${classes.unread}`
       }
     >
       <img
-        src={notification.actor.profilePicture ? `${BASE_URL}${notification.actor.profilePicture}` : "/avatar.svg"}
-
+        src={
+          notification.actor.profilePicture
+            ? `${BASE_URL}${notification.actor.profilePicture}`
+            : "/avatar.svg"
+        }
         alt=""
         className={classes.avatar}
       />
-
-      <p
-        style={{
-          marginRight: "auto",
-        }}
-      >
+      <p style={{ marginRight: "auto" }}>
         <strong>{notification.actor.firstName + " " + notification.actor.lastName}</strong>{" "}
-        {notification.type === NotificationType.LIKE ? "liked" : "commented on"} your post.
+        {getMessage(notification.type)}
       </p>
       <TimeAgo date={notification.creationDate} />
     </button>
