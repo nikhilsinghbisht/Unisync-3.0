@@ -76,6 +76,7 @@ public class ReferralService {
     }
 
     public List<ReferralRequestDTO> fetchReferralsAppliedByUser(Long userId) {
+
         return referralApplicationRepository.findByApplicantIdWithDetails(userId)
                 .stream()
                 .map(app -> {
@@ -90,8 +91,6 @@ public class ReferralService {
                             .build();
                 })
                 .toList();
-
-
     }
 
     public List<ReferralRequestDTO> fetchReferralsPostedByUser(Long postedById) {
@@ -143,7 +142,38 @@ public class ReferralService {
                 .build();
     }
 
+    public List<ReferralRequestDTO> appliedReferrals(Long userId) {
+        List<ReferralApplication> applications = referralApplicationRepository.getApplicationsByApplicant(userId);
 
+        return applications.stream()
+                .map(app -> {
+                    ReferralPost post = app.getReferralPost();
+                    return ReferralRequestDTO.builder()
+                            .postId(post.getId())
+                            .referrerId(post.getReferrer().getId())
+                            .jobTitle(post.getJobTitle())
+                            .company(post.getCompany())
+                            .jobLink(post.getJobLink())
+                            .notes(post.getNotes())
+                            .build();
+                })
+                .toList();
+    }
+
+    public List<ReferralRequestDTO> createdReferrals(Long userId) {
+        List<ReferralPost> posts = referralPostRepository.getPostsByReferrer(userId);
+
+        return posts.stream()
+                .map(post -> ReferralRequestDTO.builder()
+                        .postId(post.getId())
+                        .referrerId(post.getReferrer().getId())
+                        .jobTitle(post.getJobTitle())
+                        .company(post.getCompany())
+                        .jobLink(post.getJobLink())
+                        .notes(post.getNotes())
+                        .build())
+                .toList();
+    }
 }
 
 

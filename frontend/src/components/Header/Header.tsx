@@ -26,8 +26,9 @@ export function Header() {
   const nonReadMessagesCount = conversations.reduce(
     (acc, conversation) =>
       acc +
-      conversation.messages.filter((message) => message.sender.id !== user?.id && !message.isRead)
-        .length,
+      conversation.messages.filter(
+        (message) => message.sender.id !== user?.id && !message.isRead
+      ).length,
     0
   );
   const [invitations, setInvitations] = useState<IConnection[]>([]);
@@ -61,12 +62,16 @@ export function Header() {
       (message) => {
         const conversation = JSON.parse(message.body);
         setConversations((prevConversations) => {
-          const index = prevConversations.findIndex((c) => c.id === conversation.id);
+          const index = prevConversations.findIndex(
+            (c) => c.id === conversation.id
+          );
           if (index === -1) {
             if (conversation.author.id === user?.id) return prevConversations;
             return [conversation, ...prevConversations];
           }
-          return prevConversations.map((c) => (c.id === conversation.id ? conversation : c));
+          return prevConversations.map((c) =>
+            c.id === conversation.id ? conversation : c
+          );
         });
       }
     );
@@ -94,7 +99,9 @@ export function Header() {
     request<IConnection[]>({
       endpoint: "/api/v1/networking/connections?status=PENDING",
       onSuccess: (data) =>
-        setInvitations(data.filter((c) => !c.seen && c.recipient.id === user?.id)),
+        setInvitations(
+          data.filter((c) => !c.seen && c.recipient.id === user?.id)
+        ),
       onFailure: (error) => console.log(error),
     });
   }, [user?.id]);
@@ -105,7 +112,9 @@ export function Header() {
       (data) => {
         const connection = JSON.parse(data.body);
         setInvitations((connections) =>
-          connection.recipient.id === user?.id ? [connection, ...connections] : connections
+          connection.recipient.id === user?.id
+            ? [connection, ...connections]
+            : connections
         );
       }
     );
@@ -118,7 +127,9 @@ export function Header() {
       "/topic/users/" + user?.id + "/connections/accepted",
       (data) => {
         const connection = JSON.parse(data.body);
-        setInvitations((invitations) => invitations.filter((c) => c.id !== connection.id));
+        setInvitations((invitations) =>
+          invitations.filter((c) => c.id !== connection.id)
+        );
       }
     );
 
@@ -130,7 +141,9 @@ export function Header() {
       "/topic/users/" + user?.id + "/connections/remove",
       (data) => {
         const connection = JSON.parse(data.body);
-        setInvitations((invitations) => invitations.filter((c) => c.id !== connection.id));
+        setInvitations((invitations) =>
+          invitations.filter((c) => c.id !== connection.id)
+        );
       }
     );
 
@@ -142,7 +155,9 @@ export function Header() {
       "/topic/users/" + user?.id + "/connections/seen",
       (data) => {
         const connection = JSON.parse(data.body);
-        setInvitations((invitations) => invitations.filter((c) => c.id !== connection.id));
+        setInvitations((invitations) =>
+          invitations.filter((c) => c.id !== connection.id)
+        );
       }
     );
 
@@ -212,8 +227,11 @@ export function Header() {
                     <path d="M12 16v6H3v-6a3 3 0 013-3h3a3 3 0 013 3zm5.5-3A3.5 3.5 0 1014 9.5a3.5 3.5 0 003.5 3.5zm1 2h-2a2.5 2.5 0 00-2.5 2.5V22h7v-4.5a2.5 2.5 0 00-2.5-2.5zM7.5 2A4.5 4.5 0 1012 6.5 4.49 4.49 0 007.5 2z"></path>
                   </svg>
                   <div>
-                    {invitations.length > 0 && !location.pathname.includes("network") ? (
-                      <span className={classes.badge}>{invitations.length}</span>
+                    {invitations.length > 0 &&
+                    !location.pathname.includes("network") ? (
+                      <span className={classes.badge}>
+                        {invitations.length}
+                      </span>
                     ) : null}
                     <span>Network</span>
                   </div>
@@ -239,8 +257,11 @@ export function Header() {
                     <path d="M16 4H8a7 7 0 000 14h4v4l8.16-5.39A6.78 6.78 0 0023 11a7 7 0 00-7-7zm-8 8.25A1.25 1.25 0 119.25 11 1.25 1.25 0 018 12.25zm4 0A1.25 1.25 0 1113.25 11 1.25 1.25 0 0112 12.25zm4 0A1.25 1.25 0 1117.25 11 1.25 1.25 0 0116 12.25z"></path>
                   </svg>
                   <div>
-                    {nonReadMessagesCount > 0 && !location.pathname.includes("messaging") ? (
-                      <span className={classes.badge}>{nonReadMessagesCount}</span>
+                    {nonReadMessagesCount > 0 &&
+                    !location.pathname.includes("messaging") ? (
+                      <span className={classes.badge}>
+                        {nonReadMessagesCount}
+                      </span>
                     ) : null}
                     <span>Messaging</span>
                   </div>
@@ -267,12 +288,97 @@ export function Header() {
                   </svg>
                   <div>
                     {nonReadNotificationCount > 0 ? (
-                      <span className={classes.badge}>{nonReadNotificationCount}</span>
+                      <span className={classes.badge}>
+                        {nonReadNotificationCount}
+                      </span>
                     ) : null}
                     <span>Notications</span>
                   </div>
                 </NavLink>
-                
+              </li>
+              <li className={classes.moreMenu}>
+                <div className={classes.moreMenuDiv}>
+                  <button
+                    onClick={() => setShowProfileMenu(false)}
+                    className={classes.hamburgerButton}
+                  >
+                    {/* Hamburger SVG */}
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      viewBox="0 0 448 512"
+                      fill="currentColor"
+                      width="20"
+                      height="20"
+                    >
+                      <path d="M0 96C0 78.3 14.3 64 32 64h384c17.7 0 32 14.3 32 32s-14.3 32-32 32H32C14.3 128 0 113.7 0 96zm0 160c0-17.7 14.3-32 32-32h384c17.7 0 32 14.3 32 32s-14.3 32-32 32H32c-17.7 0-32-14.3-32-32zm416 160c17.7 0 32 14.3 32 32s-14.3 32-32 32H32c-17.7 0-32-14.3-32-32s14.3-32 32-32h384z" />
+                    </svg>
+                  </button>
+                  <div>
+                    <span>Menu</span>
+                  </div>
+                </div>
+                <ul className={classes.dropdown}>
+                  <li>
+                    <NavLink
+                      to="/referral"
+                      className={({ isActive }) =>
+                        isActive ? classes.active : ""
+                      }
+                    >
+                      {/* Referral SVG */}
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        viewBox="0 0 24 24"
+                        fill="currentColor"
+                        width="18"
+                        height="18"
+                      >
+                        <path d="M12 2a10 10 0 00-3.16 19.49c.5.09.68-.22.68-.48v-1.7c-2.78.6-3.37-1.34-3.37-1.34-.45-1.16-1.1-1.47-1.1-1.47-.9-.62.07-.61.07-.61 1 .07 1.52 1.03 1.52 1.03.9 1.54 2.36 1.1 2.94.84.09-.65.35-1.1.63-1.35-2.22-.25-4.56-1.11-4.56-4.93 0-1.09.39-1.98 1.03-2.68-.1-.25-.45-1.27.1-2.65 0 0 .84-.27 2.75 1.02A9.5 9.5 0 0112 6.8a9.5 9.5 0 012.5.34c1.91-1.29 2.75-1.02 2.75-1.02.55 1.38.2 2.4.1 2.65.64.7 1.03 1.59 1.03 2.68 0 3.83-2.34 4.67-4.58 4.92.36.31.68.91.68 1.84v2.73c0 .26.18.58.69.48A10 10 0 0012 2z" />
+                      </svg>
+                      <span>Referral</span>
+                    </NavLink>
+                  </li>
+                  <li>
+                    <NavLink
+                      to="/news"
+                      className={({ isActive }) =>
+                        isActive ? classes.active : ""
+                      }
+                    >
+                      {/* News SVG */}
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        viewBox="0 0 24 24"
+                        fill="currentColor"
+                        width="18"
+                        height="18"
+                      >
+                        <path d="M21 6.5V5a2 2 0 00-2-2H5a2 2 0 00-2 2v1.5H2V20a2 2 0 002 2h16a2 2 0 002-2V6.5h-1zM5 5h14v1.5H5V5zm0 3h14v12H5V8z" />
+                      </svg>
+                      <span>News</span>
+                    </NavLink>
+                  </li>
+                  <li>
+                    <NavLink
+                      to="/jobs"
+                      className={({ isActive }) =>
+                        isActive ? classes.active : ""
+                      }
+                    >
+                      {/* Suitcase SVG for Jobs */}
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        viewBox="0 0 24 24"
+                        fill="currentColor"
+                        width="18"
+                        height="18"
+                      >
+                        <path d="M18 6h-2V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v2H6a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V8a2 2 0 00-2-2zM10 4h4v2h-4V4zm8 14H6V8h12v10z" />
+                      </svg>
+                      <span>Jobs</span>
+                    </NavLink>
+                  </li>
+                </ul>
               </li>
             </ul>
           ) : null}
@@ -284,7 +390,11 @@ export function Header() {
               setShowProfileMenu(false);
             }}
           >
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512" fill="currentColor">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              viewBox="0 0 448 512"
+              fill="currentColor"
+            >
               <path d="M0 96C0 78.3 14.3 64 32 64l384 0c17.7 0 32 14.3 32 32s-14.3 32-32 32L32 128C14.3 128 0 113.7 0 96zM0 256c0-17.7 14.3-32 32-32l384 0c17.7 0 32 14.3 32 32s-14.3 32-32 32L32 288c-17.7 0-32-14.3-32-32zM448 416c0 17.7-14.3 32-32 32L32 448c-17.7 0-32-14.3-32-32s14.3-32 32-32l384 0c17.7 0 32 14.3 32 32z" />
             </svg>
             <span>Menu</span>

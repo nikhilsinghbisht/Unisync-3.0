@@ -1,4 +1,4 @@
-package com.linkedin.backend.features.technews.dto;
+package com.linkedin.backend.features.news.dto;
 
 import lombok.Builder;
 import lombok.Data;
