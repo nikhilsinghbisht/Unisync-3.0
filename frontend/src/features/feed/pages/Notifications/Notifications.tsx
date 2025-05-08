@@ -111,12 +111,14 @@ function Notification({
   }
 
   function handleNavigation() {
+    console.log("Notification type:", notification.type);
+  console.log("Notification resourceId:", notification.resourceId);
     markNotificationAsRead(notification.id);
     if (
       notification.type === NotificationType.REFERRAL_AVAILABLE ||
       notification.type === NotificationType.REFERRAL_FILLED
     ) {
-      navigate(`/referrals/${notification.resourceId}`);
+      navigate(`/referral/${notification.resourceId}`);
     } else {
       navigate(`/posts/${notification.resourceId}`);
     }

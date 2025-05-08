@@ -10,7 +10,6 @@ import com.linkedin.backend.features.referrals.model.ReferralPost;
 import com.linkedin.backend.features.referrals.repository.ReferralApplicationRepository;
 import com.linkedin.backend.features.referrals.repository.ReferralPostRepository;
 import jakarta.persistence.EntityNotFoundException;
-import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -131,6 +130,13 @@ public class ReferralService {
                         .build())
                 .map(referralApplicationRepository::save)
                 .toList();
+
+        User referrer = referralPost.getReferrer();
+        for (User applicant : applicants) {
+            if (!referrer.getId().equals(applicant.getId())) {
+                notificationService.sendReferralFilledNotification(applicant, referrer, referralPost.getId());
+            }
+        }
 
         return ReferralRequestResponse.builder()
                 .message("Referral applications submitted successfully.")

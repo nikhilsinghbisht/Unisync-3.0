@@ -131,7 +131,7 @@ public class NotificationService {
     public void sendConnectionSeenNotification(Long id, Connection connection) {
         messagingTemplate.convertAndSend("/topic/users/" + id + "/connections/seen", connection);
     }
-    public void sendReferralAvailableNotification(User actor, User recipient, Long referralId) {
+    public void sendReferralAvailableNotification(User actor, User recipient, Long  resourceId) {
         if (actor.getId().equals(recipient.getId())) {
             return;
         }
@@ -140,13 +140,13 @@ public class NotificationService {
                 actor,
                 recipient,
                 NotificationType.REFERRAL_AVAILABLE,
-                referralId
+                resourceId
         );
         notificationRepository.save(notification);
         messagingTemplate.convertAndSend("/topic/users/" + recipient.getId() + "/notifications", notification);
     }
 
-    public void sendReferralFilledNotification(User actor, User recipient, Long referralId) {
+    public void sendReferralFilledNotification(User actor, User recipient, Long  resourceId) {
         if (actor.getId().equals(recipient.getId())) {
             return;
         }
@@ -155,7 +155,7 @@ public class NotificationService {
                 actor,
                 recipient,
                 NotificationType.REFERRAL_FILLED,
-                referralId
+                resourceId
         );
         notificationRepository.save(notification);
         messagingTemplate.convertAndSend("/topic/users/" + recipient.getId() + "/notifications", notification);
