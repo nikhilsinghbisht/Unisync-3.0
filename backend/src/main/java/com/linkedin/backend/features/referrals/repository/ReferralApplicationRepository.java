@@ -8,6 +8,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import java.util.Arrays;
 import java.util.List;
 
 @Repository
@@ -18,4 +19,9 @@ public interface ReferralApplicationRepository extends JpaRepository<ReferralApp
 
     @Query("SELECT ra.applicant FROM ReferralApplication ra JOIN ra.referralPost rp WHERE rp.id = :postedById")
     List<User> findByReferrersByPostId(@Param("postedById") Long postedById);
+
+    List<User> findByApplicantId(@Param("applicant")Long applicant);
+
+    @Query("SELECT a FROM ReferralApplication a WHERE a.applicant.id = :applicantId")
+    List<ReferralApplication> getApplicationsByApplicant(@Param("applicantId") Long applicantId);
 }

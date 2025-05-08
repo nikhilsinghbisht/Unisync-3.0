@@ -1,29 +1,29 @@
 package com.linkedin.backend.features.notifications.model;
 
-import java.time.LocalDateTime;
-
+import com.linkedin.backend.features.authentication.model.User;
+import jakarta.persistence.*;
 import org.hibernate.annotations.CreationTimestamp;
 
-import com.linkedin.backend.features.authentication.model.User;
-
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.ManyToOne;
+import java.time.LocalDateTime;
 
 @Entity
 public class Notification {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
     @ManyToOne
     private User recipient;
+
     @ManyToOne
     private User actor;
+
     private boolean isRead;
-    private NotificationType type;
-    private Long resourceId;
+
+    private NotificationType type; // Includes REFERRAL_AVAILABLE and REFERRAL_FILLED
+
+    private Long resourceId; // Can represent the referral ID
 
     @CreationTimestamp
     private LocalDateTime creationDate;
@@ -36,9 +36,7 @@ public class Notification {
         this.resourceId = resourceId;
     }
 
-    public Notification() {
-
-    }
+    public Notification() {}
 
     public Long getId() {
         return id;

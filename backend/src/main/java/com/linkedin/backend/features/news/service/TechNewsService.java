@@ -1,7 +1,7 @@
-package com.linkedin.backend.features.technews.service;
+package com.linkedin.backend.features.news.service;
 
-import com.linkedin.backend.features.technews.dto.FullApiResponse;
-import com.linkedin.backend.features.technews.model.TechNewsResponse;
+import com.linkedin.backend.features.news.dto.FullApiResponse;
+import com.linkedin.backend.features.news.model.TechNewsResponse;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
