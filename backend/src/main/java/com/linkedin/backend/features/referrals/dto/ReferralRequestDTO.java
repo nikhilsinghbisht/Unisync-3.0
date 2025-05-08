@@ -1,5 +1,6 @@
 package com.linkedin.backend.features.referrals.dto;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.linkedin.backend.features.authentication.model.User;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -12,6 +13,7 @@ import java.util.List;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class ReferralRequestDTO {
     private Long postId;
     private Long referrerId;
@@ -19,5 +21,7 @@ public class ReferralRequestDTO {
     private String company;
     private String jobLink;
     private String notes;
+    private String status;
+    private String createdAt;
     private List<User> applicantId;
 }
