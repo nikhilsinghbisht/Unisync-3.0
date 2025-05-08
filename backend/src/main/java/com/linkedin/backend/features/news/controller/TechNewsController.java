@@ -1,7 +1,7 @@
-package com.linkedin.backend.features.technews.controller;
+package com.linkedin.backend.features.news.controller;
 
-import com.linkedin.backend.features.technews.model.TechNewsResponse;
-import com.linkedin.backend.features.technews.service.TechNewsService;
+import com.linkedin.backend.features.news.model.TechNewsResponse;
+import com.linkedin.backend.features.news.service.TechNewsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;

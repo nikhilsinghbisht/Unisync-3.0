@@ -15,4 +15,7 @@ public interface ReferralPostRepository extends JpaRepository<ReferralPost, Long
 
     @Query("SELECT rp FROM ReferralPost rp JOIN FETCH rp.referrer WHERE rp.referrer.id = :referrerId")
     List<ReferralPost> findByReferrerIdWithReferrer(@Param("referrerId") Long referrerId);
+
+    @Query("SELECT r FROM ReferralPost r WHERE r.referrer.id = :referrerId")
+    List<ReferralPost> getPostsByReferrer(@Param("referrerId") Long referrerId);
 }

@@ -1,6 +1,6 @@
-package com.linkedin.backend.features.technews.model;
+package com.linkedin.backend.features.news.model;
 
-import com.linkedin.backend.features.technews.dto.Article;
+import com.linkedin.backend.features.news.dto.Article;
 import lombok.Builder;
 import lombok.Data;
 
