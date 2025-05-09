@@ -20,7 +20,7 @@ public class ReferralRequestDTO {
     private Long referrerId;
     private String jobTitle;
     private String company;
-    private String jobLink;
+    private String link;
     private String notes;
     private String status;
     private String createdAt;

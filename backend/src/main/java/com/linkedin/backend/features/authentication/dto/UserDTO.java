@@ -14,4 +14,5 @@ public class UserDTO {
     private String lastName;
     private String company;
     private String username;
+    private String resumeLink;
 }

@@ -16,6 +16,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Map;
 
 @Slf4j
 @Service
@@ -46,7 +47,7 @@ public class ReferralService {
                 .createdAt(LocalDateTime.now())
                 .updatedAt(LocalDateTime.now())
                 .company(requestDTO.getCompany())
-                .jobLink(requestDTO.getJobLink())
+                .jobLink(requestDTO.getLink())
                 .notes(requestDTO.getNotes())
                 .jobTitle(requestDTO.getJobTitle())
                 .build();
@@ -72,7 +73,7 @@ public class ReferralService {
                         .referrerId(post.getReferrer().getId())
                         .company(post.getCompany())
                         .jobTitle(post.getJobTitle())
-                        .jobLink(post.getJobLink())
+                        .link(post.getJobLink())
                         .notes(post.getNotes())
                         .build())
                 .toList();
@@ -82,16 +83,23 @@ public class ReferralService {
         return referralPostRepository.findByReferrerIdWithReferrer(postedById)
                 .stream()
                 .map(post -> {
-                    List<UserDTO> applicantDTOs = referralApplicationRepository.findByReferrersByPostId(post.getId())
-                            .stream()
-                            .map(user -> UserDTO.builder()
-                                    .id(user.getId())
-                                    .email(user.getEmail())
-                                    .firstName(user.getFirstName())
-                                    .lastName(user.getLastName())
-                                    .company(user.getCompany())
-                                    .username(user.getUsername())
-                                    .build())
+                    List<Object[]> applicantDataList = referralApplicationRepository.findByReferrersByPostId(post.getId());
+
+                    List<UserDTO> applicantDTOs = applicantDataList.stream()
+                            .map(records -> {
+                                User user = (User) records[0];
+                                String resumeLink = (String) records[1];
+
+                                return UserDTO.builder()
+                                        .id(user.getId())
+                                        .email(user.getEmail())
+                                        .firstName(user.getFirstName())
+                                        .lastName(user.getLastName())
+                                        .company(user.getCompany())
+                                        .username(user.getUsername())
+                                        .resumeLink(resumeLink)
+                                        .build();
+                            })
                             .toList();
 
                     return ReferralRequestDTO.builder()
@@ -99,13 +107,13 @@ public class ReferralService {
                             .referrerId(post.getReferrer().getId())
                             .company(post.getCompany())
                             .jobTitle(post.getJobTitle())
-                            .jobLink(post.getJobLink())
                             .notes(post.getNotes())
                             .applicantId(applicantDTOs)
                             .build();
                 })
                 .toList();
     }
+
 
 
 
@@ -119,6 +127,7 @@ public class ReferralService {
                 .map(applicant -> ReferralApplication.builder()
                         .referralPost(referralPost)
                         .applicant(applicant)
+                        .resumeLink(referralRequestDTO.getLink())
                         .status("PENDING")
                         .appliedAt(LocalDateTime.now())
                         .build())
@@ -146,7 +155,7 @@ public class ReferralService {
                             .referrerId(post.getReferrer().getId())
                             .jobTitle(post.getJobTitle())
                             .company(post.getCompany())
-                            .jobLink(post.getJobLink())
+                            .link(post.getJobLink())
                             .status(post.getStatus())
                             .createdAt(post.getCreatedAt().toString())
                             .notes(post.getNotes())
@@ -164,7 +173,7 @@ public class ReferralService {
                         .referrerId(post.getReferrer().getId())
                         .jobTitle(post.getJobTitle())
                         .company(post.getCompany())
-                        .jobLink(post.getJobLink())
+                        .link(post.getJobLink())
                         .notes(post.getNotes())
                         .status(post.getStatus())
                         .createdAt(post.getCreatedAt().toString())
