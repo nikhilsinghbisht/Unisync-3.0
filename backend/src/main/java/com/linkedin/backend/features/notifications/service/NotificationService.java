@@ -69,11 +69,11 @@ public class NotificationService {
             return;
         }
 
-        Notification notification = new Notification(
-                author,
-                recipient,
-                NotificationType.COMMENT,
-                resourceId);
+        Notification notification = Notification.builder()
+                .actor(author)
+                .type(NotificationType.COMMENT)
+                .recipient(recipient)
+                .resourceId(resourceId).build();
         notificationRepository.save(notification);
 
         messagingTemplate.convertAndSend("/topic/users/" + recipient.getId() + "/notifications", notification);
@@ -84,11 +84,11 @@ public class NotificationService {
             return;
         }
 
-        Notification notification = new Notification(
-                author,
-                recipient,
-                NotificationType.LIKE,
-                resourceId);
+        Notification notification = Notification.builder()
+                .actor(author)
+                .type(NotificationType.LIKE)
+                .recipient(recipient)
+                .resourceId(resourceId).build();
         notificationRepository.save(notification);
 
         messagingTemplate.convertAndSend("/topic/users/" + recipient.getId() + "/notifications", notification);
@@ -136,12 +136,12 @@ public class NotificationService {
             return;
         }
 
-        Notification notification = new Notification(
-                actor,
-                recipient,
-                NotificationType.REFERRAL_AVAILABLE,
-                resourceId
-        );
+        Notification notification = Notification.builder()
+                .actor(actor)
+                .type(NotificationType.REFERRAL_AVAILABLE)
+                .recipient(recipient)
+                .resourceId(resourceId).build();
+
         notificationRepository.save(notification);
         messagingTemplate.convertAndSend("/topic/users/" + recipient.getId() + "/notifications", notification);
     }
@@ -150,13 +150,12 @@ public class NotificationService {
         if (actor.getId().equals(recipient.getId())) {
             return;
         }
+        Notification notification = Notification.builder()
+                .actor(actor)
+                .type(NotificationType.REFERRAL_FILLED)
+                .recipient(recipient)
+                .resourceId(resourceId).build();
 
-        Notification notification = new Notification(
-                actor,
-                recipient,
-                NotificationType.REFERRAL_FILLED,
-                resourceId
-        );
         notificationRepository.save(notification);
         messagingTemplate.convertAndSend("/topic/users/" + recipient.getId() + "/notifications", notification);
     }
