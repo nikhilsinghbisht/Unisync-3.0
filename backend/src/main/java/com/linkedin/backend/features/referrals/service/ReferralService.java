@@ -32,7 +32,6 @@ public class ReferralService {
         this.referralApplicationRepository = referralApplicationRepository;
         this.userRepository = userRepository;
         this.notificationService = notificationService;
-        ;
     }
 
     public ReferralRequestResponse createReferral(ReferralRequestDTO requestDTO) {

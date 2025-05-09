@@ -28,7 +28,7 @@ public class Notification {
     private User actor;
 
     private boolean isRead;
-    
+
     @Enumerated(EnumType.STRING)
     private NotificationType type;
 
