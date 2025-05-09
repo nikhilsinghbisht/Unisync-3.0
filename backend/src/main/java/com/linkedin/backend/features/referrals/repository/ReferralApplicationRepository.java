@@ -14,13 +14,8 @@ import java.util.List;
 @Repository
 public interface ReferralApplicationRepository extends JpaRepository<ReferralApplication, Long> {
 
-    @Query("SELECT ra FROM ReferralApplication ra JOIN FETCH ra.referralPost rp JOIN FETCH rp.referrer WHERE ra.applicant.id = :applicantId")
-    List<ReferralApplication> findByApplicantIdWithDetails(@Param("applicantId") Long applicantId);
-
     @Query("SELECT ra.applicant FROM ReferralApplication ra JOIN ra.referralPost rp WHERE rp.id = :postedById")
     List<User> findByReferrersByPostId(@Param("postedById") Long postedById);
-
-    List<User> findByApplicantId(@Param("applicant")Long applicant);
 
     @Query("SELECT a FROM ReferralApplication a WHERE a.applicant.id = :applicantId")
     List<ReferralApplication> getApplicationsByApplicant(@Param("applicantId") Long applicantId);
