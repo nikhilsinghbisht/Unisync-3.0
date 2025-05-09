@@ -9,10 +9,8 @@ import java.util.List;
 
 public interface NotificationRepository extends JpaRepository<Notification, Long> {
     List<Notification> findByRecipient(User recipient);
-
     List<Notification> findByRecipientOrderByCreationDateDesc(User user);
     List<Notification> findByRecipientAndType(User recipient, NotificationType type);
-
     List<Notification> findByTypeOrderByCreationDateDesc(NotificationType type);
 
 }

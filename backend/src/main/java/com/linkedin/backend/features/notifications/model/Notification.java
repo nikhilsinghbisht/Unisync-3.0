@@ -2,11 +2,19 @@ package com.linkedin.backend.features.notifications.model;
 
 import com.linkedin.backend.features.authentication.model.User;
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.hibernate.annotations.CreationTimestamp;
 
 import java.time.LocalDateTime;
 
+@Data
+@Builder
+@AllArgsConstructor
 @Entity
+@NoArgsConstructor
 public class Notification {
 
     @Id
@@ -20,77 +28,13 @@ public class Notification {
     private User actor;
 
     private boolean isRead;
+    
+    @Enumerated(EnumType.STRING)
+    private NotificationType type;
 
-    private NotificationType type; // Includes REFERRAL_AVAILABLE and REFERRAL_FILLED
-
-    private Long resourceId; // Can represent the referral ID
+    private Long resourceId;
 
     @CreationTimestamp
     private LocalDateTime creationDate;
 
-    public Notification(User actor, User recipient, NotificationType type, Long resourceId) {
-        this.actor = actor;
-        this.recipient = recipient;
-        this.type = type;
-        this.isRead = false;
-        this.resourceId = resourceId;
-    }
-
-    public Notification() {}
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public boolean isRead() {
-        return isRead;
-    }
-
-    public void setRead(boolean read) {
-        isRead = read;
-    }
-
-    public User getRecipient() {
-        return recipient;
-    }
-
-    public void setRecipient(User recipient) {
-        this.recipient = recipient;
-    }
-
-    public User getActor() {
-        return actor;
-    }
-
-    public void setActor(User actor) {
-        this.actor = actor;
-    }
-
-    public NotificationType getType() {
-        return type;
-    }
-
-    public void setType(NotificationType type) {
-        this.type = type;
-    }
-
-    public Long getResourceId() {
-        return resourceId;
-    }
-
-    public void setResourceId(Long resourceId) {
-        this.resourceId = resourceId;
-    }
-
-    public LocalDateTime getCreationDate() {
-        return creationDate;
-    }
-
-    public void setCreationDate(LocalDateTime creationDate) {
-        this.creationDate = creationDate;
-    }
 }
