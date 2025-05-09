@@ -10,11 +10,13 @@ import com.linkedin.backend.features.referrals.model.ReferralPost;
 import com.linkedin.backend.features.referrals.repository.ReferralApplicationRepository;
 import com.linkedin.backend.features.referrals.repository.ReferralPostRepository;
 import jakarta.persistence.EntityNotFoundException;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.List;
 
+@Slf4j
 @Service
 public class ReferralService {
 
@@ -25,11 +27,12 @@ public class ReferralService {
 
     public ReferralService(ReferralPostRepository referralPostRepository,
                            ReferralApplicationRepository referralApplicationRepository,
-                           UserRepository userRepository,  NotificationService notificationService) {
+                           UserRepository userRepository, NotificationService notificationService) {
         this.referralPostRepository = referralPostRepository;
         this.referralApplicationRepository = referralApplicationRepository;
         this.userRepository = userRepository;
-        this.notificationService = notificationService;;
+        this.notificationService = notificationService;
+        ;
     }
 
     public ReferralRequestResponse createReferral(ReferralRequestDTO requestDTO) {
@@ -111,15 +114,12 @@ public class ReferralService {
     }
 
 
-
     public ReferralRequestResponse applyReferral(ReferralRequestDTO referralRequestDTO) {
         ReferralPost referralPost = referralPostRepository.findById(referralRequestDTO.getPostId())
                 .orElseThrow(() -> new EntityNotFoundException("Referral post not found"));
-
         List<User> applicants = referralRequestDTO.getApplicantId().stream()
                 .map(user -> userRepository.findById(user.getId())
                         .orElseThrow(() -> new EntityNotFoundException("User not found with ID: " + user.getId()))).toList();
-
         applicants.stream()
                 .map(applicant -> ReferralApplication.builder()
                         .referralPost(referralPost)
@@ -129,14 +129,12 @@ public class ReferralService {
                         .build())
                 .map(referralApplicationRepository::save)
                 .toList();
-
         User referrer = referralPost.getReferrer();
         for (User applicant : applicants) {
             if (!referrer.getId().equals(applicant.getId())) {
                 notificationService.sendReferralFilledNotification(applicant, referrer, referralPost.getId());
             }
         }
-
         return ReferralRequestResponse.builder()
                 .message("Referral applications submitted successfully.")
                 .build();
@@ -144,7 +142,7 @@ public class ReferralService {
 
     public List<ReferralRequestDTO> appliedReferrals(Long userId) {
         List<ReferralApplication> applications = referralApplicationRepository.getApplicationsByApplicant(userId);
-
+        log.info("Applied referrals fetched for userId: {}", userId);
         return applications.stream()
                 .map(app -> {
                     ReferralPost post = app.getReferralPost();
@@ -154,6 +152,8 @@ public class ReferralService {
                             .jobTitle(post.getJobTitle())
                             .company(post.getCompany())
                             .jobLink(post.getJobLink())
+                            .status(post.getStatus())
+                            .createdAt(post.getCreatedAt().toString())
                             .notes(post.getNotes())
                             .build();
                 })
@@ -162,7 +162,7 @@ public class ReferralService {
 
     public List<ReferralRequestDTO> createdReferrals(Long userId) {
         List<ReferralPost> posts = referralPostRepository.getPostsByReferrer(userId);
-
+        log.info("Created referrals fetched for userId: {}", userId);
         return posts.stream()
                 .map(post -> ReferralRequestDTO.builder()
                         .postId(post.getId())
@@ -171,8 +171,25 @@ public class ReferralService {
                         .company(post.getCompany())
                         .jobLink(post.getJobLink())
                         .notes(post.getNotes())
+                        .status(post.getStatus())
+                        .createdAt(post.getCreatedAt().toString())
                         .build())
                 .toList();
+    }
+
+    public ReferralRequestResponse deleteReferral(Long userId, Long postId) {
+        ReferralPost referralPost = referralPostRepository.findById(postId)
+                .orElseThrow(() -> new EntityNotFoundException("Referral post not found"));
+
+        if (!referralPost.getReferrer().getId().equals(userId)) {
+            throw new IllegalArgumentException("User is not authorized to delete this referral post");
+        }
+
+        referralPostRepository.delete(referralPost);
+        log.info("Referral post with ID {} deleted successfully", postId);
+        return ReferralRequestResponse.builder()
+                .message("Referral post deleted successfully")
+                .build();
     }
 }
 

@@ -9,10 +9,6 @@ export function ReferralFormPersonal() {
   const { user } = useAuthentication();
   const userId = user?.id;
 
-  // State to trigger deletion
-  // const [referralToDelete, setReferralToDelete] = useState<number | null>(null);
-
-  // Fetch referrals
   useEffect(() => {
     if (!userId) return;
 
@@ -24,30 +20,6 @@ export function ReferralFormPersonal() {
       },
     });
   }, [userId]);
-
-  // Delete referral when referralToDelete changes
-  // useEffect(() => {
-  //   if (!referralToDelete || !userId) return;
-
-  //   request({
-  //     method: "DELETE",
-  //     endpoint: "/api/v1/referrals/delete",
-  //     data: {
-  //       userId,
-  //       referrerId: referralToDelete,
-  //     },
-  //     onSuccess: () => {
-  //       setReferrals((prev) =>
-  //         prev.filter((ref) => ref.referrerId !== referralToDelete)
-  //       );
-  //       setReferralToDelete(null); // reset after delete
-  //     },
-  //     onFailure: (error) => {
-  //       console.error("Failed to delete referral:", error);
-  //       setReferralToDelete(null); // reset even if it fails
-  //     },
-  //   });
-  // }, [referralToDelete, userId]);
 
   return (
     <>
@@ -62,12 +34,7 @@ export function ReferralFormPersonal() {
                 <a href={ref.jobLink} target="_blank" rel="noopener noreferrer">
                   View Job
                 </a>
-                {/* <button
-                  className="ref-delete"
-                  onClick={() => setReferralToDelete(ref.referrerId)}
-                >
-                  Delete
-                </button> */}
+                <button className="ref-delete">Delete</button>
               </div>
             ))}
           </div>

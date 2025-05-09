@@ -4,5 +4,6 @@ public enum NotificationType {
     LIKE,
     COMMENT,
     REFERRAL_AVAILABLE,
-    REFERRAL_FILLED
+    REFERRAL_FILLED,
+
 }
