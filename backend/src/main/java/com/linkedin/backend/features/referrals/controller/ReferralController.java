@@ -59,4 +59,10 @@ public class ReferralController {
         return ResponseEntity.ok(referrals);
     }
 
+    @GetMapping("/delete")
+    public ResponseEntity<ReferralRequestResponse> deleteReferral(@RequestParam("userId")Long userId,
+                                                 @RequestParam("postId")Long postId){
+        ReferralRequestResponse referrals = referralService.deleteReferral(userId,postId);
+        return ResponseEntity.ok(referrals);
+    }
 }

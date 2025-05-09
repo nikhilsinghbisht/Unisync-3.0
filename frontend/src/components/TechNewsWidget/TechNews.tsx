@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { request } from "../../utils/api";
+import './TechNews.scss';
 
 type Article = {
   source: { id: string | null; name: string };
@@ -36,61 +37,49 @@ const TechNews: React.FC = () => {
     });
   }, []);
 
-  if (loading) return <p className="text-center mt-10 text-lg font-serif">Loading tech news...</p>;
+  if (loading) return <p className="loading-text">Loading tech news...</p>;
 
   return (
-    <div className="px-6 py-10 min-h-screen bg-gradient-to-br from-gray-100 to-blue-50 font-[Times_New_Roman]">
-  <h1 className="text-center text-blue-900 font-extrabold text-5xl mb-12 border-b-4 border-blue-600 inline-block pb-2">
-    📰 Latest Tech News
-  </h1>
+    <div className="tech-news-container">
+      <h1>📰 Latest Tech News</h1>
 
-
-
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+      <div className="news-grid">
         {news.map((article, index) => (
-          <div
-            key={index}
-            className="bg-white shadow-xl rounded-xl overflow-hidden hover:shadow-2xl transition-all duration-300"
-          >
+          <div key={index} className="news-card">
             {article.urlToImage && (
-              <img
-                src={article.urlToImage}
-                alt={article.title}
-                className="w-full h-28 object-cover"
-                onError={(e) => (e.currentTarget.style.display = 'none')}
-              />
+              <div className="image-wrapper">
+                <img
+                  src={article.urlToImage}
+                  alt={article.title}
+                  onError={(e) => (e.currentTarget.style.display = 'none')}
+                />
+              </div>
             )}
-            <div className="p-5">
-              <h2 className="text-lg font-semibold text-gray-800">{article.title}</h2>
-              <p className="text-gray-700 text-sm mt-2 line-clamp-3">{article.description}</p>
+            <div className="content">
+              <h2>{article.title}</h2>
+              <p>{article.description}</p>
 
-              <div className="mt-4 flex justify-between items-center text-sm text-gray-600">
-                <span className="italic">By {article.author || 'Unknown'}</span>
+              <div className="author-time">
+                <span className="author">By {article.author || 'Unknown'}</span>
+                <div className="date-time">
+                  <span className="date">
+                    📅 {new Date(article.publishedAt).toLocaleDateString(undefined, {
+                      weekday: 'short',
+                      year: 'numeric',
+                      month: 'short',
+                      day: 'numeric',
+                    })}
+                  </span>
+                  <span className="time">
+                    🕒 {new Date(article.publishedAt).toLocaleTimeString(undefined, {
+                      hour: '2-digit',
+                      minute: '2-digit',
+                    })}
+                  </span>
+                </div>
               </div>
 
-              <div className="mt-2 text-xs text-gray-500">
-                <span className="block mb-1">
-                  📅 {new Date(article.publishedAt).toLocaleDateString(undefined, {
-                    weekday: 'short',
-                    year: 'numeric',
-                    month: 'short',
-                    day: 'numeric',
-                  })}
-                </span>
-                <span>
-                  🕒 {new Date(article.publishedAt).toLocaleTimeString(undefined, {
-                    hour: '2-digit',
-                    minute: '2-digit',
-                  })}
-                </span>
-              </div>
-
-              <a
-                href={article.url}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="inline-block mt-4 font-bold text-blue-700 hover:underline"
-              >
+              <a href={article.url} target="_blank" rel="noopener noreferrer" className="read-more-btn">
                 Read More →
               </a>
             </div>
