@@ -8,10 +8,7 @@ import com.linkedin.backend.features.notifications.model.Notification;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotNull;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.hibernate.search.mapper.pojo.mapping.definition.annotation.FullTextField;
 import org.hibernate.search.mapper.pojo.mapping.definition.annotation.Indexed;
 
@@ -23,6 +20,11 @@ import java.util.List;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
+@ToString(exclude = {
+        "receivedNotifications", "actedNotifications", "posts",
+        "conversationsAsAuthor", "conversationsAsRecipient",
+        "initiatedConnections", "receivedConnections"
+})
 public class User {
 
     @Id
@@ -106,9 +108,4 @@ public class User {
         this.password = password;
     }
 
-    public void updateProfileCompletionStatus() {
-        this.profileComplete = (this.firstName != null && this.lastName != null &&
-                this.company != null && this.position != null &&
-                this.location != null);
-    }
 }

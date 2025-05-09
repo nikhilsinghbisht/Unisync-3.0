@@ -29,6 +29,8 @@ public class ReferralApplication {
     @JoinColumn(name = "applicant_id", nullable = false)
     private User applicant;
 
+    private String resumeLink;
+
     @Builder.Default
     private String status = "PENDING";
 

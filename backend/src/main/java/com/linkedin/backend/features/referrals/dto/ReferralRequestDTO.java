@@ -1,6 +1,7 @@
 package com.linkedin.backend.features.referrals.dto;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
+import com.linkedin.backend.features.authentication.dto.UserDTO;
 import com.linkedin.backend.features.authentication.model.User;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -19,9 +20,9 @@ public class ReferralRequestDTO {
     private Long referrerId;
     private String jobTitle;
     private String company;
-    private String jobLink;
+    private String link;
     private String notes;
     private String status;
     private String createdAt;
-    private List<User> applicantId;
+    private List<UserDTO> applicantId;
 }

@@ -29,12 +29,6 @@ public class ReferralController {
         return ResponseEntity.ok(referrals);
     }
 
-    @GetMapping("/my-applied/{userId}")
-    public ResponseEntity<List<ReferralRequestDTO>> fetchReferralsAppliedByUser(@PathVariable Long userId) {
-        List<ReferralRequestDTO> referrals = referralService.fetchReferralsAppliedByUser(userId);
-        return ResponseEntity.ok(referrals);
-    }
-
     @GetMapping("/open-to-apply")
     public ResponseEntity<List<ReferralRequestDTO>> fetchOpenToApplyReferrals() {
         List<ReferralRequestDTO> referrals = referralService.fetchOpenToApplyReferrals();
