@@ -3,7 +3,6 @@ import { request } from "../../../../utils/api";
 import { useAuthentication } from "../../../authentication/contexts/AuthenticationContextProvider";
 import "../form_css/ReferralForm.scss"
 
-
 export function ReferralForm() {
   const { user } = useAuthentication();
   const [company, setCompany] = useState("");

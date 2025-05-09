@@ -1,38 +1,31 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { request } from "../../../../utils/api";
+import { useAuthentication } from "../../../authentication/contexts/AuthenticationContextProvider";
+import { Referral } from "../../types";
 import "../form_css/ReferralApplied.scss";
 
-interface Application {
-  company: string;
-  jobTitle: string;
-  jobLink: string;
-  notes: string;
-  postId: number;
-  appliedAt: string;
-}
-
 export function ReferralApplied() {
-  const [applications] = useState<Application[]>([
-    {
-      company: "Google",
-      jobTitle: "Software Engineer",
-      jobLink: "https://careers.google.com/jobs/results/",
-      notes: "Exciting backend role for freshers.",
-      postId: 1,
-      appliedAt: "2025-05-01T10:00:00Z",
-    },
-    {
-      company: "Amazon",
-      jobTitle: "Frontend Developer",
-      jobLink: "https://www.amazon.jobs/en/",
-      notes: "React experience preferred.",
-      postId: 2,
-      appliedAt: "2025-05-03T14:30:00Z",
-    },
-  ]);
+  const [applications, setApplications] = useState<Referral[]>([]);
+  const { user } = useAuthentication();
+  const userId = user?.id;
+
+  useEffect(() => {
+    if (!userId) return;
+
+    request<Referral[]>({
+      endpoint: `/api/v1/referrals/applied?userId=${userId}`,
+      onSuccess: setApplications,
+      onFailure: (error) => {
+        console.error("Failed to fetch referral applications:", error);
+      },
+    });
+  }, [userId]);
 
   return (
     <div className="my-applications-container">
-      <h3 style={{fontSize:"1.5rem" , textAlign:"center" , margin:"15px"}}>Applied Referral Applications</h3>
+      <h3 style={{ fontSize: "1.5rem", textAlign: "center", margin: "15px" }}>
+        Applied Referral Applications
+      </h3>
       {applications.length === 0 ? (
         <p className="no-applications">You haven’t applied for any referrals yet.</p>
       ) : (
@@ -48,9 +41,7 @@ export function ReferralApplied() {
             >
               View Job Posting
             </a>
-            <p className="application-date">
-              Applied on: {new Date(app.appliedAt).toLocaleDateString()}
-            </p>
+            <p>Status - {app.status}</p>
           </div>
         ))
       )}
