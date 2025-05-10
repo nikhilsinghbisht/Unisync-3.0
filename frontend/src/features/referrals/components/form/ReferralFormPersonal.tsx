@@ -52,7 +52,8 @@ export function ReferralFormPersonal() {
               <div className="referral-card" key={ref.postId}>
                 <h4>{ref.company} - {ref.jobTitle}</h4>
                 <p>{ref.notes}</p>
-                <a href={ref.jobLink} target="_blank" rel="noopener noreferrer">
+                console.log("Hello bhai {ref.link}");
+                <a href={ref.link} target="_blank" rel="noopener noreferrer">
                   View Job
                 </a>
                 <button

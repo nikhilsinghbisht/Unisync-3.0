@@ -8,7 +8,7 @@ export function ReferralForm() {
   const [company, setCompany] = useState("");
   const [position, setPosition] = useState("");
   const [description, setDescription] = useState("");
-  const [jobLink, setJobLink] = useState("");
+  const [link, setJobLink] = useState("");
   const [message, setMessage] = useState("");
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -27,7 +27,7 @@ export function ReferralForm() {
         jobTitle: position,
         company,
         notes: description,
-        jobLink,
+        link,
       }),
       onSuccess: () => {
         setMessage("Referral posted successfully!");
@@ -71,7 +71,7 @@ export function ReferralForm() {
         <input
           type="url"
           placeholder="Job Link"
-          value={jobLink}
+          value={link}
           onChange={(e) => setJobLink(e.target.value)}
           required
         />
