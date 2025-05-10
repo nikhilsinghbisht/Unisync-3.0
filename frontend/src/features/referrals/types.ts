@@ -6,7 +6,7 @@ export interface Referral {
   notes?: string;
   jobLink?: string;
   applicantId?: Array<number>;
-  status:string;
+  status: string;
 }
 
 export interface ReferralApplication {
@@ -15,3 +15,14 @@ export interface ReferralApplication {
   referrerId: number;
 }
 
+export interface Applicant {
+  id: number;
+  name: string;
+  email: string;
+  resumeLink?: string;
+}
+
+export interface Props {
+  userId: number;
+  postId: number;
+}
