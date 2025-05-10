@@ -66,9 +66,10 @@ public class ReferralService {
                 .build();
     }
 
-    public List<ReferralRequestDTO> fetchOpenToApplyReferrals() {
+    public List<ReferralRequestDTO> fetchOpenToApplyReferrals(Long userId) {
         return referralPostRepository.findByStatus("OPEN")
                 .stream()
+                .filter(post -> !post.getReferrer().getId().equals(userId))
                 .map(post -> ReferralRequestDTO.builder()
                         .postId(post.getId())
                         .referrerId(post.getReferrer().getId())
@@ -79,6 +80,7 @@ public class ReferralService {
                         .build())
                 .toList();
     }
+
 
     public List<ReferralRequestDTO> fetchReferralsPostedByUser(Long postedById) {
         return referralPostRepository.findByReferrerIdWithReferrer(postedById)
@@ -121,9 +123,15 @@ public class ReferralService {
     public ReferralRequestResponse applyReferral(ReferralRequestDTO referralRequestDTO) {
         ReferralPost referralPost = referralPostRepository.findById(referralRequestDTO.getPostId()).orElseThrow(() ->
                 new EntityNotFoundException("Referral post not found"));
+
+        User referrer = referralPost.getReferrer();
+
         List<User> applicants = referralRequestDTO.getApplicantId().stream()
                 .map(user -> userRepository.findById(user.getId()).orElseThrow(() ->
-                                new EntityNotFoundException("User not found with ID: " + user.getId()))).toList();
+                        new EntityNotFoundException("User not found with ID: " + user.getId())))
+                .filter(applicant -> !applicant.getId().equals(referrer.getId()))
+                .toList();
+
         applicants.stream()
                 .map(applicant -> ReferralApplication.builder()
                         .referralPost(referralPost)
@@ -134,21 +142,23 @@ public class ReferralService {
                         .build())
                 .map(referralApplicationRepository::save)
                 .toList();
-        User referrer = referralPost.getReferrer();
+
         for (User applicant : applicants) {
-            if (!referrer.getId().equals(applicant.getId())) {
-                notificationService.sendReferralFilledNotification(applicant, referrer, referralPost.getId());
-            }
+            notificationService.sendReferralFilledNotification(applicant, referrer, referralPost.getId());
         }
+
         return ReferralRequestResponse.builder()
                 .message("Referral applications submitted successfully.")
                 .build();
     }
 
+
     public List<ReferralRequestDTO> appliedReferrals(Long userId) {
         List<ReferralApplication> applications = referralApplicationRepository.getApplicationsByApplicant(userId);
         log.info("Applied referrals fetched for userId: {}", userId);
+
         return applications.stream()
+                .filter(app -> !app.getReferralPost().getReferrer().getId().equals(userId))
                 .map(app -> {
                     ReferralPost post = app.getReferralPost();
                     return ReferralRequestDTO.builder()
@@ -164,6 +174,7 @@ public class ReferralService {
                 })
                 .toList();
     }
+
 
     public List<ReferralRequestDTO> createdReferrals(Long userId) {
         List<ReferralPost> posts = referralPostRepository.getPostsByReferrer(userId);

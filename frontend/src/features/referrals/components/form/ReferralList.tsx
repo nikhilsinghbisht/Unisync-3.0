@@ -1,21 +1,25 @@
+// ReferralList.tsx
 import { useEffect, useState } from "react";
 import { request } from "../../../../utils/api";
-import { Referral} from "../../types";
+import { Referral } from "../../types";
 import { useAuthentication } from "../../../authentication/contexts/AuthenticationContextProvider";
 import "../form_css/ReferralList.scss"
 
 export function ReferralList() {
   const [referrals, setReferrals] = useState<Referral[]>([]);
+  const { user } = useAuthentication();
 
   useEffect(() => {
+    if (!user?.id) return;
+
     request<Referral[]>({
-      endpoint: "/api/v1/referrals/open-to-apply",
+      endpoint: `/api/v1/referrals/open-to-apply?userId=${user.id}`,
       onSuccess: setReferrals,
       onFailure: (error) => {
         console.error("Failed to fetch referrals:", error);
       },
     });
-  }, []);
+  }, [user?.id]);
 
   return (
     <div className="referral-container">
@@ -26,15 +30,17 @@ export function ReferralList() {
             {r.company} - {r.jobTitle}
           </h3>
           <p className="referral-notes">{r.notes}</p>
-          {r.referrerId !== undefined && r.postId !== undefined && (
-            <ApplyForm referrerId={r.referrerId} postId={r.postId} />
-          )}
+         {r.referrerId !== Number(user?.id) && (
+  <ApplyForm referrerId={r.referrerId} postId={r.postId} />
+)}
+
         </div>
       ))}
     </div>
   );
 }
 
+// 👇 Move ApplyForm BELOW ReferralList
 function ApplyForm({ referrerId, postId }: { referrerId: number; postId: number }) {
   const [jobLink, setResumeLink] = useState("");
   const { user } = useAuthentication();

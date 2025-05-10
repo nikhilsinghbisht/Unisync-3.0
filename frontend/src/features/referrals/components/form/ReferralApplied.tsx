@@ -34,7 +34,7 @@ export function ReferralApplied() {
             <h3 className="application-title">{app.company} - {app.jobTitle}</h3>
             <p className="application-notes">{app.notes}</p>
             <a
-              href={app.jobLink}
+              href={app.link}
               target="_blank"
               rel="noopener noreferrer"
               className="job-link"

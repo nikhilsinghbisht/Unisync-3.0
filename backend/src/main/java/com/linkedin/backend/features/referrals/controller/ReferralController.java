@@ -29,10 +29,10 @@ public class ReferralController {
     }
 
     @GetMapping("/open-to-apply")
-    public ResponseEntity<List<ReferralRequestDTO>> fetchOpenToApplyReferrals() {
-        List<ReferralRequestDTO> referrals = referralService.fetchOpenToApplyReferrals();
-        return ResponseEntity.ok(referrals);
+    public List<ReferralRequestDTO> getOpenToApplyReferrals(@RequestParam Long userId) {
+        return referralService.fetchOpenToApplyReferrals(userId);
     }
+
 
     @PostMapping("/apply")
     public ResponseEntity<ReferralRequestResponse> applyReferral(@RequestBody ReferralRequestDTO referralRequestDTO) {
