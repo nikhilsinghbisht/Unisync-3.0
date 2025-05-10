@@ -4,14 +4,14 @@ export interface Referral {
   company?: string;
   jobTitle?: string;
   notes?: string;
-  jobLink?: string;
+  link?: string;
   applicantId?: Array<number>;
   status:string;
 }
 
 export interface ReferralApplication {
   applicantUserId: string;
-  jobLink: string;
+  link: string;
   referrerId: number;
 }
 
