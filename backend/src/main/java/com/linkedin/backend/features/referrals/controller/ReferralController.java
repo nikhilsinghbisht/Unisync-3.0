@@ -3,7 +3,6 @@ package com.linkedin.backend.features.referrals.controller;
 import com.linkedin.backend.features.referrals.dto.ReferralRequestDTO;
 import com.linkedin.backend.features.referrals.dto.ReferralRequestResponse;
 import com.linkedin.backend.features.referrals.service.ReferralService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -53,7 +52,7 @@ public class ReferralController {
         return ResponseEntity.ok(referrals);
     }
 
-    @GetMapping("/delete")
+    @DeleteMapping("/delete")
     public ResponseEntity<ReferralRequestResponse> deleteReferral(@RequestParam("userId")Long userId,
                                                  @RequestParam("postId")Long postId){
         ReferralRequestResponse referrals = referralService.deleteReferral(userId,postId);
