@@ -91,7 +91,7 @@ export function ReferralPage() {
 
         {/* Main Content */}
         <div style={{ flex: 1, padding: "1rem", position: "relative" }}>
-          {activeTab === "created" && (
+          {activeTab === "referrals" && (
             <button
               onClick={handleToggleForm}
               style={{
@@ -113,12 +113,11 @@ export function ReferralPage() {
           <hr />
 
           {activeTab === "applied" && <ReferralApplied />}
-          {activeTab === "referrals" && <ReferralList />}
+          {activeTab === "referrals" && <>{showForm && <ReferralForm />}
+          <ReferralList /></>}
           {activeTab === "created" && (
-            <>
-              {showForm && <ReferralForm />}
+              
               <ReferralFormPersonal />
-            </>
           )}
         </div>
       </div>
