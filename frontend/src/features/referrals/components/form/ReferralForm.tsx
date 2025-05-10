@@ -1,9 +1,9 @@
 import { useState } from "react";
 import { request } from "../../../../utils/api";
 import { useAuthentication } from "../../../authentication/contexts/AuthenticationContextProvider";
-import "../form_css/ReferralForm.scss"
+import "../form_css/ReferralForm.scss";
 
-export function ReferralForm() {
+const ReferralForm = () => {
   const { user } = useAuthentication();
   const [company, setCompany] = useState("");
   const [position, setPosition] = useState("");
@@ -46,7 +46,10 @@ export function ReferralForm() {
   return (
     <div className="referral-container">
       <h2>Post a Referral</h2>
-      <form className="referral-form" onSubmit={handleSubmit}>
+      <form
+        className="referral-form"
+        onSubmit={handleSubmit}
+      >
         <input
           type="text"
           placeholder="Company"
@@ -78,7 +81,8 @@ export function ReferralForm() {
         <button type="submit">Submit Referral</button>
       </form>
       {message && <p className="message">{message}</p>}
-
     </div>
   );
-}
+};
+
+export default ReferralForm;

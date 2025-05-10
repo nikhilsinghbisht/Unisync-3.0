@@ -85,40 +85,16 @@ public class ReferralService {
     public List<ReferralRequestDTO> fetchReferralsPostedByUser(Long postedById) {
         return referralPostRepository.findByReferrerIdWithReferrer(postedById)
                 .stream()
-                .map(post -> {
-                    List<Object[]> applicantDataList = referralApplicationRepository.findByReferrersByPostId(post.getId());
-
-                    List<UserDTO> applicantDTOs = applicantDataList.stream()
-                            .map(records -> {
-                                User user = (User) records[0];
-                                String resumeLink = (String) records[1];
-
-                                return UserDTO.builder()
-                                        .id(user.getId())
-                                        .email(user.getEmail())
-                                        .firstName(user.getFirstName())
-                                        .lastName(user.getLastName())
-                                        .company(user.getCompany())
-                                        .username(user.getUsername())
-                                        .resumeLink(resumeLink)
-                                        .build();
-                            })
-                            .toList();
-
-                    return ReferralRequestDTO.builder()
-                            .postId(post.getId())
-                            .referrerId(post.getReferrer().getId())
-                            .company(post.getCompany())
-                            .jobTitle(post.getJobTitle())
-                            .notes(post.getNotes())
-                            .applicantId(applicantDTOs)
-                            .build();
-                })
+                .map(post -> ReferralRequestDTO.builder()
+                        .postId(post.getId())
+                        .referrerId(post.getReferrer().getId())
+                        .company(post.getCompany())
+                        .jobTitle(post.getJobTitle())
+                        .notes(post.getNotes())
+                        .build()
+                )
                 .toList();
     }
-
-
-
 
     public ReferralRequestResponse applyReferral(ReferralRequestDTO referralRequestDTO) {
         ReferralPost referralPost = referralPostRepository.findById(referralRequestDTO.getPostId()).orElseThrow(() ->
@@ -206,9 +182,7 @@ public class ReferralService {
             }
         }
 
-
         referralApplicationRepository.deleteByReferralPostId(postId);
-
 
         referralPostRepository.deleteById(postId);
 
@@ -217,6 +191,26 @@ public class ReferralService {
                 .build();
     }
 
+    public List<UserDTO> getApplicants(Long postId, Long userId) {
+        List<Object[]> applicantsData = referralApplicationRepository.findApplicantsByPostAndUser(userId, postId);
+
+        return applicantsData.stream()
+                .map(data -> {
+                    User user = (User) data[0];
+                    String resumeLink = (String) data[1];
+
+                    return UserDTO.builder()
+                            .id(user.getId())
+                            .email(user.getEmail())
+                            .firstName(user.getFirstName())
+                            .lastName(user.getLastName())
+                            .company(user.getCompany())
+                            .username(user.getUsername())
+                            .resumeLink(resumeLink)
+                            .build();
+                })
+                .toList();
+    }
 }
 
 

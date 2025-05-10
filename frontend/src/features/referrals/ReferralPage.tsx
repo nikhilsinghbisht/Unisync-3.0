@@ -1,8 +1,8 @@
 import { useState } from "react";
-import { ReferralForm } from "./components/form/ReferralForm";
-import { ReferralList } from "./components/form/ReferralList";
-import { ReferralApplied } from "./components/form/ReferralApplied";
-import { ReferralFormPersonal } from "./components/form/ReferralFormPersonal";
+import ReferralForm from "./components/form/ReferralForm";
+import  ReferralList  from "./components/form/ReferralList";
+import ReferralApplied from "./components/form/ReferralApplied";
+import ReferralCreated  from "./components/Created/Referral_Created";
 
 export function ReferralPage() {
   const [activeTab, setActiveTab] = useState("referrals");
@@ -14,7 +14,13 @@ export function ReferralPage() {
 
   return (
     <>
-      <h1 style={{ textAlign: "center", marginTop: activeTab === "created" ? "3rem" : 0, fontSize: "30px" }}>
+      <h1
+        style={{
+          textAlign: "center",
+          marginTop: activeTab === "created" ? "3rem" : 0,
+          fontSize: "30px",
+        }}
+      >
         Referral Hub
       </h1>
       <div style={{ display: "flex", height: "100vh" }}>
@@ -24,7 +30,7 @@ export function ReferralPage() {
             width: "200px",
             backgroundColor: "#f5f5f5",
             padding: "1rem",
-            borderRight: "1px solid #ccc"
+            borderRight: "1px solid #ccc",
           }}
         >
           {/* Referrals */}
@@ -38,7 +44,7 @@ export function ReferralPage() {
               padding: "0.5rem",
               width: "100%",
               textAlign: "left",
-              cursor: "pointer"
+              cursor: "pointer",
             }}
             onClick={() => {
               setActiveTab("referrals");
@@ -59,7 +65,7 @@ export function ReferralPage() {
               padding: "0.5rem",
               width: "100%",
               textAlign: "left",
-              cursor: "pointer"
+              cursor: "pointer",
             }}
             onClick={() => {
               setActiveTab("created");
@@ -78,7 +84,7 @@ export function ReferralPage() {
               padding: "0.5rem",
               width: "100%",
               textAlign: "left",
-              cursor: "pointer"
+              cursor: "pointer",
             }}
             onClick={() => {
               setActiveTab("applied");
@@ -103,7 +109,7 @@ export function ReferralPage() {
                 color: "white",
                 border: "none",
                 borderRadius: "5px",
-                cursor: "pointer"
+                cursor: "pointer",
               }}
             >
               {showForm ? "-" : "+"}
@@ -113,11 +119,17 @@ export function ReferralPage() {
           <hr />
 
           {activeTab === "applied" && <ReferralApplied />}
-          {activeTab === "referrals" && <>{showForm && <ReferralForm />}
-          <ReferralList /></>}
+          {activeTab === "referrals" && (
+            <>
+              {showForm && <ReferralForm />}
+              <ReferralList />
+            </>
+          )}
           {activeTab === "created" && (
-              
-              <ReferralFormPersonal />
+            <>
+              {showForm && <ReferralForm />}
+              <ReferralCreated />
+            </>
           )}
         </div>
       </div>

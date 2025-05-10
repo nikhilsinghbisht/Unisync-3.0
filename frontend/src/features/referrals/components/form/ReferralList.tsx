@@ -3,9 +3,9 @@ import { useEffect, useState } from "react";
 import { request } from "../../../../utils/api";
 import { Referral } from "../../types";
 import { useAuthentication } from "../../../authentication/contexts/AuthenticationContextProvider";
-import "../form_css/ReferralList.scss"
+import "../form_css/ReferralList.scss";
 
-export function ReferralList() {
+const ReferralList = () => {
   const [referrals, setReferrals] = useState<Referral[]>([]);
   const { user } = useAuthentication();
 
@@ -25,23 +25,34 @@ export function ReferralList() {
     <div className="referral-container">
       <h2>Available Referrals</h2>
       {referrals.map((r) => (
-        <div className="referral-card" key={r.postId}>
+        <div
+          className="referral-card"
+          key={r.postId}
+        >
           <h3 className="referral-title">
             {r.company} - {r.jobTitle}
           </h3>
           <p className="referral-notes">{r.notes}</p>
-         {r.referrerId !== Number(user?.id) && (
-  <ApplyForm referrerId={r.referrerId} postId={r.postId} />
-)}
-
+          {r.referrerId !== Number(user?.id) && (
+            <ApplyForm
+              referrerId={r.referrerId}
+              postId={r.postId}
+            />
+          )}
         </div>
       ))}
     </div>
   );
-}
+};
+export default ReferralList;
 
-// 👇 Move ApplyForm BELOW ReferralList
-function ApplyForm({ referrerId, postId }: { referrerId: number; postId: number }) {
+function ApplyForm({
+  referrerId,
+  postId,
+}: {
+  referrerId: number;
+  postId: number;
+}) {
   const [jobLink, setResumeLink] = useState("");
   const { user } = useAuthentication();
 

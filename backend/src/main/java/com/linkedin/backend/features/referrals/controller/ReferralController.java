@@ -1,5 +1,6 @@
 package com.linkedin.backend.features.referrals.controller;
 
+import com.linkedin.backend.features.authentication.dto.UserDTO;
 import com.linkedin.backend.features.referrals.dto.ReferralRequestDTO;
 import com.linkedin.backend.features.referrals.dto.ReferralRequestResponse;
 import com.linkedin.backend.features.referrals.service.ReferralService;
@@ -33,7 +34,6 @@ public class ReferralController {
         return referralService.fetchOpenToApplyReferrals(userId);
     }
 
-
     @PostMapping("/apply")
     public ResponseEntity<ReferralRequestResponse> applyReferral(@RequestBody ReferralRequestDTO referralRequestDTO) {
         ReferralRequestResponse referrals = referralService.applyReferral(referralRequestDTO);
@@ -56,6 +56,13 @@ public class ReferralController {
     public ResponseEntity<ReferralRequestResponse> deleteReferral(@RequestParam("userId")Long userId,
                                                  @RequestParam("postId")Long postId){
         ReferralRequestResponse referrals = referralService.deleteReferral(userId,postId);
+        return ResponseEntity.ok(referrals);
+    }
+
+    @GetMapping("/applicants")
+    public ResponseEntity<List<UserDTO>> getApplicants(@RequestParam("postId")Long postId,
+                                                 @RequestParam("userId")Long userId){
+        List<UserDTO> referrals = referralService.getApplicants(postId,userId);
         return ResponseEntity.ok(referrals);
     }
 }

@@ -4,7 +4,7 @@ import { useAuthentication } from "../../../authentication/contexts/Authenticati
 import { Referral } from "../../types";
 import "../form_css/ReferralApplied.scss";
 
-export function ReferralApplied() {
+const ReferralApplied = () => {
   const [applications, setApplications] = useState<Referral[]>([]);
   const { user } = useAuthentication();
   const userId = user?.id;
@@ -27,11 +27,18 @@ export function ReferralApplied() {
         Applied Referral Applications
       </h3>
       {applications.length === 0 ? (
-        <p className="no-applications">You haven’t applied for any referrals yet.</p>
+        <p className="no-applications">
+          You haven’t applied for any referrals yet.
+        </p>
       ) : (
         applications.map((app) => (
-          <div className="application-card" key={app.postId}>
-            <h3 className="application-title">{app.company} - {app.jobTitle}</h3>
+          <div
+            className="application-card"
+            key={app.postId}
+          >
+            <h3 className="application-title">
+              {app.company} - {app.jobTitle}
+            </h3>
             <p className="application-notes">{app.notes}</p>
             <a
               href={app.link}
@@ -47,4 +54,5 @@ export function ReferralApplied() {
       )}
     </div>
   );
-}
+};
+export default ReferralApplied;
