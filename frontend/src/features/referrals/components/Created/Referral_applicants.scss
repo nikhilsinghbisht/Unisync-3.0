@@ -1,28 +1,61 @@
 .applicants-section {
-  margin-top: 10px;
+  padding: 2rem;
+  background-color: #f3f4f6;
+  min-height: 100vh;
+}
 
-  .ref-applicants-btn {
-    background-color: #0077cc;
-    color: white;
-    border: none;
-    padding: 6px 12px;
-    border-radius: 4px;
-    cursor: pointer;
-    margin-bottom: 6px;
+.applicants-list {
+  list-style: none;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 1.5rem;
+}
 
-    &:hover {
-      background-color: #005fa3;
-    }
-  }
+.applicant-card {
+  background-color: #ffffff;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  padding: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  transition: transform 0.2s ease;
+}
 
-  .applicants-list {
-    list-style: none;
-    padding-left: 0;
-    margin-top: 0;
+.applicant-card:hover {
+  transform: translateY(-5px);
+}
 
-    li {
-      padding: 4px 0;
-      border-bottom: 1px solid #eee;
-    }
-  }
+.applicant-info strong {
+  font-size: 1.2rem;
+  color: #1f2937;
+}
+
+.applicant-info p {
+  margin: 0.25rem 0;
+  font-size: 0.95rem;
+  color: #4b5563;
+}
+
+.resume-section {
+  margin-top: 1rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.resume-label {
+  font-weight: 500;
+  color: #374151;
+}
+
+.resume-link {
+  color: #3b82f6;
+  text-decoration: none;
+  font-weight: 600;
+}
+
+.resume-link:hover {
+  text-decoration: underline;
 }

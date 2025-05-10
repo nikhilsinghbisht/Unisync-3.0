@@ -23,7 +23,7 @@ import "./index.scss";
 import { ReferralPage } from "./features/referrals/ReferralPage";
 import TechNews from "./components/TechNewsWidget/TechNews";
 import JobBoard from "./components/JobBoard/JobBoard";
-
+import { ReferralApplicants } from "./features/referrals/components/Created/Referral_Applicants";
 const router = createBrowserRouter([
   {
     element: <AuthenticationContextProvider />,
@@ -67,6 +67,10 @@ const router = createBrowserRouter([
                 element: <Conversation />,
               },
             ],
+          },
+          {
+            path:"/referral-applicants/:postId",
+            element : <ReferralApplicants />,
           },
           {
             path: "notifications",

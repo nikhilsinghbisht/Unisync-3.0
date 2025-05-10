@@ -3,15 +3,13 @@ import "../form_css/ReferralForm.scss";
 import { Referral } from "../../types";
 import { request } from "../../../../utils/api";
 import { useAuthentication } from "../../../authentication/contexts/AuthenticationContextProvider";
-import { ReferralApplicants } from "./Referral_Applicants";
+import { useNavigate } from "react-router-dom";
 
 const ReferralCreated = () => {
   const [referrals, setReferrals] = useState<Referral[]>([]);
-  const [visibleApplicants, setVisibleApplicants] = useState<
-    Record<number, boolean>
-  >({});
   const { user } = useAuthentication();
   const userId = user?.id;
+  const navigate = useNavigate();
 
   useEffect(() => {
     if (!userId) return;
@@ -40,13 +38,6 @@ const ReferralCreated = () => {
     });
   };
 
-  const toggleApplicants = (postId: number) => {
-    setVisibleApplicants((prev) => ({
-      ...prev,
-      [postId]: !prev[postId],
-    }));
-  };
-
   return (
     <>
       {referrals.length > 0 && (
@@ -60,24 +51,32 @@ const ReferralCreated = () => {
                     {ref.company} - {ref.jobTitle}
                   </h4>
                   <p>{ref.notes}</p>
-                  <button onClick={() => toggleApplicants(ref.postId)}>
-                    {visibleApplicants[ref.postId]
-                      ? "Hide Applicants"
-                      : "View Applicants"}
-                  </button>
-                  <button
-                    className="ref-delete"
-                    onClick={() => handleDelete(ref.postId)}
+                  
+                  {/* Displaying the job link */}
+                  <a
+                    href={ref.link}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="referral-link"
                   >
-                    Delete
-                  </button>
+                    Job Link
+                  </a>
+
+                  <div className="referral-actions">
+                    <button
+                      className="ref-view-applicants"
+                      onClick={() => navigate(`/referral-applicants/${ref.postId}`)}
+                    >
+                      View Applicants
+                    </button>
+                    <button
+                      className="ref-delete"
+                      onClick={() => handleDelete(ref.postId)}
+                    >
+                      Delete
+                    </button>
+                  </div>
                 </div>
-                {visibleApplicants[ref.postId] && (
-                  <ReferralApplicants
-                    userId={userId ?? 0}
-                    postId={ref.postId}
-                  />
-                )}
               </div>
             ))}
           </div>
@@ -86,4 +85,5 @@ const ReferralCreated = () => {
     </>
   );
 };
+
 export default ReferralCreated;
