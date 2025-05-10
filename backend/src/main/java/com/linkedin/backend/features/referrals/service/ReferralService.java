@@ -13,10 +13,11 @@ import com.linkedin.backend.features.referrals.repository.ReferralPostRepository
 import jakarta.persistence.EntityNotFoundException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
+import java.nio.file.AccessDeniedException;
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Map;
 
 @Slf4j
 @Service
@@ -181,20 +182,30 @@ public class ReferralService {
                 .toList();
     }
 
+    @Transactional
     public ReferralRequestResponse deleteReferral(Long userId, Long postId) {
         ReferralPost referralPost = referralPostRepository.findById(postId)
                 .orElseThrow(() -> new EntityNotFoundException("Referral post not found"));
 
         if (!referralPost.getReferrer().getId().equals(userId)) {
-            throw new IllegalArgumentException("User is not authorized to delete this referral post");
+            try {
+                throw new AccessDeniedException("You can only delete your own referrals");
+            } catch (AccessDeniedException e) {
+                e.printStackTrace();
+            }
         }
 
-        referralPostRepository.delete(referralPost);
-        log.info("Referral post with ID {} deleted successfully", postId);
+
+        referralApplicationRepository.deleteByReferralPostId(postId);
+
+
+        referralPostRepository.deleteById(postId);
+
         return ReferralRequestResponse.builder()
-                .message("Referral post deleted successfully")
+                .message("Referral deleted successfully.")
                 .build();
     }
+
 }
 
 

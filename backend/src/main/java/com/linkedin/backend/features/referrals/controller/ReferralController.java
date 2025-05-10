@@ -3,7 +3,6 @@ package com.linkedin.backend.features.referrals.controller;
 import com.linkedin.backend.features.referrals.dto.ReferralRequestDTO;
 import com.linkedin.backend.features.referrals.dto.ReferralRequestResponse;
 import com.linkedin.backend.features.referrals.service.ReferralService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
