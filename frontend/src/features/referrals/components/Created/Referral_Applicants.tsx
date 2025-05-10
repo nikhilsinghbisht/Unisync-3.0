@@ -8,7 +8,7 @@ export function ReferralApplicants({ userId, postId }: Props) {
 
   useEffect(() => {
     request<Applicant[]>({
-      endpoint: `/api/v1/referral/get-applicants?userId=${userId}&postId=${postId}`,
+      endpoint: `/api/v1/referrals/applicants?userId=${userId}&postId=${postId}`,
       onSuccess: (data) => {
         setApplicants(data), setIsLoading(false);
       },
@@ -26,11 +26,13 @@ export function ReferralApplicants({ userId, postId }: Props) {
         <ul className="applicants-list">
           {applicants.map((applicant) => (
             <li key={applicant.id}>
-              <strong>{applicant.name}</strong> ({applicant.email})
+              <strong>
+                {applicant.firstName} {applicant.lastName}
+              </strong>
+              <p>Email: {applicant.email}</p>
+              <p>Company: {applicant.company}</p>
               {applicant.resumeLink && (
                 <>
-                  {" "}
-                  –{" "}
                   <a
                     href={applicant.resumeLink}
                     target="_blank"

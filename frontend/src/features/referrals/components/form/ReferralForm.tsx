@@ -1,14 +1,14 @@
 import { useState } from "react";
 import { request } from "../../../../utils/api";
 import { useAuthentication } from "../../../authentication/contexts/AuthenticationContextProvider";
-import "../form_css/ReferralForm.scss"
+import "../form_css/ReferralForm.scss";
 
-export function ReferralForm() {
+const ReferralForm = () => {
   const { user } = useAuthentication();
   const [company, setCompany] = useState("");
   const [position, setPosition] = useState("");
   const [description, setDescription] = useState("");
-  const [jobLink, setJobLink] = useState("");
+  const [link, setJobLink] = useState("");
   const [message, setMessage] = useState("");
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -27,7 +27,7 @@ export function ReferralForm() {
         jobTitle: position,
         company,
         notes: description,
-        jobLink,
+        link,
       }),
       onSuccess: () => {
         setMessage("Referral posted successfully!");
@@ -46,7 +46,10 @@ export function ReferralForm() {
   return (
     <div className="referral-container">
       <h2>Post a Referral</h2>
-      <form className="referral-form" onSubmit={handleSubmit}>
+      <form
+        className="referral-form"
+        onSubmit={handleSubmit}
+      >
         <input
           type="text"
           placeholder="Company"
@@ -71,14 +74,15 @@ export function ReferralForm() {
         <input
           type="url"
           placeholder="Job Link"
-          value={jobLink}
+          value={link}
           onChange={(e) => setJobLink(e.target.value)}
           required
         />
         <button type="submit">Submit Referral</button>
       </form>
       {message && <p className="message">{message}</p>}
-
     </div>
   );
-}
+};
+
+export default ReferralForm;

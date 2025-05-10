@@ -1,8 +1,8 @@
 import { useState } from "react";
-import { ReferralForm } from "./components/form/ReferralForm";
-import { ReferralList } from "./components/form/ReferralList";
-import { ReferralApplied } from "./components/form/ReferralApplied";
-import { ReferralCreated } from "./components/Created/Referral_Created";
+import ReferralForm from "./components/form/ReferralForm";
+import  ReferralList  from "./components/form/ReferralList";
+import ReferralApplied from "./components/form/ReferralApplied";
+import ReferralCreated  from "./components/Created/Referral_Created";
 
 export function ReferralPage() {
   const [activeTab, setActiveTab] = useState("referrals");
@@ -97,7 +97,7 @@ export function ReferralPage() {
 
         {/* Main Content */}
         <div style={{ flex: 1, padding: "1rem", position: "relative" }}>
-          {activeTab === "created" && (
+          {activeTab === "referrals" && (
             <button
               onClick={handleToggleForm}
               style={{
@@ -119,7 +119,12 @@ export function ReferralPage() {
           <hr />
 
           {activeTab === "applied" && <ReferralApplied />}
-          {activeTab === "referrals" && <ReferralList />}
+          {activeTab === "referrals" && (
+            <>
+              {showForm && <ReferralForm />}
+              <ReferralList />
+            </>
+          )}
           {activeTab === "created" && (
             <>
               {showForm && <ReferralForm />}

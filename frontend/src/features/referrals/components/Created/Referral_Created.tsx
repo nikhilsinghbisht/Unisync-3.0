@@ -5,7 +5,7 @@ import { request } from "../../../../utils/api";
 import { useAuthentication } from "../../../authentication/contexts/AuthenticationContextProvider";
 import { ReferralApplicants } from "./Referral_Applicants";
 
-export function ReferralCreated() {
+const ReferralCreated = () => {
   const [referrals, setReferrals] = useState<Referral[]>([]);
   const [visibleApplicants, setVisibleApplicants] = useState<
     Record<number, boolean>
@@ -85,4 +85,5 @@ export function ReferralCreated() {
       )}
     </>
   );
-}
+};
+export default ReferralCreated;

@@ -24,7 +24,7 @@ public class ReferralRequestDTO {
     private String notes;
     private String status;
     private String createdAt;
-    
+
     @JsonInclude(JsonInclude.Include.NON_EMPTY)
     private List<UserDTO> applicantId;
 }
