@@ -53,11 +53,11 @@ function ApplyForm({
   referrerId: number;
   postId: number;
 }) {
-  const [jobLink, setResumeLink] = useState("");
+  const [link, setResumeLink] = useState("");
   const { user } = useAuthentication();
 
   const apply = async () => {
-    if (!jobLink) {
+    if (!link) {
       alert("Please enter resume link.");
       return;
     }
@@ -68,7 +68,7 @@ function ApplyForm({
       body: JSON.stringify({
         postId,
         referrerId,
-        jobLink,
+        link,
         applicantId: [{ id: user?.id }],
       }),
       onSuccess: () => {
@@ -86,7 +86,7 @@ function ApplyForm({
     <div className="apply-form">
       <input
         placeholder="Resume Link"
-        value={jobLink}
+        value={link}
         onChange={(e) => setResumeLink(e.target.value)}
       />
       <button onClick={apply}>Apply</button>
