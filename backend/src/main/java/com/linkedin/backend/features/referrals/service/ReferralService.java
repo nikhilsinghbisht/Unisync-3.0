@@ -108,6 +108,7 @@ public class ReferralService {
                 .filter(applicant -> !applicant.getId().equals(referrer.getId()))
                 .toList();
 
+
         applicants.stream()
                 .map(applicant -> ReferralApplication.builder()
                         .referralPost(referralPost)
@@ -146,6 +147,7 @@ public class ReferralService {
                             .status(post.getStatus())
                             .createdAt(post.getCreatedAt().toString())
                             .notes(post.getNotes())
+                            .applicationStatus(app.getStatus())
                             .build();
                 })
                 .toList();
@@ -211,6 +213,27 @@ public class ReferralService {
                 })
                 .toList();
     }
+    @Transactional
+    public ReferralRequestResponse updateApplicationStatus(Long applicantId, Long postId, String status) {
+        // Validate status
+        if (!status.equalsIgnoreCase("ACCEPTED") && !status.equalsIgnoreCase("REJECTED")) {
+            throw new IllegalArgumentException("Invalid status. Use ACCEPTED or REJECTED.");
+        }
+
+        // Check if application exists before updating
+        ReferralApplication application = referralApplicationRepository
+                .findByApplicantIdAndReferralPostId(applicantId, postId)
+                .orElseThrow(() -> new EntityNotFoundException("Application not found"));
+
+        // Perform update using custom query
+        referralApplicationRepository.updateApplicationStatusByApplicantAndPost(applicantId, postId, status.toUpperCase());
+
+        return ReferralRequestResponse.builder()
+                .message("Application status updated to: " + status.toUpperCase())
+                .build();
+    }
+
+
 }
 
 

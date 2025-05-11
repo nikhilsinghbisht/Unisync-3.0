@@ -10,7 +10,9 @@ import lombok.NoArgsConstructor;
 import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "referral_application")
+@Table(name = "referral_application", uniqueConstraints = {
+        @UniqueConstraint(columnNames = {"referral_post_id", "applicant_id"})
+})
 @Data
 @Builder
 @AllArgsConstructor
