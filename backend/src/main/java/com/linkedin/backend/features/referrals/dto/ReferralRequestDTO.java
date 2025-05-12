@@ -2,7 +2,6 @@ package com.linkedin.backend.features.referrals.dto;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.linkedin.backend.features.authentication.dto.UserDTO;
-import com.linkedin.backend.features.authentication.model.User;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -24,6 +23,8 @@ public class ReferralRequestDTO {
     private String notes;
     private String status;
     private String createdAt;
+    private String applicationStatus;
+
 
     @JsonInclude(JsonInclude.Include.NON_EMPTY)
     private List<UserDTO> applicantId;

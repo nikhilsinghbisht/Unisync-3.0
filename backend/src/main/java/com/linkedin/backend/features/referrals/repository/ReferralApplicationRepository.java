@@ -9,6 +9,7 @@ import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface ReferralApplicationRepository extends JpaRepository<ReferralApplication, Long> {
@@ -26,5 +27,20 @@ public interface ReferralApplicationRepository extends JpaRepository<ReferralApp
 
     @Query("SELECT ra.applicant, ra.resumeLink FROM ReferralApplication ra WHERE ra.referralPost.id = :postId AND ra.referralPost.referrer.id = :userId")
     List<Object[]> findApplicantsByPostAndUser(@Param("userId") Long userId, @Param("postId") Long postId);
+
+    @Modifying
+    @Transactional
+    @Query("UPDATE ReferralApplication ra SET ra.status = :status WHERE ra.applicant.id = :applicantId AND ra.referralPost.id = :postId")
+    void updateApplicationStatusByApplicantAndPost(@Param("applicantId") Long applicantId,
+                                                   @Param("postId") Long postId,
+                                                   @Param("status") String status);
+
+
+
+    Optional<ReferralApplication> findByApplicantIdAndReferralPostId(Long applicantId, Long postId);
+    boolean existsByApplicantIdAndReferralPostId(Long applicantId, Long postId);
+
+
+
 
 }
