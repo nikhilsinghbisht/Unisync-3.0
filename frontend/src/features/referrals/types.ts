@@ -7,22 +7,25 @@ export interface Referral {
   link?: string;
   applicantId?: Array<number>;
   status: string;
+  applicationStatus?: string;
 }
 
 export interface ReferralApplication {
   applicantUserId: string;
   link: string;
   referrerId: number;
+  
 }
 
 export interface Applicant {
   id: number;
+  postId:number;
   firstName: string;
   lastName: string;
   company: string;
   email: string;
   resumeLink?: string;
-  status?: "Pending" | "Shortlisted" | "Rejected" | "Hired"; 
+  applicationStatus?: string;
 }
 
 export interface Props {
