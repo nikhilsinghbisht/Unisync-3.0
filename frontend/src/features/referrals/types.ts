@@ -22,6 +22,7 @@ export interface Applicant {
   company: string;
   email: string;
   resumeLink?: string;
+  status?: "Pending" | "Shortlisted" | "Rejected" | "Hired"; 
 }
 
 export interface Props {
