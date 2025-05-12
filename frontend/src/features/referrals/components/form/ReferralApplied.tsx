@@ -48,7 +48,7 @@ const ReferralApplied = () => {
             >
               View Job Posting
             </a>
-            <p>Status - {app.status}</p>
+            <p className={`application-status ${app.status?.toLowerCase()}`}>Status - {app.status}</p>
           </div>
         ))
       )}

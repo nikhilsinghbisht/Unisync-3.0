@@ -45,7 +45,6 @@ export function ReferralApplicants() {
                 <p>Email: {applicant.email}</p>
                 <p>Company: {applicant.company}</p>
               </div>
-              <div>Resume</div>
               {applicant.resumeLink && (
                 <a
                   href={applicant.resumeLink}
