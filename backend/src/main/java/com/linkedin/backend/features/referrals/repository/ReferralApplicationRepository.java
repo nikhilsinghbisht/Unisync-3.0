@@ -25,8 +25,9 @@ public interface ReferralApplicationRepository extends JpaRepository<ReferralApp
     @Query("DELETE FROM ReferralApplication a WHERE a.referralPost.id = :postId")
     void deleteByReferralPostId(@Param("postId") Long postId);
 
-    @Query("SELECT ra.applicant, ra.resumeLink FROM ReferralApplication ra WHERE ra.referralPost.id = :postId AND ra.referralPost.referrer.id = :userId")
+    @Query("SELECT ra.applicant, ra.resumeLink, ra.status FROM ReferralApplication ra WHERE ra.referralPost.id = :postId AND ra.referralPost.referrer.id = :userId")
     List<Object[]> findApplicantsByPostAndUser(@Param("userId") Long userId, @Param("postId") Long postId);
+
 
     @Modifying
     @Transactional
@@ -39,6 +40,8 @@ public interface ReferralApplicationRepository extends JpaRepository<ReferralApp
 
     Optional<ReferralApplication> findByApplicantIdAndReferralPostId(Long applicantId, Long postId);
     boolean existsByApplicantIdAndReferralPostId(Long applicantId, Long postId);
+
+
 
 
 

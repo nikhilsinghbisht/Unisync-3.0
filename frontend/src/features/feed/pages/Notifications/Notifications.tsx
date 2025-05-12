@@ -104,7 +104,7 @@ function Notification({
       case NotificationType.REFERRAL_AVAILABLE:
         return "posted a new referral opportunity.";
       case NotificationType.REFERRAL_FILLED:
-        return "closed a referral opportunity.";
+        return "Filled The Referral Form";
       default:
         return "sent a notification.";
     }

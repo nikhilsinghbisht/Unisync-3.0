@@ -15,5 +15,6 @@ public class UserDTO {
     private String company;
     private String username;
     private String resumeLink;
-    private String status;
+    private String applicationStatus;
+
 }

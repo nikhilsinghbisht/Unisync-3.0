@@ -75,10 +75,24 @@ function ApplyForm({
         alert("Applied successfully!");
         setResumeLink("");
       },
-      onFailure: (error) => {
-        console.error("Failed to apply for referral:", error);
-        alert("Failed to apply.");
-      },
+    onFailure: (error: any) => {
+      // Check if the error contains a message
+      if (error?.response?.data?.message) {
+        const errorMessage = error.response.data.message;
+
+        // If the error message contains "already applied", show a specific message
+        if (errorMessage.includes("already applied")) {
+          alert("You have already applied to this referral.");
+        } else {
+          console.error("Failed to apply for referral:", error);
+          alert("Failed to apply.");
+        }
+      } else {
+        // In case the error doesn't have a response or message, show a generic message
+        console.error("An unexpected error occurred:", error);
+        alert("An unexpected error occurred.");
+      }
+    },
     });
   };
 
