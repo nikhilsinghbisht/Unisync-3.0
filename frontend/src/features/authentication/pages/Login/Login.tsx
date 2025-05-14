@@ -82,6 +82,7 @@ export function Login() {
             Continue with Google
           </Button>
           New to LinkedIn? <Link to="/authentication/signup">Join now</Link>
+            
         </div>
       </Box>
     </div>

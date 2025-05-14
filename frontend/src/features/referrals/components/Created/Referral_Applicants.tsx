@@ -49,9 +49,6 @@ export function ReferralApplicants() {
               )
             : prevApplicants
         );
-        // setStatusUpdateMessage(
-        //   `Status updated to ${newStatus} for applicant ${applicantId}`
-        // );
       },
       onFailure: (error) => {
         console.error("Failed to update status:", error);
@@ -70,49 +67,57 @@ export function ReferralApplicants() {
             <p className="status-message">{statusUpdateMessage}</p>
           )}
           <ul className="applicants-list">
-            {applicants.map((applicant) => (
-              <li key={applicant.id} className="applicant-card">
-                <div className="applicant-info">
-                  <strong>
-                    {applicant.firstName} {applicant.lastName}
-                  </strong>
-                  <p>Email: {applicant.email}</p>
-                  <p>Company: {applicant.company}</p>
-                  <div>
-            Status -
-            <span className={`application-status ${applicant.applicationStatus?.toLowerCase() || "pending"}`}>
-               {applicant.applicationStatus || "PENDING"}
-            </span>
-            </div>
-                </div>
-                {applicant.resumeLink && (
-                  <a
-                    href={applicant.resumeLink}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="resume-link"
-                  >
-                    View Resume
-                  </a>
-                )}
-                <div className="status-buttons">
-                  <button
-                    onClick={() => updateS(applicant.id, "ACCEPTED")}
-                    disabled={applicant.applicationStatus === "ACCEPTED"}
-                    className="accept-button"
-                  >
-                    Accept
-                  </button>
-                  <button
-                    onClick={() => updateS(applicant.id, "REJECTED")}
-                    disabled={applicant.applicationStatus === "REJECTED"}
-                    className="reject-button"
-                  >
-                    Reject
-                  </button>
-                </div>
-              </li>
-            ))}
+            {applicants.map((applicant) => {
+              const isActionDisabled = applicant.applicationStatus !== "PENDING";
+
+              return (
+                <li key={applicant.id} className="applicant-card">
+                  <div className="applicant-info">
+                    <strong>
+                      {applicant.firstName} {applicant.lastName}
+                    </strong>
+                    <p>Email: {applicant.email}</p>
+                    <p>Company: {applicant.company}</p>
+                    <div>
+                      Status -{" "}
+                      <span
+                        className={`application-status ${
+                          applicant.applicationStatus?.toLowerCase() || "pending"
+                        }`}
+                      >
+                        {applicant.applicationStatus || "PENDING"}
+                      </span>
+                    </div>
+                  </div>
+                  {applicant.resumeLink && (
+                    <a
+                      href={applicant.resumeLink}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="resume-link"
+                    >
+                      View Resume
+                    </a>
+                  )}
+                  <div className="status-buttons">
+                    <button
+                      onClick={() => updateS(applicant.id, "ACCEPTED")}
+                      disabled={isActionDisabled}
+                      className="accept-button"
+                    >
+                      Accept
+                    </button>
+                    <button
+                      onClick={() => updateS(applicant.id, "REJECTED")}
+                      disabled={isActionDisabled}
+                      className="reject-button"
+                    >
+                      Reject
+                    </button>
+                  </div>
+                </li>
+              );
+            })}
           </ul>
         </>
       ) : (
