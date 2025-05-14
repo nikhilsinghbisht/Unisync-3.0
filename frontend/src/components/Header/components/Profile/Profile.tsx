@@ -84,6 +84,17 @@ export function Profile({
             >
               View Profile
             </Button>
+            <div className={classes.aboutButton}>
+          <Button
+          size="small"
+            outline
+    onClick={() => {
+      navigate("/aboutus");
+    }}
+  >
+    About Us
+  </Button>
+</div>
             <Link
               to="/logout"
               onClick={(e) => {

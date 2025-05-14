@@ -29,12 +29,14 @@ export function Search() {
 
   return (
     <div className={classes.search}>
+      <div style={{marginLeft:"20px"}}>
       <Input
         onChange={(e) => setSearchTerm(e.target.value)}
         placeholder="Search for connections"
         size="medium"
         value={searchTerm}
       />
+      </div>
       {suggestions.length > 0 && (
         <ul className={classes.suggestions}>
           {suggestions.map((user) => (

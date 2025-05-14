@@ -1,6 +1,6 @@
 import { Outlet } from "react-router-dom";
 import classes from "./AuthenticationLayout.module.scss";
-
+import "../../../../assest/logo_br.svg"
 export function AuthenticationLayout() {
   return (
     <div className={classes.root}>
@@ -17,8 +17,8 @@ export function AuthenticationLayout() {
       <footer>
         <ul className={classes.container}>
           <li>
-            <img src="/logo-dark.svg" alt="" />
-            <span>© 2024</span>
+            <img src="/logo_br.svg" alt="image" />
+            <span>© 2025</span>
           </li>
           <li>
             <a href="">Accessiblity</a>
