@@ -7,7 +7,7 @@ export function AuthenticationLayout() {
       <header>
         <div className={classes.container}>
           <a href="/">
-            <img src="/logo.svg" alt="" className={classes.logo} />
+            <img src="/logo_Unisync_updated.svg" alt="" className={classes.logo} />
           </a>
         </div>
       </header>
@@ -17,7 +17,7 @@ export function AuthenticationLayout() {
       <footer>
         <ul className={classes.container}>
           <li>
-            <img src="/logo_br.svg" alt="image" />
+            <img src="/logo_updated.svg" alt="image" />
             <span>© 2025</span>
           </li>
           <li>

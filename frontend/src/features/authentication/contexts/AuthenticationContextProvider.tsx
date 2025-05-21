@@ -55,7 +55,8 @@ export function AuthenticationContextProvider() {
   const isOnAuthPage =
     location.pathname === "/authentication/login" ||
     location.pathname === "/authentication/signup" ||
-    location.pathname === "/authentication/request-password-reset";
+    location.pathname === "/authentication/request-password-reset" ||
+    location.pathname === "/aboutus";
 
   const login = async (email: string, password: string) => {
     if (!validateEmail(email)) {
@@ -140,6 +141,7 @@ export function AuthenticationContextProvider() {
   }
 
   if (!isLoading && !user && !isOnAuthPage) {
+    console.log("Redirecting unauthenticated user to /aboutus");
     return <Navigate to="/authentication/login" state={{ from: location.pathname }} />;
   }
 

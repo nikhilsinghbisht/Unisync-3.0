@@ -95,10 +95,6 @@ const router = createBrowserRouter([
             element:<TechNews/>
           },
           {
-            path:"/aboutus",
-            element:<AboutUs />
-          },
-          {
             path:"/jobs",
             element:<JobBoard/>
           }
@@ -109,6 +105,7 @@ const router = createBrowserRouter([
         path: "/authentication",
         element: <AuthenticationLayout />,
         children: [
+          
           {
             path: "login",
             element: <Login />,
@@ -129,8 +126,6 @@ const router = createBrowserRouter([
             path: "profile/:id",
             element: <LoginProfile />,
           },
-          
-          
         ],
       },
       {
@@ -138,8 +133,13 @@ const router = createBrowserRouter([
         element: <Navigate to="/" />,
       },
       
+      
     ],
   },
+  {
+        path:"/aboutus",
+        element: <AboutUs />,
+  }
 ]);
 
 createRoot(document.getElementById("root")!).render(
