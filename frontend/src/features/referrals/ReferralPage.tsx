@@ -38,7 +38,7 @@ export function ReferralPage() {
             style={{
               display: "block",
               marginBottom: "1rem",
-              background: activeTab === "referrals" ? "#007bff" : "#fff",
+              background: activeTab === "referrals" ? "#d95a44" : "#fff",
               color: activeTab === "referrals" ? "#fff" : "#000",
               border: "none",
               padding: "0.5rem",
@@ -59,7 +59,7 @@ export function ReferralPage() {
             style={{
               display: "block",
               marginBottom: "1rem",
-              background: activeTab === "created" ? "#007bff" : "#fff",
+              background: activeTab === "created" ? "#d95a44" : "#fff",
               color: activeTab === "created" ? "#fff" : "#000",
               border: "none",
               padding: "0.5rem",
@@ -78,7 +78,7 @@ export function ReferralPage() {
           <button
             style={{
               display: "block",
-              background: activeTab === "applied" ? "#007bff" : "#fff",
+              background: activeTab === "applied" ? "#d95a44" : "#fff",
               color: activeTab === "applied" ? "#fff" : "#000",
               border: "none",
               padding: "0.5rem",
@@ -105,7 +105,7 @@ export function ReferralPage() {
                 bottom: "99%",
                 right: "1rem",
                 padding: "0.5rem 1rem",
-                backgroundColor: "#007bff",
+                backgroundColor: "#d95a44",
                 color: "white",
                 border: "none",
                 borderRadius: "5px",

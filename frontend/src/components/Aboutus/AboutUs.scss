@@ -120,3 +120,34 @@
   font-size: 1.1rem;
   color: #666;
 }
+
+
+.authButtons {
+  display: flex;
+  justify-content: center;
+  margin: 20px 0;
+  gap: 1rem;
+
+  button {
+    padding: 10px 20px;
+    font-size: 1rem;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: 0.3s ease-in-out;
+  }
+
+  .loginBtn {
+    background-color: #007bff;
+    color: white;
+  }
+
+  .signupBtn {
+    background-color: #28a745;
+    color: white;
+  }
+
+  button:hover {
+    opacity: 0.85;
+  }
+}

@@ -4,17 +4,18 @@
   align-items: center;
   gap: 0.5rem;
   width: 100%;
-  background-color: var(--primary-color);
+  background-color: #d95a44;
   color: white;
   border-radius: 9999px;
   margin-block: 1rem;
   font-weight: bold;
   transition: 0.3s;
-
+  
   svg {
     width: 1.5rem;
     height: 1.5rem;
   }
+
 
   &.large {
     padding: 1rem;
@@ -37,7 +38,7 @@
   }
 
   &:not(:disabled, .outline):hover {
-    background-color: var(--primary-color-dark);
+    background-color: #951f0a;
   }
 
   &.outline {

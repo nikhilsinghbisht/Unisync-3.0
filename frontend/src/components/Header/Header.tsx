@@ -170,7 +170,7 @@ export function Header() {
         <div className={classes.left}>
            <NavLink to="/">
       <img
-        src="/logo_Unisync.svg" // Replace with your actual Base64 string
+        src="/logo_Unisync_updated.svg" // Replace with your actual Base64 string
         alt="Logo"
         className={classes.logo}
       />

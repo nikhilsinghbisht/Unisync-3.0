@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import "./AboutUs.scss"; // External CSS file for styling
+import { useNavigate } from "react-router-dom";
 // import Navbar from "../Navbar/Navbar"; // Assuming you have a Navbar component
 // import pick from "../../Photo/team.jpg";
 // import grow from "../../Photo/grow.jpg";
@@ -8,6 +9,7 @@ import "./AboutUs.scss"; // External CSS file for styling
 
 const AboutUs = () => {
   const [isLoading, setIsLoading] = useState(true);
+  const navigate = useNavigate();
 
   useEffect(() => {
     // Simulate a network request or task
@@ -23,6 +25,15 @@ const AboutUs = () => {
           {/* Rest of your home page content */}
         </div>
       )}
+      <div className="authButtons">
+  <button onClick={() => navigate("/authentication/login")} className="loginBtn">
+    Sign In
+  </button>
+  <button onClick={() => navigate("/authentication/signup")} className="signupBtn">
+    Sign Up
+  </button>
+</div>
+
       <div className="aboutContainer">
         {/* Intro Section */}
         <section className="introSection">

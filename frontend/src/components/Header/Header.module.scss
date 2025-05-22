@@ -56,14 +56,16 @@
     gap: 1rem;
 
     &:hover {
-      color: black;
+      color: #e78573;
     }
   }
 
   .active {
-    color: var(--primary-color);
+    color: #d95a44;
   }
-
+.active:hover{
+  color: #ec4325;
+}
   svg {
     width: 1.5rem;
     height: 1.5rem;

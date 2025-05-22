@@ -103,7 +103,7 @@ $tag-text: #4338ca;
       .view-job-btn {
         display: block;
         margin-top: 1.5rem;
-        background-color: $primary-color;
+        background-color: #d95a44;
         color: white;
         text-align: center;
         font-weight: bold;
@@ -112,7 +112,7 @@ $tag-text: #4338ca;
         transition: background-color 0.3s ease;
 
         &:hover {
-          background-color: $hover-color;
+          background-color: #d53c21;
         }
       }
     }
