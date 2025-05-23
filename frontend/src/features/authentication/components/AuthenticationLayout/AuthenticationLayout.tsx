@@ -1,14 +1,16 @@
 import { Outlet } from "react-router-dom";
 import classes from "./AuthenticationLayout.module.scss";
-import "../../../../assest/logo_br.svg"
-// import AboutUs from "../../../../components/Aboutus/AboutUs";
 export function AuthenticationLayout() {
   return (
     <div className={classes.root}>
       <header>
         <div className={classes.container}>
           <a href="/">
-            <img src="/logo_Unisync_updated.svg" alt="" className={classes.logo} />
+            <img
+              src="/src/assest/logo_500_rbg.png"
+              alt=""
+              className={classes.logo}
+            />
           </a>
         </div>
       </header>
@@ -19,7 +21,10 @@ export function AuthenticationLayout() {
       <footer>
         <ul className={classes.container}>
           <li>
-            <img src="/logo_updated.svg" alt="image" />
+            <img
+              src="/src/assest/logo_200_rbg.png"
+              alt="image"
+            />
             <span>© 2025</span>
           </li>
           <li>

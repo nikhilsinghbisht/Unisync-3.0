@@ -4,6 +4,10 @@
   min-height: 100vh;
 
   .container {
+    display :flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
     max-width: 74rem;
     width: 100%;
     margin: 0 auto;
@@ -30,7 +34,7 @@
   }
 
   .logo {
-    width: 7rem;
+    width: 20rem;
   }
 
   main {
