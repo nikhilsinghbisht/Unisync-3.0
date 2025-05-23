@@ -41,7 +41,7 @@ export const request = async <T>({
         response.status === 401 &&
         !window.location.pathname.includes("authentication")
       ) {
-        window.location.href = "/authentication/login";
+        window.location.href = "/about-us";
         return;
       }
 
