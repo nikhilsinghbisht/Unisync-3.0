@@ -31,7 +31,10 @@ export function Profile({
   }, [setShowProfileMenu]);
 
   return (
-    <div className={classes.root} ref={ref}>
+    <div
+      className={classes.root}
+      ref={ref}
+    >
       <button
         className={classes.toggle}
         onClick={() => {
@@ -45,7 +48,9 @@ export function Profile({
           className={classes.avatar}
           src={
             user?.profilePicture
-              ? `${import.meta.env.VITE_API_URL}/api/v1/storage/${user?.profilePicture}`
+              ? `${import.meta.env.VITE_API_URL}/api/v1/storage/${
+                  user?.profilePicture
+                }`
               : "/avatar.svg"
           }
           alt=""
@@ -62,14 +67,20 @@ export function Profile({
               className={`${classes.left} ${classes.avatar}`}
               src={
                 user?.profilePicture
-                  ? `${import.meta.env.VITE_API_URL}/api/v1/storage/${user?.profilePicture}`
+                  ? `${import.meta.env.VITE_API_URL}/api/v1/storage/${
+                      user?.profilePicture
+                    }`
                   : "./avatar.svg"
               }
               alt=""
             />
             <div className={classes.right}>
-              <div className={classes.name}>{user?.firstName + " " + user?.lastName}</div>
-              <div className={classes.title}>{user?.position + " at " + user?.company}</div>
+              <div className={classes.name}>
+                {user?.firstName + " " + user?.lastName}
+              </div>
+              <div className={classes.title}>
+                {user?.position + " at " + user?.company}
+              </div>
             </div>
           </div>
           <div className={classes.links}>
@@ -84,8 +95,7 @@ export function Profile({
             >
               View Profile
             </Button>
-            <div className={classes.aboutButton}>
-</div>
+            <div className={classes.aboutButton}></div>
             <Link
               to="/logout"
               onClick={(e) => {

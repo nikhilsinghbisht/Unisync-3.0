@@ -2,28 +2,36 @@
 import "./AboutUs.scss"; // External CSS file for styling
 import { useNavigate } from "react-router-dom";
 
-
 const AboutUs = () => {
   const navigate = useNavigate();
 
   return (
     <>
-
       <header className="mainHeader">
-  <div className="container_logo">
-    <a href="/">
-      <img style={{ width: "7rem" }} src="/logo_Unisync_updated.svg" alt="Unisync Logo" />
-    </a>
-  </div>
-  <div className="authButtons">
-    <button onClick={() => navigate("/authentication/login")} className="loginBtn">
-      Sign In
-    </button>
-    <button onClick={() => navigate("/authentication/signup")} className="signupBtn">
-      Sign Up
-    </button>
-  </div>
-</header>
+        <div className="container_logo">
+          <a href="/">
+            <img
+              style={{ width: "15rem" }}
+              src="/src/assest/logo_500_rbg.png"
+              alt="Unisync Logo"
+            />
+          </a>
+        </div>
+        <div className="authButtons">
+          <button
+            onClick={() => navigate("/authentication/login")}
+            className="loginBtn"
+          >
+            Sign In
+          </button>
+          <button
+            onClick={() => navigate("/authentication/signup")}
+            className="signupBtn"
+          >
+            Sign Up
+          </button>
+        </div>
+      </header>
 
       <div className="aboutContainer">
         {/* Intro Section */}
@@ -38,7 +46,10 @@ const AboutUs = () => {
             </p>
           </div>
           <div className="imageSection">
-            <img src="/team.jpg" alt="Dictoo Team" />
+            <img
+              src="/team.jpg"
+              alt="Dictoo Team"
+            />
           </div>
         </section>
 
@@ -54,7 +65,10 @@ const AboutUs = () => {
               </p>
             </div>
             <div className="missionImage">
-              <img src="/grow.jpg" alt="Growth Better" />
+              <img
+                src="/grow.jpg"
+                alt="Growth Better"
+              />
             </div>
           </div>
         </section>
@@ -75,7 +89,11 @@ const AboutUs = () => {
           </p>
           <div className="storyImage">
             <div className="imageTextWrapper">
-              <img src="/friends.jpg" alt="Unisync Story" className="storyImg" />
+              <img
+                src="/friends.jpg"
+                alt="Unisync Story"
+                className="storyImg"
+              />
               <p className="storyText">
                 At Unisync, we believe that collaboration is the key to success,
                 and we are committed to providing the tools and resources
@@ -115,35 +133,50 @@ const AboutUs = () => {
         </section>
       </div>
       {/* Developers Section */}
-<section className="developersSection">
-  <h2>Meet the Developers</h2>
-  <div className="developerCards">
-    <div className="devCard">
-      <img src="/Nikhil.jpeg" alt="Nikhil" />
-      <h3>Nikhil</h3>
-      <p>Backend Developer</p>
-    </div>
-    <div className="devCard">
-      <img src="/Mohit.jpeg" alt="Mohit" />
-      <h3>Mohit</h3>
-      <p>Backend Developer</p>
-    </div>
-    <div className="devCard">
-      <img src="/Hardik.jpeg" alt="Hardik" />
-      <h3>Hardik</h3>
-      <p>Frontend Developer</p>
-    </div>
-    <div className="devCard">
-      <img src="/Yash.jpeg" alt="Yash" />
-      <h3>Yash</h3>
-      <p>Analyst</p>
-    </div>
-  </div>
-</section>
-<footer>
+      <section className="developersSection">
+        <h2>Meet the Developers</h2>
+        <div className="developerCards">
+          <div className="devCard">
+            <img
+              src="/Nikhil.jpeg"
+              alt="Nikhil"
+            />
+            <h3>Nikhil</h3>
+            <p>Backend Developer</p>
+          </div>
+          <div className="devCard">
+            <img
+              src="/Mohit.jpeg"
+              alt="Mohit"
+            />
+            <h3>Mohit</h3>
+            <p>Backend Developer</p>
+          </div>
+          <div className="devCard">
+            <img
+              src="/Hardik.jpeg"
+              alt="Hardik"
+            />
+            <h3>Hardik</h3>
+            <p>Frontend Developer</p>
+          </div>
+          <div className="devCard">
+            <img
+              src="/Yash.jpeg"
+              alt="Yash"
+            />
+            <h3>Yash</h3>
+            <p>Analyst</p>
+          </div>
+        </div>
+      </section>
+      <footer>
         <ul>
           <li>
-            <img src="/logo_updated.svg" alt="image" />
+            <img
+              src="/src/assest/logo_500_rbg.png"
+              alt="image"
+            />
             <span>© 2025</span>
           </li>
           <li>
