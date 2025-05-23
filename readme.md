@@ -1,4 +1,4 @@
-<img src = "./screenshot.png"/>
+<img src = "./UniSync.png"/>
 
 ## Running the project on your machine
 
