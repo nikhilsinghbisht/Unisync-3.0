@@ -16,6 +16,7 @@ export function AuthenticationLayout() {
       </header>
       <main className={classes.container}>
         <Outlet />
+        {/* <AboutUs /> */}
       </main>
       <footer>
         <ul className={classes.container}>
