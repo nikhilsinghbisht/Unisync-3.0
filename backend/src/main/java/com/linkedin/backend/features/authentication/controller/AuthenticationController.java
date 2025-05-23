@@ -6,8 +6,10 @@ import com.linkedin.backend.features.authentication.dto.AuthenticationRequestBod
 import com.linkedin.backend.features.authentication.dto.AuthenticationResponseBody;
 import com.linkedin.backend.features.authentication.model.User;
 import com.linkedin.backend.features.authentication.service.AuthenticationService;
+import com.linkedin.backend.features.referrals.service.ReferralService;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.server.ResponseStatusException;
@@ -127,4 +129,5 @@ public class AuthenticationController {
     public User getUserById(@PathVariable Long id) {
         return authenticationUserService.getUserById(id);
     }
+
 }

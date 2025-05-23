@@ -13,6 +13,7 @@ import io.jsonwebtoken.Claims;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import jakarta.transaction.Transactional;
+import jakarta.validation.Valid;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.core.ParameterizedTypeReference;
@@ -301,5 +302,5 @@ public class AuthenticationService {
         return userRepository.findById(receiverId)
                 .orElseThrow(() -> new IllegalArgumentException("User not found."));
     }
-
+    
 }
