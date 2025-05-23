@@ -59,8 +59,10 @@ export function AuthenticationContextProvider() {
   const [error, setError] = useState<string | null>(null);
 
   const isOnAuthPage =
+    location.pathname === "/aboutus" ||
     location.pathname === "/authentication/login" ||
     location.pathname === "/authentication/signup" ||
+    location.pathname === "/authentication/request-password-reset";
     location.pathname === "/authentication/request-password-reset" ||
     location.pathname === "/about-us";
 

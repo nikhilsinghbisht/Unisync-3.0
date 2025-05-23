@@ -118,3 +118,27 @@ $tag-text: #4338ca;
     }
   }
 }
+
+
+.Jobs_button {
+  display: flex;
+  flex-direction: column;  // Stack vertically
+  align-items: flex-start; // Align to left; use center or flex-end if needed
+  margin-top: 1rem;
+
+  .view-job-btn {
+    display: block;
+    padding: 10px 16px;
+    background-color: #0073e6;
+    color: white;
+    text-decoration: none;
+    border-radius: 6px;
+    font-weight: 600;
+    transition: background-color 0.3s ease;
+    margin-bottom: 10px; // space between buttons if multiple
+
+    &:hover {
+      background-color: #005bb5;
+    }
+  }
+}
