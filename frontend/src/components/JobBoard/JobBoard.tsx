@@ -43,7 +43,7 @@ const JobBoard: React.FC = () => {
     {jobs.map((job) => (
       <div key={job.id} className="job-card">
         <div className="company-info">
-          <img src='../../assest/image.png' alt='photo'/>
+          <img src='/image.svg' alt='photo'/>
           <div>
             <h2>{job.title}</h2>
             <p>{job.companyName}</p>
@@ -61,9 +61,13 @@ const JobBoard: React.FC = () => {
             <span key={idx}>#{tag}</span>
           ))}
         </div>
-        <a href={job.url} target="_blank" rel="noopener noreferrer" className="view-job-btn">
+        
+        <div className='Jobs_button'>
+          <a href={job.url} target="_blank" rel="noopener noreferrer" className="view-job-btn">
           View Job →
         </a>
+        </div>
+        
       </div>
     ))}
   </div>

@@ -1,38 +1,29 @@
-import { useState, useEffect } from "react";
+// import { useState, useEffect } from "react";
 import "./AboutUs.scss"; // External CSS file for styling
 import { useNavigate } from "react-router-dom";
-// import Navbar from "../Navbar/Navbar"; // Assuming you have a Navbar component
-// import pick from "../../Photo/team.jpg";
-// import grow from "../../Photo/grow.jpg";
-// import friends from "../../Photo/friends.jpg";
-// import LoadingScreen from "../LoadingScrean/LoadingScreen";
+
 
 const AboutUs = () => {
-  const [isLoading, setIsLoading] = useState(true);
   const navigate = useNavigate();
 
-  useEffect(() => {
-    // Simulate a network request or task
-    setTimeout(() => {
-      setIsLoading(false); // Set loading to false after task completion
-    }, 400); // 3 seconds delay for demonstration
-  }, []);
   return (
     <>
 
-      {!isLoading && (
-        <div>
-          {/* Rest of your home page content */}
-        </div>
-      )}
-      <div className="authButtons">
-  <button onClick={() => navigate("/authentication/login")} className="loginBtn">
-    Sign In
-  </button>
-  <button onClick={() => navigate("/authentication/signup")} className="signupBtn">
-    Sign Up
-  </button>
-</div>
+      <header className="mainHeader">
+  <div className="container_logo">
+    <a href="/">
+      <img style={{ width: "7rem" }} src="/logo_Unisync_updated.svg" alt="Unisync Logo" />
+    </a>
+  </div>
+  <div className="authButtons">
+    <button onClick={() => navigate("/authentication/login")} className="loginBtn">
+      Sign In
+    </button>
+    <button onClick={() => navigate("/authentication/signup")} className="signupBtn">
+      Sign Up
+    </button>
+  </div>
+</header>
 
       <div className="aboutContainer">
         {/* Intro Section */}
@@ -123,6 +114,67 @@ const AboutUs = () => {
           </div>
         </section>
       </div>
+      {/* Developers Section */}
+<section className="developersSection">
+  <h2>Meet the Developers</h2>
+  <div className="developerCards">
+    <div className="devCard">
+      <img src="/Nikhil.jpeg" alt="Nikhil" />
+      <h3>Nikhil</h3>
+      <p>Backend Developer</p>
+    </div>
+    <div className="devCard">
+      <img src="/Mohit.jpeg" alt="Mohit" />
+      <h3>Mohit</h3>
+      <p>Backend Developer</p>
+    </div>
+    <div className="devCard">
+      <img src="/Hardik.jpeg" alt="Hardik" />
+      <h3>Hardik</h3>
+      <p>Frontend Developer</p>
+    </div>
+    <div className="devCard">
+      <img src="/Yash.jpeg" alt="Yash" />
+      <h3>Yash</h3>
+      <p>Analyst</p>
+    </div>
+  </div>
+</section>
+<footer>
+        <ul>
+          <li>
+            <img src="/logo_updated.svg" alt="image" />
+            <span>© 2025</span>
+          </li>
+          <li>
+            <a href="">Accessiblity</a>
+          </li>
+          <li>
+            <a href="">User Agreement</a>
+          </li>
+          <li>
+            <a href="">Privacy Policy</a>
+          </li>
+          <li>
+            <a href="">Cookie Policy</a>
+          </li>
+          <li>
+            <a href="">Copywright Policy</a>
+          </li>
+          <li>
+            <a href="">Brand Policy</a>
+          </li>
+          <li>
+            <a href="">Guest Controls</a>
+          </li>
+          <li>
+            <a href="">Community Guidelines</a>
+          </li>
+          <li>
+            <a href="">Language</a>
+          </li>
+        </ul>
+      </footer>
     </>
   );
 };

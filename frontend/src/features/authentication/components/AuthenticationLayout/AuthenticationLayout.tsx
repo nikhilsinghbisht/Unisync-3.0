@@ -1,6 +1,7 @@
 import { Outlet } from "react-router-dom";
 import classes from "./AuthenticationLayout.module.scss";
 import "../../../../assest/logo_br.svg"
+// import AboutUs from "../../../../components/Aboutus/AboutUs";
 export function AuthenticationLayout() {
   return (
     <div className={classes.root}>
@@ -13,6 +14,7 @@ export function AuthenticationLayout() {
       </header>
       <main className={classes.container}>
         <Outlet />
+        {/* <AboutUs /> */}
       </main>
       <footer>
         <ul className={classes.container}>

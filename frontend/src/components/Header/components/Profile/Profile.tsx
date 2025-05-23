@@ -85,15 +85,6 @@ export function Profile({
               View Profile
             </Button>
             <div className={classes.aboutButton}>
-          <Button
-          size="small"
-            outline
-    onClick={() => {
-      navigate("/ForgotPassword");
-    }}
-  >
-    Change Password
-  </Button>
 </div>
             <Link
               to="/logout"
