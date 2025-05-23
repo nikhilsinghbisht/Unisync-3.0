@@ -137,7 +137,7 @@ const router = createBrowserRouter([
     ],
   },
   {
-        path:"/aboutus",
+        path:"/about-us",
         element: <AboutUs />,
   }
 ]);

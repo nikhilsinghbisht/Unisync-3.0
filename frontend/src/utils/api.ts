@@ -21,7 +21,6 @@ export const request = async <T>({
   onSuccess,
   onFailure,
 }: IRequestParams<T>): Promise<void> => {
-
   const headers: IHeaders = {
     Authorization: `Bearer ${localStorage.getItem("token")}`,
   };
@@ -31,7 +30,6 @@ export const request = async <T>({
   }
 
   try {
-console.log("LOGGG",BASE_URL)
     const response = await fetch(`${BASE_URL}${endpoint}`, {
       method,
       headers,
@@ -39,8 +37,11 @@ console.log("LOGGG",BASE_URL)
     });
 
     if (!response.ok) {
-      if (response.status === 401 && !window.location.pathname.includes("authentication")) {
-        window.location.href = "/authentication/login";
+      if (
+        response.status === 401 &&
+        !window.location.pathname.includes("authentication")
+      ) {
+        window.location.href = "/about-us";
         return;
       }
 

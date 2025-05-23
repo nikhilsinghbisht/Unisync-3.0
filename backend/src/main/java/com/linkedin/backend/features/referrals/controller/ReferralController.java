@@ -65,6 +65,7 @@ public class ReferralController {
         List<UserDTO> referrals = referralService.getApplicants(postId,userId);
         return ResponseEntity.ok(referrals);
     }
+    
     @PutMapping("/referral/application/status")
     public ResponseEntity<?> updateApplicationStatus(@RequestParam Long applicantId,
                                                      @RequestParam Long postId,

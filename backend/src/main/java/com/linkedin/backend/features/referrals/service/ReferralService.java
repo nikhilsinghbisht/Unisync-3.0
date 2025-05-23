@@ -227,9 +227,7 @@ public class ReferralService {
         if (!status.equalsIgnoreCase("ACCEPTED") && !status.equalsIgnoreCase("REJECTED")) {
             throw new IllegalArgumentException("Invalid status. Use ACCEPTED or REJECTED.");
         }
-
-        // Check if application exists before updating
-        ReferralApplication application = referralApplicationRepository
+        referralApplicationRepository
                 .findByApplicantIdAndReferralPostId(applicantId, postId)
                 .orElseThrow(() -> new EntityNotFoundException("Application not found"));
 
