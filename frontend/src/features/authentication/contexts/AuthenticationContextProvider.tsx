@@ -1,11 +1,18 @@
-import { createContext, Dispatch, SetStateAction, useContext, useEffect, useState } from "react";
+import {
+  createContext,
+  Dispatch,
+  SetStateAction,
+  useContext,
+  useEffect,
+  useState,
+} from "react";
 import { Navigate, Outlet, useLocation } from "react-router-dom";
 import { Loader } from "../../../components/Loader/Loader";
 import { request } from "../../../utils/api";
 
 interface IAuthenticationResponse {
   token: string;
-  message: string; // Fix typo: 'messgage' to 'message'
+  message: string;
 }
 
 export interface IUser {
@@ -32,37 +39,38 @@ interface IAuthenticationContextType {
   ouathLogin: (code: string, page: "login" | "signup") => Promise<void>;
 }
 
-const AuthenticationContext = createContext<IAuthenticationContextType | null>(null);
+const AuthenticationContext = createContext<IAuthenticationContextType | null>(
+  null
+);
 
 export function useAuthentication() {
   return useContext(AuthenticationContext)!;
 }
 
-// Validate email format
 const validateEmail = (email: string): boolean => {
-  // Basic email format: must start with a letter and follow proper email structure
   const emailRegex = /^[A-Za-z][A-Za-z0-9._%+-]*@gmail\.com$/i;
   return emailRegex.test(email);
 };
-
 
 export function AuthenticationContextProvider() {
   const location = useLocation();
   const [user, setUser] = useState<IUser | null>(null);
   const [isLoading, setIsLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null); // State to store error message
+  const [error, setError] = useState<string | null>(null);
 
   const isOnAuthPage =
     location.pathname === "/aboutus" ||
     location.pathname === "/authentication/login" ||
     location.pathname === "/authentication/signup" ||
     location.pathname === "/authentication/request-password-reset";
+    location.pathname === "/authentication/request-password-reset" ||
+    location.pathname === "/about-us";
 
   const login = async (email: string, password: string) => {
     if (!validateEmail(email)) {
       throw new Error("Invalid email address. Please check your email format.");
     }
-    
+
     setError(null); // Reset error if email is valid
 
     await request<IAuthenticationResponse>({
@@ -96,7 +104,7 @@ export function AuthenticationContextProvider() {
     if (!validateEmail(email)) {
       throw new Error("Invalid email address. Please check your email format.");
     }
-    
+
     setError(null); // Reset error if email is valid
 
     await request<IAuthenticationResponse>({
@@ -140,16 +148,29 @@ export function AuthenticationContextProvider() {
     return <Loader />;
   }
 
-  if (!isLoading && !user && !isOnAuthPage) {
-    console.log("Redirecting unauthenticated user to /aboutus");
-    return <Navigate to="/aboutus" state={{ from: location.pathname }} />;
+  if (!isLoading && !localStorage.getItem("token") && !isOnAuthPage) {
+    console.log("Redirecting unauthenticated user to /about-us");
+    return (
+      <Navigate
+        to="/about-us"
+        state={{ from: location.pathname }}
+      />
+    );
   }
 
-  if (user && !user.emailVerified && location.pathname !== "/authentication/verify-email") {
+  if (
+    user &&
+    !user.emailVerified &&
+    location.pathname !== "/authentication/verify-email"
+  ) {
     return <Navigate to="/authentication/verify-email" />;
   }
 
-  if (user && user.emailVerified && location.pathname == "/authentication/verify-email") {
+  if (
+    user &&
+    user.emailVerified &&
+    location.pathname == "/authentication/verify-email"
+  ) {
     return <Navigate to="/" />;
   }
 
