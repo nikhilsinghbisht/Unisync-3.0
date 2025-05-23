@@ -53,10 +53,10 @@ export function AuthenticationContextProvider() {
   const [error, setError] = useState<string | null>(null); // State to store error message
 
   const isOnAuthPage =
+    location.pathname === "/aboutus" ||
     location.pathname === "/authentication/login" ||
     location.pathname === "/authentication/signup" ||
-    location.pathname === "/authentication/request-password-reset" ||
-    location.pathname === "/aboutus";
+    location.pathname === "/authentication/request-password-reset";
 
   const login = async (email: string, password: string) => {
     if (!validateEmail(email)) {
@@ -142,7 +142,7 @@ export function AuthenticationContextProvider() {
 
   if (!isLoading && !user && !isOnAuthPage) {
     console.log("Redirecting unauthenticated user to /aboutus");
-    return <Navigate to="/authentication/login" state={{ from: location.pathname }} />;
+    return <Navigate to="/aboutus" state={{ from: location.pathname }} />;
   }
 
   if (user && !user.emailVerified && location.pathname !== "/authentication/verify-email") {
