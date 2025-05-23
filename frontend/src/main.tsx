@@ -25,6 +25,7 @@ import TechNews from "./components/TechNewsWidget/TechNews";
 import JobBoard from "./components/JobBoard/JobBoard";
 import { ReferralApplicants } from "./features/referrals/components/Created/Referral_Applicants";
 import AboutUs from "../src/components/Aboutus/AboutUs";
+//code is under review
 
 const router = createBrowserRouter([
   {
