@@ -24,6 +24,8 @@ import { ReferralPage } from "./features/referrals/ReferralPage";
 import TechNews from "./components/TechNewsWidget/TechNews";
 import JobBoard from "./components/JobBoard/JobBoard";
 import { ReferralApplicants } from "./features/referrals/components/Created/Referral_Applicants";
+import AboutUs from "../src/components/Aboutus/AboutUs";
+
 const router = createBrowserRouter([
   {
     element: <AuthenticationContextProvider />,
@@ -96,12 +98,14 @@ const router = createBrowserRouter([
             path:"/jobs",
             element:<JobBoard/>
           }
+          
         ],
       },
       {
         path: "/authentication",
         element: <AuthenticationLayout />,
         children: [
+          
           {
             path: "login",
             element: <Login />,
@@ -122,15 +126,20 @@ const router = createBrowserRouter([
             path: "profile/:id",
             element: <LoginProfile />,
           },
-          
         ],
       },
       {
         path: "*",
         element: <Navigate to="/" />,
       },
+      
+      
     ],
   },
+  {
+        path:"/aboutus",
+        element: <AboutUs />,
+  }
 ]);
 
 createRoot(document.getElementById("root")!).render(

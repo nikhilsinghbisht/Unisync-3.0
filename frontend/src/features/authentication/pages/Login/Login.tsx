@@ -62,10 +62,10 @@ export function Login() {
           />
           {errorMessage && <p className={classes.error}>{errorMessage}</p>}
 
-          <Button type="submit" disabled={isLoading}>
+          <Button type="submit" disabled={isLoading} >
             {isLoading ? "..." : "Sign in"}
           </Button>
-          <Link to="/authentication/request-password-reset">Forgot password?</Link>
+          <Link style={{color:"#d95a44"}} to="/authentication/request-password-reset">Forgot password?</Link>
         </form>
         <Seperator>Or</Seperator>
         <div className={classes.register}>
@@ -81,7 +81,8 @@ export function Login() {
             </svg>
             Continue with Google
           </Button>
-          New to LinkedIn? <Link to="/authentication/signup">Join now</Link>
+          New to LinkedIn? <Link style={{color:"#d95a44"}} to="/authentication/signup">Join now</Link>
+            
         </div>
       </Box>
     </div>

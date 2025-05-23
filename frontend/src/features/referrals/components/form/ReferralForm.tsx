@@ -78,7 +78,7 @@ const ReferralForm = () => {
           onChange={(e) => setJobLink(e.target.value)}
           required
         />
-        <button type="submit">Submit Referral</button>
+        <button style={{backgroundColor:"#d95a44", marginLeft:"35%"}} type="submit">Submit Referral</button>
       </form>
       {message && <p className="message">{message}</p>}
     </div>

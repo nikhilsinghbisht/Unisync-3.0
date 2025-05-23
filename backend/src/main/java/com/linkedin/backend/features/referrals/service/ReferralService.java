@@ -97,30 +97,36 @@ public class ReferralService {
     }
 
     public ReferralRequestResponse applyReferral(ReferralRequestDTO referralRequestDTO) {
-        ReferralPost referralPost = referralPostRepository.findById(referralRequestDTO.getPostId()).orElseThrow(() ->
-                new EntityNotFoundException("Referral post not found"));
+        ReferralPost referralPost = referralPostRepository.findById(referralRequestDTO.getPostId())
+                .orElseThrow(() -> new EntityNotFoundException("Referral post not found"));
 
         User referrer = referralPost.getReferrer();
 
         List<User> applicants = referralRequestDTO.getApplicantId().stream()
-                .map(user -> userRepository.findById(user.getId()).orElseThrow(() ->
-                        new EntityNotFoundException("User not found with ID: " + user.getId())))
+                .map(user -> userRepository.findById(user.getId())
+                        .orElseThrow(() -> new EntityNotFoundException("User not found with ID: " + user.getId())))
                 .filter(applicant -> !applicant.getId().equals(referrer.getId()))
                 .toList();
 
-
-        applicants.stream()
-                .map(applicant -> ReferralApplication.builder()
-                        .referralPost(referralPost)
-                        .applicant(applicant)
-                        .resumeLink(referralRequestDTO.getLink())
-                        .status("PENDING")
-                        .appliedAt(LocalDateTime.now())
-                        .build())
-                .map(referralApplicationRepository::save)
-                .toList();
-
         for (User applicant : applicants) {
+
+            boolean alreadyApplied = referralApplicationRepository
+                    .existsByApplicantIdAndReferralPostId(applicant.getId(), referralPost.getId());
+
+            if (alreadyApplied) {
+                throw new IllegalStateException("User with ID " + applicant.getId() + " has already applied to this referral.");
+            }
+
+
+            ReferralApplication application = ReferralApplication.builder()
+                    .referralPost(referralPost)
+                    .applicant(applicant)
+                    .resumeLink(referralRequestDTO.getLink())
+                    .status("PENDING")
+                    .appliedAt(LocalDateTime.now())
+                    .build();
+
+            referralApplicationRepository.save(application);
             notificationService.sendReferralFilledNotification(applicant, referrer, referralPost.getId());
         }
 
@@ -200,6 +206,7 @@ public class ReferralService {
                 .map(data -> {
                     User user = (User) data[0];
                     String resumeLink = (String) data[1];
+                    String status = (String) data[2];
 
                     return UserDTO.builder()
                             .id(user.getId())
@@ -209,6 +216,7 @@ public class ReferralService {
                             .company(user.getCompany())
                             .username(user.getUsername())
                             .resumeLink(resumeLink)
+                            .applicationStatus(status)
                             .build();
                 })
                 .toList();

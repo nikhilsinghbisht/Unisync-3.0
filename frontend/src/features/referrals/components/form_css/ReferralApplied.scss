@@ -48,3 +48,55 @@
     font-style: italic;
   }
   
+  .application-status {
+  font-weight: bold;
+  margin-top: 8px;
+}
+
+.application-status.open {
+  color: green;
+}
+
+.application-status.rejected {
+  color: red;
+}
+
+.application-status.pending {
+  color: orange;
+}
+
+.refresh-button {
+  padding: 8px 16px;
+  background-color: #d95a44;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: bold;
+  transition: background-color 0.3s;
+
+  &:hover {
+    background-color: #e87865;
+  }
+}
+
+.application-status {
+  font-weight: bold;
+  padding: 5px;
+  border-radius: 3px;
+}
+
+.application-status.accepted {
+  // color: white;
+  color: green; /* Green for accepted */
+}
+
+.application-status.rejected {
+  // color: white;
+  color: red; /* Red for rejected */
+}
+
+.application-status.pending {
+  color: black;
+  // background-color: lightgray; /* Black for pending */
+}

@@ -78,7 +78,7 @@ export function Signup() {
           Continue with Google
         </Button>
         <div className={classes.register}>
-          Already on LinkedIn? <Link to="/authentication/login">Sign in</Link>
+          Already on LinkedIn? <Link style={{color:"#d95a44"}} to="/authentication/login">Sign in</Link>
         </div>
       </Box>
     </div>

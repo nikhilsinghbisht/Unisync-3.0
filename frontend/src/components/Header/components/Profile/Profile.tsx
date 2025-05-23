@@ -63,7 +63,7 @@ export function Profile({
               src={
                 user?.profilePicture
                   ? `${import.meta.env.VITE_API_URL}/api/v1/storage/${user?.profilePicture}`
-                  : "/avatar.svg"
+                  : "./avatar.svg"
               }
               alt=""
             />
@@ -84,6 +84,17 @@ export function Profile({
             >
               View Profile
             </Button>
+            <div className={classes.aboutButton}>
+          <Button
+          size="small"
+            outline
+    onClick={() => {
+      navigate("/ForgotPassword");
+    }}
+  >
+    Change Password
+  </Button>
+</div>
             <Link
               to="/logout"
               onClick={(e) => {

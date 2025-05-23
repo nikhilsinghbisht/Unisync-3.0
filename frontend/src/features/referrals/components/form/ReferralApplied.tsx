@@ -9,7 +9,7 @@ const ReferralApplied = () => {
   const { user } = useAuthentication();
   const userId = user?.id;
 
-  useEffect(() => {
+  const fetchApplications = () => {
     if (!userId) return;
 
     request<Referral[]>({
@@ -19,6 +19,10 @@ const ReferralApplied = () => {
         console.error("Failed to fetch referral applications:", error);
       },
     });
+  };
+
+  useEffect(() => {
+    fetchApplications();
   }, [userId]);
 
   return (
@@ -26,16 +30,20 @@ const ReferralApplied = () => {
       <h3 style={{ fontSize: "1.5rem", textAlign: "center", margin: "15px" }}>
         Applied Referral Applications
       </h3>
+
+      <div style={{ textAlign: "center", marginBottom: "15px" }}>
+        <button className="refresh-button" onClick={fetchApplications}>
+          🔄 Refresh Status
+        </button>
+      </div>
+
       {applications.length === 0 ? (
         <p className="no-applications">
           You haven’t applied for any referrals yet.
         </p>
       ) : (
         applications.map((app) => (
-          <div
-            className="application-card"
-            key={app.postId}
-          >
+          <div className="application-card" key={app.postId}>
             <h3 className="application-title">
               {app.company} - {app.jobTitle}
             </h3>
@@ -48,11 +56,17 @@ const ReferralApplied = () => {
             >
               View Job Posting
             </a>
-            <p>Status - {app.status}</p>
+          <div>
+            Status -
+            <span className={`application-status ${app.applicationStatus?.toLowerCase() || "pending"}`}>
+               {app.applicationStatus || "PENDING"}
+            </span>
+            </div>
           </div>
         ))
       )}
     </div>
   );
 };
+
 export default ReferralApplied;

@@ -106,6 +106,7 @@ export function Network() {
           <NavLink
             to="invitations"
             className={({ isActive }) => (isActive ? classes.active : "")}
+            // style={{ color: '#d95a44' }}
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"
