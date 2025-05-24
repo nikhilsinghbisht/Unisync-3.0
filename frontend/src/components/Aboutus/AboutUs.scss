@@ -76,10 +76,11 @@
     gap: 2rem;
     align-items: center;
 
-    .textSection,
-    .missionText {
-      flex: 1;
-    }
+   .textSection,
+.missionText {
+  flex: 1;
+  padding-left: 2rem; // Adds equal spacing as image side
+}
 
     .imageSection,
     .missionImage {
@@ -113,6 +114,7 @@
           font-size: 1rem;
           text-align: justify;
         }
+        
       }
     }
   }
