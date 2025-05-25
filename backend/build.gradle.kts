@@ -4,7 +4,7 @@ plugins {
     id("io.spring.dependency-management") version "1.1.6"
 }
 
-group = "com.linkedin"
+group = "com.unisync"
 version = "0.0.1-SNAPSHOT"
 
 java {
@@ -27,26 +27,15 @@ dependencies {
     implementation("org.springframework.boot:spring-boot-starter-websocket")
     compileOnly("org.projectlombok:lombok:1.18.36")
     annotationProcessor("org.projectlombok:lombok:1.18.34")
-
-
-    // Database
     implementation("org.springframework.boot:spring-boot-starter-data-jpa")
     implementation("mysql:mysql-connector-java:8.0.33")
-
-    // Search
     implementation("org.hibernate.search:hibernate-search-mapper-orm:7.2.2.Final")
     implementation("org.hibernate.search:hibernate-search-backend-lucene:7.2.2.Final")
     implementation("org.jboss.logging:jboss-logging:3.6.1.Final")
-
-    // Security
     implementation("io.jsonwebtoken:jjwt-api:0.12.6")
     implementation("io.jsonwebtoken:jjwt-impl:0.12.6")
     implementation(("io.jsonwebtoken:jjwt-jackson:0.12.6"))
-
-    // DevTools
     developmentOnly("org.springframework.boot:spring-boot-devtools")
-
-    // Testing
     testImplementation("org.springframework.boot:spring-boot-starter-test")
     testRuntimeOnly("org.junit.platform:junit-platform-launcher")
 }
