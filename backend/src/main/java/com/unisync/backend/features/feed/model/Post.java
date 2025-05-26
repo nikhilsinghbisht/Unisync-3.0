@@ -1,7 +1,7 @@
 package com.unisync.backend.features.feed.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.linkedin.backend.features.authentication.model.User;
+import com.unisync.backend.features.authentication.model.User;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotEmpty;
 import lombok.Builder;
@@ -10,26 +10,6 @@ import org.hibernate.annotations.CreationTimestamp;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Set;
-
-<<<<<<< HEAD:backend/src/main/java/com/linkedin/backend/features/feed/model/Post.java
-=======
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import org.hibernate.annotations.CreationTimestamp;
-
-import com.unisync.backend.features.authentication.model.User;
-
-import jakarta.persistence.CascadeType;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.JoinTable;
-import jakarta.persistence.ManyToMany;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.OneToMany;
-import jakarta.persistence.PreUpdate;
-import jakarta.validation.constraints.NotEmpty;
 
 
 @Entity(name = "posts")

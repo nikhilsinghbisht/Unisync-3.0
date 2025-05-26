@@ -1,4 +1,4 @@
-package com.linkedin.backend.features.feed.dto;
+package com.unisync.backend.features.feed.dto;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 

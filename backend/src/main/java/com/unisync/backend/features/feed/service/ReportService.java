@@ -1,10 +1,10 @@
-package com.linkedin.backend.features.feed.service;
+package com.unisync.backend.features.feed.service;
 
-import com.linkedin.backend.features.feed.dto.ReportRequestDTO;
-import com.linkedin.backend.features.feed.model.Comment;
-import com.linkedin.backend.features.feed.model.Post;
-import com.linkedin.backend.features.feed.repository.CommentRepository;
-import com.linkedin.backend.features.feed.repository.PostRepository;
+import com.unisync.backend.features.feed.dto.ReportRequestDTO;
+import com.unisync.backend.features.feed.model.Comment;
+import com.unisync.backend.features.feed.model.Post;
+import com.unisync.backend.features.feed.repository.CommentRepository;
+import com.unisync.backend.features.feed.repository.PostRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
