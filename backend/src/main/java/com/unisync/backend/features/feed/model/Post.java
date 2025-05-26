@@ -5,22 +5,15 @@ import java.util.List;
 import java.util.Set;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import jakarta.persistence.*;
+import lombok.Builder;
+import lombok.Data;
 import org.hibernate.annotations.CreationTimestamp;
 
 import com.unisync.backend.features.authentication.model.User;
 
-import jakarta.persistence.CascadeType;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.JoinTable;
-import jakarta.persistence.ManyToMany;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.OneToMany;
-import jakarta.persistence.PreUpdate;
 import jakarta.validation.constraints.NotEmpty;
+
 
 @Entity(name = "posts")
 public class Post {
@@ -44,6 +37,9 @@ public class Post {
     @CreationTimestamp
     private LocalDateTime creationDate;
 
+    @Column(nullable = false)
+    private Long reportCount = 0L;
+
     private LocalDateTime updatedDate;
 
     public Post(String content, User author) {
@@ -62,6 +58,8 @@ public class Post {
     public Long getId() {
         return id;
     }
+    public void setReportCount(Long count){
+        this.reportCount= count;}
 
     public void setId(Long id) {
         this.id = id;

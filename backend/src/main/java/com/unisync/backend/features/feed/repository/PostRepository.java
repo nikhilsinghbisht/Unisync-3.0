@@ -14,4 +14,8 @@ public interface PostRepository extends JpaRepository<Post, Long> {
     List<Post> findAllByOrderByCreationDateDesc();
     
     List<Post> findByAuthorIdInOrderByCreationDateDesc(Set<Long> connectedUserIds);
+
+    List<Post> findByAuthorIdInAndReportCountLessThanOrderByCreationDateDesc(Set<Long> connectedUserIds, Long reportCount);
+
+    List<Post> findByReportCountLessThanOrderByCreationDateDesc(Long reportCount);
 }

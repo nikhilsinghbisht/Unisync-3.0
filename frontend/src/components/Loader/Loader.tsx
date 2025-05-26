@@ -14,7 +14,10 @@ export function Loader({ isInline }: ILoaderProps) {
   }
   return (
     <div className={classes.global}>
-      <img src="/logo_Unisync_updated.svg" alt="Loading..." />
+      <img
+        src="/src/assest/logo_500_rbg.png"
+        alt="Loading..."
+      />
       <div className={classes.container}>
         <div className={classes.content}></div>
       </div>
