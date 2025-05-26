@@ -11,4 +11,5 @@ uploads/*
 
 # IntelliJ IDEA filesdo
 src/main/resources/application.properties
+src/main/resources/application-prod.properties
 docker-compose.yml

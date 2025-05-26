@@ -21,7 +21,6 @@ public class Comment {
     @ManyToOne
     @JoinColumn(name = "author_id", nullable = false)
     private User author;
-    @Builder.Default
     private Boolean isVisible = true;
     @Column(name = "report_count")
     private int reportCount = 0;

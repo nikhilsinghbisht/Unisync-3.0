@@ -1,7 +1,13 @@
 package com.unisync.backend.features.feed.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import jakarta.persistence.*;
+import lombok.Builder;
+import lombok.Data;
+import org.hibernate.annotations.CreationTimestamp;
+
 import com.unisync.backend.features.authentication.model.User;
+
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotEmpty;
 import lombok.Builder;
@@ -24,10 +30,9 @@ public class Post {
     @ManyToOne
     @JoinColumn(name = "author_id", nullable = false)
     private User author;
-    @Builder.Default
+
     private Boolean isVisible = true;
-    @Column(name = "report_count")
-    private int reportCount = 0;
+
     @JsonIgnore
     @ManyToMany
     @JoinTable(name = "posts_likes", joinColumns = @JoinColumn(name = "post_id"), inverseJoinColumns = @JoinColumn(name = "user_id"))
@@ -37,6 +42,18 @@ public class Post {
     private List<Comment> comments;
     @CreationTimestamp
     private LocalDateTime creationDate;
+
+
+    public Long getReportCount() {
+        return reportCount;
+    }
+
+    public void setReportCount(Long reportCount) {
+        this.reportCount = reportCount;
+    }
+
+    @Column(nullable = false)
+    private Long reportCount = 0L;
 
     private LocalDateTime updatedDate;
 
@@ -117,11 +134,5 @@ public class Post {
         this.updatedDate = updatedDate;
     }
     public void setIsVisible(Boolean value) { this.isVisible = value;}
-    public int getReportCount() {
-        return reportCount;
-    }
 
-    public void setReportCount(int reportCount) {
-        this.reportCount = reportCount;
-    }
 }
