@@ -3,6 +3,7 @@ package com.linkedin.backend.features.feed.model;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.linkedin.backend.features.authentication.model.User;
 import jakarta.persistence.*;
+import lombok.Builder;
 import org.hibernate.annotations.CreationTimestamp;
 
 import java.time.LocalDateTime;
@@ -20,6 +21,10 @@ public class Comment {
     @ManyToOne
     @JoinColumn(name = "author_id", nullable = false)
     private User author;
+    @Builder.Default
+    private Boolean isVisible = true;
+    @Column(name = "report_count")
+    private int reportCount = 0;
     @Column(nullable = false)
     private String content;
 
@@ -88,5 +93,13 @@ public class Comment {
 
     public void setUpdatedDate(LocalDateTime updatedDate) {
         this.updatedDate = updatedDate;
+    }
+    public void setIsVisible(Boolean value) { this.isVisible = value;}
+    public int getReportCount() {
+        return reportCount;
+    }
+
+    public void setReportCount(int reportCount) {
+        this.reportCount = reportCount;
     }
 }

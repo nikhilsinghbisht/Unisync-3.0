@@ -1,26 +1,15 @@
 package com.linkedin.backend.features.feed.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.linkedin.backend.features.authentication.model.User;
+import jakarta.persistence.*;
+import jakarta.validation.constraints.NotEmpty;
+import lombok.Builder;
+import org.hibernate.annotations.CreationTimestamp;
+
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Set;
-
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import org.hibernate.annotations.CreationTimestamp;
-
-import com.linkedin.backend.features.authentication.model.User;
-
-import jakarta.persistence.CascadeType;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.JoinTable;
-import jakarta.persistence.ManyToMany;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.OneToMany;
-import jakarta.persistence.PreUpdate;
-import jakarta.validation.constraints.NotEmpty;
 
 @Entity(name = "posts")
 public class Post {
@@ -34,6 +23,10 @@ public class Post {
     @ManyToOne
     @JoinColumn(name = "author_id", nullable = false)
     private User author;
+    @Builder.Default
+    private Boolean isVisible = true;
+    @Column(name = "report_count")
+    private int reportCount = 0;
     @JsonIgnore
     @ManyToMany
     @JoinTable(name = "posts_likes", joinColumns = @JoinColumn(name = "post_id"), inverseJoinColumns = @JoinColumn(name = "user_id"))
@@ -121,5 +114,13 @@ public class Post {
 
     public void setUpdatedDate(LocalDateTime updatedDate) {
         this.updatedDate = updatedDate;
+    }
+    public void setIsVisible(Boolean value) { this.isVisible = value;}
+    public int getReportCount() {
+        return reportCount;
+    }
+
+    public void setReportCount(int reportCount) {
+        this.reportCount = reportCount;
     }
 }
