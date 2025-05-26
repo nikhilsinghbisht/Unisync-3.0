@@ -8,6 +8,8 @@ import com.unisync.backend.features.feed.repository.PostRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Objects;
+
 @Service
 public class ReportService {
 
@@ -24,7 +26,7 @@ public class ReportService {
             Post post = postRepository.findById(requestDTO.getPostId())
                     .orElseThrow(() -> new IllegalArgumentException("Post not found with ID: " + requestDTO.getPostId()));
 
-            post.setReportCount(post.getReportCount() + 1);
+            post.setReportCount(Objects.requireNonNullElse(post.getReportCount(), 0L) + 1);
             if (post.getReportCount() >= REPORT_THRESHOLD) {
                 post.setIsVisible(true);
             }
