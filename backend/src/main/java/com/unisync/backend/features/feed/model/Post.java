@@ -1,9 +1,5 @@
 package com.unisync.backend.features.feed.model;
 
-import java.time.LocalDateTime;
-import java.util.List;
-import java.util.Set;
-
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Builder;
@@ -12,7 +8,14 @@ import org.hibernate.annotations.CreationTimestamp;
 
 import com.unisync.backend.features.authentication.model.User;
 
+import jakarta.persistence.*;
 import jakarta.validation.constraints.NotEmpty;
+import lombok.Builder;
+import org.hibernate.annotations.CreationTimestamp;
+
+import java.time.LocalDateTime;
+import java.util.List;
+import java.util.Set;
 
 
 @Entity(name = "posts")
@@ -27,6 +30,9 @@ public class Post {
     @ManyToOne
     @JoinColumn(name = "author_id", nullable = false)
     private User author;
+
+    private Boolean isVisible = true;
+
     @JsonIgnore
     @ManyToMany
     @JoinTable(name = "posts_likes", joinColumns = @JoinColumn(name = "post_id"), inverseJoinColumns = @JoinColumn(name = "user_id"))
@@ -36,6 +42,15 @@ public class Post {
     private List<Comment> comments;
     @CreationTimestamp
     private LocalDateTime creationDate;
+
+
+    public Long getReportCount() {
+        return reportCount;
+    }
+
+    public void setReportCount(Long reportCount) {
+        this.reportCount = reportCount;
+    }
 
     @Column(nullable = false)
     private Long reportCount = 0L;
@@ -58,8 +73,6 @@ public class Post {
     public Long getId() {
         return id;
     }
-    public void setReportCount(Long count){
-        this.reportCount= count;}
 
     public void setId(Long id) {
         this.id = id;
@@ -120,4 +133,6 @@ public class Post {
     public void setUpdatedDate(LocalDateTime updatedDate) {
         this.updatedDate = updatedDate;
     }
+    public void setIsVisible(Boolean value) { this.isVisible = value;}
+
 }
