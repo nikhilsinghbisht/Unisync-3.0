@@ -157,20 +157,16 @@ public class FeedService {
                         : connection.getAuthor().getId())
                 .collect(Collectors.toSet());
 
-<<<<<<< HEAD
-        return postRepository.findByAuthorIdInAndReportCountLessThanOrderByCreationDateDesc(connectedUserIds, 100L);
-=======
+
         return postRepository.findByAuthorIdInAndReportCountLessThanOrderByCreationDateDesc(connectedUserIds, Constant.REPORT_THRESHOLD);
->>>>>>> 9f27949a8dd93234bb7f62a5f53fa2e9f24d6232
+
     }
 
 
     public List<Post> getAllPosts() {
-<<<<<<< HEAD
-        return postRepository.findByReportCountLessThanOrderByCreationDateDesc(100L);
-=======
+
         return postRepository.findByReportCountLessThanOrderByCreationDateDesc(Constant.REPORT_THRESHOLD);
->>>>>>> 9f27949a8dd93234bb7f62a5f53fa2e9f24d6232
+
     }
 
     public List<Comment> getPostComments(Long postId) {
