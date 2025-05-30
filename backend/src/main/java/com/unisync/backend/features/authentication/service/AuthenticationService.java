@@ -126,7 +126,8 @@ public class AuthenticationService {
             throw new IllegalArgumentException("Password is incorrect.");
         }
         String token = jsonWebToken.generateToken(loginRequestBody.getEmail());
-        return new AuthenticationResponseBody(token, "Authentication succeeded.");
+        String refreshToken = jsonWebToken.generateRefreshToken(loginRequestBody.getEmail());
+        return new AuthenticationResponseBody(token,refreshToken,"Authentication succeeded.");
     }
 
     public AuthenticationResponseBody googleLoginOrSignup(String code, String page) {
@@ -168,7 +169,8 @@ public class AuthenticationService {
             }
 
             String token = jsonWebToken.generateToken(email);
-            return new AuthenticationResponseBody(token, "Google authentication succeeded.");
+            String refreshToken = jsonWebToken.generateRefreshToken(email);
+            return new AuthenticationResponseBody(token, refreshToken,"Google authentication succeeded.");
         } else {
             throw new IllegalArgumentException("Failed to exchange code for ID token.");
         }
@@ -197,7 +199,8 @@ public class AuthenticationService {
             logger.info("Error while sending email: {}", e.getMessage());
         }
         String authToken = jsonWebToken.generateToken(registerRequestBody.getEmail());
-        return new AuthenticationResponseBody(authToken, "User registered successfully.");
+        String refreshToken = jsonWebToken.generateRefreshToken(registerRequestBody.getEmail());
+        return new AuthenticationResponseBody(authToken, refreshToken,"User registered successfully.");
     }
 
     public Map<String, String> refreshToken(HttpServletRequest request) {
