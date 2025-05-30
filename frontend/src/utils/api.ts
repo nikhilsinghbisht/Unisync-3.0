@@ -25,7 +25,7 @@ const redirectTo = (path: string) => {
 
 const refreshToken = async (): Promise<string | null> => {
   try {
-    const res = await fetch(`${BASE_URL}/auth/refresh`, {
+    const res = await fetch(`${BASE_URL}/api/v1/authentication/refresh`, {
       method: "POST",
       credentials: "include",
     });
@@ -37,7 +37,7 @@ const refreshToken = async (): Promise<string | null> => {
     return data.accessToken;
   } catch (error) {
     localStorage.removeItem("token");
-    redirectTo("/login");
+    redirectTo("/authentication/login");
     return null;
   }
 };

@@ -9,9 +9,10 @@ import {
 import { Navigate, Outlet, useLocation } from "react-router-dom";
 import { Loader } from "../../../components/Loader/Loader";
 import { request } from "../../../utils/api";
-
+import Cookies from "js-cookie";
 interface IAuthenticationResponse {
   token: string;
+  refreshToken: string;
   message: string;
 }
 
@@ -36,7 +37,7 @@ interface IAuthenticationContextType {
   login: (email: string, password: string) => Promise<void>;
   logout: () => void;
   signup: (email: string, password: string) => Promise<void>;
-  ouathLogin: (code: string, page: "login" | "signup") => Promise<void>;
+  oauthLogin: (code: string, page: "login" | "signup") => Promise<void>;
 }
 
 const AuthenticationContext = createContext<IAuthenticationContextType | null>(
@@ -59,11 +60,10 @@ export function AuthenticationContextProvider() {
   const [error, setError] = useState<string | null>(null);
 
   const isOnAuthPage =
-    location.pathname === "/aboutus" ||
     location.pathname === "/authentication/login" ||
     location.pathname === "/authentication/signup" ||
     location.pathname === "/authentication/request-password-reset";
-    location.pathname === "/authentication/request-password-reset" ||
+  location.pathname === "/authentication/request-password-reset" ||
     location.pathname === "/about-us";
 
   const login = async (email: string, password: string) => {
@@ -71,14 +71,19 @@ export function AuthenticationContextProvider() {
       throw new Error("Invalid email address. Please check your email format.");
     }
 
-    setError(null); // Reset error if email is valid
+    setError(null);
 
     await request<IAuthenticationResponse>({
       endpoint: "/api/v1/authentication/login",
       method: "POST",
       body: JSON.stringify({ email, password }),
-      onSuccess: ({ token }) => {
+      onSuccess: ({ token, refreshToken }) => {
         localStorage.setItem("token", token);
+        Cookies.set("refreshToken", refreshToken, {
+          expires: 3, // days
+          secure: true,
+          sameSite: "Strict",
+        });
       },
       onFailure: (error) => {
         setError("Login failed: " + error);
@@ -86,13 +91,18 @@ export function AuthenticationContextProvider() {
     });
   };
 
-  const ouathLogin = async (code: string, page: "login" | "signup") => {
+  const oauthLogin = async (code: string, page: "login" | "signup") => {
     await request<IAuthenticationResponse>({
       endpoint: "/api/v1/authentication/oauth/google/login",
       method: "POST",
       body: JSON.stringify({ code, page }),
-      onSuccess: ({ token }) => {
+      onSuccess: ({ token, refreshToken }) => {
         localStorage.setItem("token", token);
+        Cookies.set("refreshToken", refreshToken, {
+          expires: 3, // days
+          secure: true,
+          sameSite: "Strict",
+        });
       },
       onFailure: (error) => {
         setError("OAuth login failed: " + error);
@@ -105,14 +115,19 @@ export function AuthenticationContextProvider() {
       throw new Error("Invalid email address. Please check your email format.");
     }
 
-    setError(null); // Reset error if email is valid
+    setError(null);
 
     await request<IAuthenticationResponse>({
       endpoint: "/api/v1/authentication/register",
       method: "POST",
       body: JSON.stringify({ email, password }),
-      onSuccess: ({ token }) => {
+      onSuccess: ({ token, refreshToken }) => {
         localStorage.setItem("token", token);
+        Cookies.set("refreshToken", refreshToken, {
+          expires: 3,
+          secure: true,
+          sameSite: "Strict",
+        });
       },
       onFailure: (error) => {
         setError("Signup failed: " + error);
@@ -204,7 +219,7 @@ export function AuthenticationContextProvider() {
         logout,
         signup,
         setUser,
-        ouathLogin,
+        oauthLogin,
       }}
     >
       <Outlet />
