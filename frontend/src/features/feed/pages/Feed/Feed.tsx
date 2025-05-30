@@ -68,7 +68,7 @@ export function Feed() {
             }}
           >
             <img
-              className={`${classes.top} ${classes.avatar}`}
+              className={classes.avatar}
               src={
                 user?.profilePicture
                   ? `${import.meta.env.VITE_API_URL}/api/v1/storage/${user?.profilePicture}`
