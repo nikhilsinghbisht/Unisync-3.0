@@ -14,6 +14,11 @@ import java.util.Objects;
 @Service
 public class ReportService {
 
+<<<<<<< HEAD
+    private static final int REPORT_THRESHOLD = 100;
+
+=======
+>>>>>>> 9f27949a8dd93234bb7f62a5f53fa2e9f24d6232
     @Autowired
     private PostRepository postRepository;
 

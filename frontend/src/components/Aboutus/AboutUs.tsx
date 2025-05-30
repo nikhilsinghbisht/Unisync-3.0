@@ -155,7 +155,7 @@ const AboutUs = () => {
             <img src="/Yash.jpeg" alt="Yash" />
             <h3>Yash</h3>
             <p>
-              <strong>Analyst</strong> – Graduate Engineer Trainee at LTI Mindtree, driving data
+              <strong>UI/UX and Analyst</strong> – Graduate Engineer Trainee at LTI Mindtree, driving data
               insights and analysis.
             </p>
           </div>

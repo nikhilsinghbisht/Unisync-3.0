@@ -34,6 +34,8 @@ export function Post({ post, setPosts }: PostProps) {
   const navigate = useNavigate();
   const { user } = useAuthentication();
   const [showMenu, setShowMenu] = useState(false);
+  const [showMenuReport, setShowMenuReport] = useState(false);
+
   const [editing, setEditing] = useState(false);
   const webSocketClient = useWebSocket();
 
@@ -195,6 +197,37 @@ export function Post({ post, setPosts }: PostProps) {
     });
   };
 
+const reportContent = async ({
+  isPost,
+  postId = null,
+  commentId = null,
+}: {
+  isPost: boolean;
+  postId?: number | null;
+  commentId?: number | null;
+}) => {
+  const body = {
+    post: isPost,
+    comment: !isPost,
+    postId: isPost ? postId : null,
+    commentId: isPost ? null : commentId,
+  };
+
+  await request<void>({
+  endpoint: `/api/v1/report/this`,
+  method: "POST",
+  body: JSON.stringify(body),
+  onSuccess: () => {
+    alert(`${isPost ? "Post" : "Comment"} reported successfully.`);
+  },
+  onFailure: (error) => {
+    console.error("Report error:", error);
+    alert(`Failed to report the ${isPost ? "post" : "comment"}.`);
+  },
+});
+};
+
+
   const editPost = async (data: FormData) => {
     await request<IPost>({
       endpoint: `/api/v1/feed/posts/${post.id}`,
@@ -248,6 +281,7 @@ export function Post({ post, setPosts }: PostProps) {
                 alt=""
               />
             </button>
+            
             <div>
               <div className={classes.name}>
                 {post.author.firstName + " " + post.author.lastName}
@@ -262,7 +296,10 @@ export function Post({ post, setPosts }: PostProps) {
               />
             </div>
           </div>
+          
+          
           <div>
+
             {post.author.id == user?.id && (
               <button
                 className={`${classes.toggle} ${showMenu ? classes.active : ""}`}
@@ -279,13 +316,33 @@ export function Post({ post, setPosts }: PostProps) {
                 <button onClick={() => deletePost(post.id)}>Delete</button>
               </div>
             )}
+            {post.author.id !== user?.id && (
+  <div className={classes.menuWrapper}>
+    <button
+      className={`${classes.toggle} ${showMenuReport ? classes.active : ""}`}
+      onClick={() => setShowMenuReport(!showMenuReport)}
+    >
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 512">
+        <path d="M64 360a56 56 0 1 0 0 112 56 56 0 1 0 0-112zm0-160a56 56 0 1 0 0 112 56 56 0 1 0 0-112zM120 96A56 56 0 1 0 8 96a56 56 0 1 0 112 0z" />
+      </svg>
+    </button>
+    {showMenuReport && (
+      <div className={classes.reportButton}>
+        <button onClick={() => reportContent({ isPost: true, postId: post.id })}>
+          Report Post
+        </button>
+      </div>
+    )}
+  </div>
+)}
+
           </div>
         </div>
         <div className={classes.content}>{post.content}</div>
         {post.picture && (
           <img
             src={`${import.meta.env.VITE_API_URL}/api/v1/storage/${post.picture}`}
-            alt=""
+            alt="photo"
             className={classes.picture}
           />
         )}
@@ -336,6 +393,7 @@ export function Post({ post, setPosts }: PostProps) {
           </button>
         </div>
 
+
         {showComments ? (
           <div className={classes.comments}>
             <form onSubmit={postComment}>
@@ -352,6 +410,7 @@ export function Post({ post, setPosts }: PostProps) {
               <Comment
                 editComment={editComment}
                 deleteComment={deleteComment}
+                onReport={() => reportContent({ isPost: false, commentId: comment.id })}
                 key={comment.id}
                 comment={comment}
               />

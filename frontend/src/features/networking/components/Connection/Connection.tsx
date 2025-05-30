@@ -57,7 +57,7 @@ export function Connection({
       <button onClick={() => navigate("/profile/" + userToDisplay.id)}>
         <img
           className={classes.avatar}
-          src={`${BASE_URL}${userToDisplay.profilePicture} ` || "/avatar.svg"}
+          src={`${BASE_URL}${userToDisplay.profilePicture}` || "/avatar.svg"}
           alt=""
         />
       </button>
