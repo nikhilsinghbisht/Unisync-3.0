@@ -140,24 +140,29 @@ export function AuthenticationContextProvider() {
     setUser(null);
   };
 
-  useEffect(() => {
-    if (user) {
-      return;
-    }
-    setIsLoading(true);
-    const fetchUser = async () => {
-      await request<IUser>({
-        endpoint: "/api/v1/authentication/users/me",
-        onSuccess: (data) => setUser(data),
-        onFailure: (error) => {
-          console.log(error);
-        },
-      });
-      setIsLoading(false);
-    };
+useEffect(() => {
+  const token = localStorage.getItem("token");
+  if (user || !token) {
+    setIsLoading(false);
+    return;
+  }
 
-    fetchUser();
-  }, [user, location.pathname]);
+  const fetchUser = async () => {
+    setIsLoading(true);
+    await request<IUser>({
+      endpoint: "/api/v1/authentication/users/me",
+      onSuccess: (data) => setUser(data),
+      onFailure: (error) => {
+        console.log("Error fetching user:", error);
+        localStorage.removeItem("token"); // Cleanup
+      },
+    });
+    setIsLoading(false);
+  };
+
+  fetchUser();
+}, [user, location.pathname]);
+
 
   if (isLoading) {
     return <Loader />;

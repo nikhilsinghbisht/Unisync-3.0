@@ -67,7 +67,6 @@ public class BackendController {
         return ResponseEntity.badRequest().body(Map.of("message", e.getMessage()));
     }
 
-
     @ExceptionHandler(NoSuchFileException.class)
     public ResponseEntity<Map<String, String>> handleNoSuchFileException(NoSuchFileException e) {
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(Map.of("message", "File not found"));
