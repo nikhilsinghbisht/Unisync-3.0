@@ -24,7 +24,7 @@ public class AuthenticationFilter extends HttpFilter {
             "/api/v1/authentication/register",
             "/api/v1/authentication/send-password-reset-token",
             "/api/v1/authentication/reset-password",
-            "/api/v1/authentication/refresh" // allow refresh token access
+            "/api/v1/authentication/refresh"
     );
 
     private final JsonWebToken jsonWebTokenService;
@@ -49,10 +49,11 @@ public class AuthenticationFilter extends HttpFilter {
     protected void doFilter(HttpServletRequest request, HttpServletResponse response, FilterChain chain)
             throws IOException, ServletException {
 
-        // CORS headers
-        response.addHeader("Access-Control-Allow-Origin", "http://localhost:5173");
-        response.addHeader("Access-Control-Allow-Methods", "*");
-        response.addHeader("Access-Control-Allow-Headers", "*");
+        response.setHeader("Access-Control-Allow-Origin", "http://localhost:5173");
+        response.setHeader("Access-Control-Allow-Methods", "GET,POST,PUT,DELETE,OPTIONS");
+        response.setHeader("Access-Control-Allow-Headers", "Content-Type, Authorization");
+        response.setHeader("Access-Control-Allow-Credentials", "true");
+
 
         if ("OPTIONS".equalsIgnoreCase(request.getMethod())) {
             response.setStatus(HttpServletResponse.SC_OK);

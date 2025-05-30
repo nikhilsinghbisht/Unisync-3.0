@@ -26,7 +26,6 @@ export function Login() {
 
     try {
       await login(email, password);
-      debugger;
       navigate("/");
     } catch (error) {
       if (error instanceof Error) {

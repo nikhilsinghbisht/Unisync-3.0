@@ -132,9 +132,9 @@ public class AuthenticationService {
 
     public AuthenticationResponseBody googleLoginOrSignup(String code, String page) {
         String tokenEndpoint = "https://oauth2.googleapis.com/token";
-        String redirectUri = "http://localhost:5173/authentication/" + page;
-        MultiValueMap<String, String> body = new LinkedMultiValueMap<>();
+        String redirectUri = "http://localhost:5173/authentication/" + page; // Ensure this matches exactly
 
+        MultiValueMap<String, String> body = new LinkedMultiValueMap<>();
         body.add("code", code);
         body.add("client_id", googleClientId);
         body.add("client_secret", googleClientSecret);
@@ -145,36 +145,42 @@ public class AuthenticationService {
         headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
         HttpEntity<MultiValueMap<String, String>> request = new HttpEntity<>(body, headers);
 
-        ResponseEntity<Map<String, Object>> response = restTemplate.exchange(tokenEndpoint, HttpMethod.POST, request,
-                new ParameterizedTypeReference<>() {
-                });
+        ResponseEntity<Map<String, Object>> response = restTemplate.exchange(
+                tokenEndpoint,
+                HttpMethod.POST,
+                request,
+                new ParameterizedTypeReference<>() {}
+        );
 
-        if (response.getStatusCode() == HttpStatus.OK && response.getBody() != null) {
-            Map<String, Object> responseBody = response.getBody();
-            String idToken = (String) responseBody.get("id_token");
-
-            Claims claims = jsonWebToken.getClaimsFromGoogleOauthIdToken(idToken);
-            String email = claims.get("email", String.class);
-            User user = userRepository.findByEmail(email).orElse(null);
-
-            if (user == null) {
-                Boolean emailVerified = claims.get("email_verified", Boolean.class);
-                String firstName = claims.get("given_name", String.class);
-                String lastName = claims.get("family_name", String.class);
-                User newUser = new User(email, null);
-                newUser.setEmailVerified(emailVerified);
-                newUser.setFirstName(firstName);
-                newUser.setLastName(lastName);
-                userRepository.save(newUser);
-            }
-
-            String token = jsonWebToken.generateToken(email);
-            String refreshToken = jsonWebToken.generateRefreshToken(email);
-            return new AuthenticationResponseBody(token, refreshToken,"Google authentication succeeded.");
-        } else {
-            throw new IllegalArgumentException("Failed to exchange code for ID token.");
+        if (response.getStatusCode() != HttpStatus.OK || response.getBody() == null) {
+            throw new IllegalArgumentException("Failed to exchange code for token.");
         }
+
+        Map<String, Object> responseBody = response.getBody();
+        String idToken = (String) responseBody.get("id_token");
+        if (idToken == null) {
+            throw new IllegalArgumentException("No ID token received from Google.");
+        }
+
+        Claims claims = jsonWebToken.getClaimsFromGoogleOauthIdToken(idToken);
+        String email = claims.get("email", String.class);
+        if (email == null) {
+            throw new IllegalArgumentException("No email found in ID token.");
+        }
+
+        User user = userRepository.findByEmail(email).orElseGet(() -> {
+            User newUser = new User(email, null);
+            newUser.setEmailVerified(claims.get("email_verified", Boolean.class));
+            newUser.setFirstName(claims.get("given_name", String.class));
+            newUser.setLastName(claims.get("family_name", String.class));
+            return userRepository.save(newUser);
+        });
+
+        String token = jsonWebToken.generateToken(user.getEmail());
+        String refreshToken = jsonWebToken.generateRefreshToken(user.getEmail());
+        return new AuthenticationResponseBody(token, refreshToken, "Google authentication succeeded.");
     }
+
 
     public AuthenticationResponseBody register(AuthenticationRequestBody registerRequestBody) {
         User user = userRepository.save(new User(
