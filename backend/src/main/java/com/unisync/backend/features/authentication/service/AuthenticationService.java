@@ -8,11 +8,18 @@ import com.unisync.backend.features.authentication.repository.UserRepository;
 import com.unisync.backend.features.authentication.utils.EmailService;
 import com.unisync.backend.features.authentication.utils.Encoder;
 import com.unisync.backend.features.authentication.utils.JsonWebToken;
+import com.unisync.backend.features.authentication.utils.TokenBlacklistUtil;
+import com.unisync.backend.features.feed.Constant;
 import com.unisync.backend.features.storage.service.StorageService;
 import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.ExpiredJwtException;
+import io.jsonwebtoken.JwtException;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
+import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.transaction.Transactional;
+import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.core.ParameterizedTypeReference;
@@ -29,17 +36,19 @@ import java.time.LocalDateTime;
 import java.util.Map;
 import java.util.Optional;
 
+@Slf4j
 @Service
 public class AuthenticationService {
     private static final Logger logger = LoggerFactory.getLogger(AuthenticationService.class);
     private final UserRepository userRepository;
     private final int durationInMinutes = 1;
-
     private final Encoder encoder;
     private final JsonWebToken jsonWebToken;
     private final EmailService emailService;
     private final RestTemplate restTemplate;
     private final StorageService storageService;
+    private final TokenBlacklistUtil tokenBlacklistUtil;
+
 
     @PersistenceContext
     private EntityManager entityManager;
@@ -49,12 +58,13 @@ public class AuthenticationService {
 
 
     public AuthenticationService(UserRepository userRepository, Encoder encoder, JsonWebToken jsonWebToken,
-            EmailService emailService, RestTemplate restTemplate) {
+            EmailService emailService, RestTemplate restTemplate,TokenBlacklistUtil tokenBlacklistUtil) {
         this.userRepository = userRepository;
         this.encoder = encoder;
         this.jsonWebToken = jsonWebToken;
         this.emailService = emailService;
         this.restTemplate = restTemplate;
+        this.tokenBlacklistUtil = tokenBlacklistUtil;
         this.storageService = new StorageService();
     }
 
@@ -116,14 +126,15 @@ public class AuthenticationService {
             throw new IllegalArgumentException("Password is incorrect.");
         }
         String token = jsonWebToken.generateToken(loginRequestBody.getEmail());
-        return new AuthenticationResponseBody(token, "Authentication succeeded.");
+        String refreshToken = jsonWebToken.generateRefreshToken(loginRequestBody.getEmail());
+        return new AuthenticationResponseBody(token,refreshToken,"Authentication succeeded.");
     }
 
     public AuthenticationResponseBody googleLoginOrSignup(String code, String page) {
         String tokenEndpoint = "https://oauth2.googleapis.com/token";
-        String redirectUri = "http://localhost:5173/authentication/" + page;
-        MultiValueMap<String, String> body = new LinkedMultiValueMap<>();
+        String redirectUri = "http://localhost:5173/authentication/" + page; // Ensure this matches exactly
 
+        MultiValueMap<String, String> body = new LinkedMultiValueMap<>();
         body.add("code", code);
         body.add("client_id", googleClientId);
         body.add("client_secret", googleClientSecret);
@@ -134,35 +145,42 @@ public class AuthenticationService {
         headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
         HttpEntity<MultiValueMap<String, String>> request = new HttpEntity<>(body, headers);
 
-        ResponseEntity<Map<String, Object>> response = restTemplate.exchange(tokenEndpoint, HttpMethod.POST, request,
-                new ParameterizedTypeReference<>() {
-                });
+        ResponseEntity<Map<String, Object>> response = restTemplate.exchange(
+                tokenEndpoint,
+                HttpMethod.POST,
+                request,
+                new ParameterizedTypeReference<>() {}
+        );
 
-        if (response.getStatusCode() == HttpStatus.OK && response.getBody() != null) {
-            Map<String, Object> responseBody = response.getBody();
-            String idToken = (String) responseBody.get("id_token");
-
-            Claims claims = jsonWebToken.getClaimsFromGoogleOauthIdToken(idToken);
-            String email = claims.get("email", String.class);
-            User user = userRepository.findByEmail(email).orElse(null);
-
-            if (user == null) {
-                Boolean emailVerified = claims.get("email_verified", Boolean.class);
-                String firstName = claims.get("given_name", String.class);
-                String lastName = claims.get("family_name", String.class);
-                User newUser = new User(email, null);
-                newUser.setEmailVerified(emailVerified);
-                newUser.setFirstName(firstName);
-                newUser.setLastName(lastName);
-                userRepository.save(newUser);
-            }
-
-            String token = jsonWebToken.generateToken(email);
-            return new AuthenticationResponseBody(token, "Google authentication succeeded.");
-        } else {
-            throw new IllegalArgumentException("Failed to exchange code for ID token.");
+        if (response.getStatusCode() != HttpStatus.OK || response.getBody() == null) {
+            throw new IllegalArgumentException("Failed to exchange code for token.");
         }
+
+        Map<String, Object> responseBody = response.getBody();
+        String idToken = (String) responseBody.get("id_token");
+        if (idToken == null) {
+            throw new IllegalArgumentException("No ID token received from Google.");
+        }
+
+        Claims claims = jsonWebToken.getClaimsFromGoogleOauthIdToken(idToken);
+        String email = claims.get("email", String.class);
+        if (email == null) {
+            throw new IllegalArgumentException("No email found in ID token.");
+        }
+
+        User user = userRepository.findByEmail(email).orElseGet(() -> {
+            User newUser = new User(email, null);
+            newUser.setEmailVerified(claims.get("email_verified", Boolean.class));
+            newUser.setFirstName(claims.get("given_name", String.class));
+            newUser.setLastName(claims.get("family_name", String.class));
+            return userRepository.save(newUser);
+        });
+
+        String token = jsonWebToken.generateToken(user.getEmail());
+        String refreshToken = jsonWebToken.generateRefreshToken(user.getEmail());
+        return new AuthenticationResponseBody(token, refreshToken, "Google authentication succeeded.");
     }
+
 
     public AuthenticationResponseBody register(AuthenticationRequestBody registerRequestBody) {
         User user = userRepository.save(new User(
@@ -187,7 +205,55 @@ public class AuthenticationService {
             logger.info("Error while sending email: {}", e.getMessage());
         }
         String authToken = jsonWebToken.generateToken(registerRequestBody.getEmail());
-        return new AuthenticationResponseBody(authToken, "User registered successfully.");
+        String refreshToken = jsonWebToken.generateRefreshToken(registerRequestBody.getEmail());
+        return new AuthenticationResponseBody(authToken, refreshToken,"User registered successfully.");
+    }
+
+    public Map<String, String> refreshToken(HttpServletRequest request) {
+        String oldRefreshToken = null;
+
+        if (request.getCookies() != null) {
+            for (Cookie cookie : request.getCookies()) {
+                if (Constant.REFRESH_TOKEN.equals(cookie.getName())) {
+                    oldRefreshToken = cookie.getValue();
+                    break;
+                }
+            }
+        }
+
+        if (oldRefreshToken == null) {
+            log.info("Missing refresh token in cookies");
+            throw new JwtException("Missing Refresh Token");
+        }
+
+        try {
+            String email = jsonWebToken.getEmailFromToken(oldRefreshToken);
+
+
+            if (jsonWebToken.isTokenExpired(oldRefreshToken)) {
+                tokenBlacklistUtil.blacklistToken(oldRefreshToken);
+                log.info("Refresh token expired: {}", oldRefreshToken);
+                throw new ExpiredJwtException(null, null, "Refresh token expired");
+            }
+
+            tokenBlacklistUtil.blacklistToken(oldRefreshToken);
+
+            String newAccessToken = jsonWebToken.generateToken(email);
+            String newRefreshToken = jsonWebToken.generateRefreshToken(email);
+
+            return Map.of(
+                    Constant.ACCESS_TOKEN, newAccessToken,
+                    Constant.REFRESH_TOKEN, newRefreshToken
+            );
+
+        }
+        catch (JwtException e) {
+            tokenBlacklistUtil.blacklistToken(oldRefreshToken);
+            throw e;
+        }
+        catch (Exception e) {
+            throw new RuntimeException("Invalid refresh token");
+        }
     }
 
     public User getUser(String email) {

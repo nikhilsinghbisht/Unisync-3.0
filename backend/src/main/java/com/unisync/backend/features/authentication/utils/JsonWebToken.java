@@ -40,7 +40,15 @@ public class JsonWebToken {
         return Jwts.builder()
                 .subject(email)
                 .issuedAt(new Date(System.currentTimeMillis()))
-                .expiration(new Date(System.currentTimeMillis() + 1000 * 60 * 60 * 10))
+                .expiration(new Date(System.currentTimeMillis() + 1000 * 60 * 15)) //15 min
+                .signWith(getKey())
+                .compact();
+    }
+    public String generateRefreshToken(String email){
+        return Jwts.builder()
+                .subject(email)
+                .issuedAt(new Date(System.currentTimeMillis()))
+                .expiration(new Date(System.currentTimeMillis() + 1000 * 60 * 60 * 24 * 3)) //3days
                 .signWith(getKey())
                 .compact();
     }

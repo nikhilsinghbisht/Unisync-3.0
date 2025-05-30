@@ -9,65 +9,83 @@ export function useOauth(page: "login" | "signup") {
   const [searchParams, setSearchParams] = useSearchParams();
   const navigate = useNavigate();
   const location = useLocation();
-  const { ouathLogin } = useAuthentication();
+  const { oauthLogin } = useAuthentication();
   const code = searchParams.get("code");
   const state = searchParams.get("state");
   const error = searchParams.get("error");
-  const [isOauthInProgress, setIsOauthInProgress] = useState(code !== null || error !== null);
+
+  const [isOauthInProgress, setIsOauthInProgress] = useState(
+    code !== null || error !== null
+  );
   const [oauthError, setOauthError] = useState("");
 
   useEffect(() => {
     async function fetchData() {
       if (error) {
-        if (error === "access_denied") {
-          setOauthError("You denied access to your Google account.");
-        } else {
-          setOauthError("An unknown error occurred.");
-        }
-        setIsOauthInProgress(false);
-        setSearchParams({});
+        setOauthError(
+          error === "access_denied"
+            ? "You denied access to your Google account."
+            : "An unknown error occurred."
+        );
+        cleanup();
         return;
       }
 
       if (!code || !state) return;
 
-      const { destination, antiForgeryToken } = JSON.parse(state);
+      let parsedState;
+      try {
+        parsedState = JSON.parse(state);
+      } catch {
+        setOauthError("Invalid state format.");
+        cleanup();
+        return;
+      }
 
+      const { destination, antiForgeryToken } = parsedState;
       if (antiForgeryToken !== "n6kibcv2ov") {
         setOauthError("Invalid state parameter.");
-        setIsOauthInProgress(false);
-        setSearchParams({});
+        cleanup();
         return;
       }
 
       try {
-        setTimeout(async () => {
-          await ouathLogin(code, page);
-          setIsOauthInProgress(false);
-          setSearchParams({});
-          navigate(destination || "/");
-        }, 1000);
-      } catch (error) {
-        if (error instanceof Error) {
-          setOauthError(error.message);
-        } else {
-          setOauthError("An unknown error occurred.");
-        }
-        setIsOauthInProgress(false);
-        setSearchParams({});
+        await oauthLogin(code, page);
+        navigate(destination || "/");
+      } catch (err) {
+        setOauthError(
+          err instanceof Error ? err.message : "An unknown error occurred."
+        );
+      } finally {
+        cleanup();
       }
     }
+
+    function cleanup() {
+      setIsOauthInProgress(false);
+      setSearchParams({});
+    }
+
     fetchData();
-  }, [code, error, navigate, ouathLogin, page, setSearchParams, state]);
+  }, [code, error, navigate, oauthLogin, page, setSearchParams, state]);
 
   return {
     isOauthInProgress,
     oauthError,
     startOauth: () => {
       const redirectUri = `${window.location.origin}/authentication/${page}`;
-      window.location.href = `${VITE_GOOGLE_OAUTH_URL}?client_id=${GOOGLE_OAUTH2_CLIENT_ID}&redirect_uri=${redirectUri}&scope=openid+email+profile&response_type=code&state=${JSON.stringify(
-        { antiForgeryToken: "n6kibcv2ov", destination: location.state?.from || "/" }
-      )}`;
+      const state = JSON.stringify({
+        antiForgeryToken: "n6kibcv2ov",
+        destination: location.state?.from || "/",
+      });
+
+      const authUrl = `${VITE_GOOGLE_OAUTH_URL}?client_id=${GOOGLE_OAUTH2_CLIENT_ID}&redirect_uri=${encodeURIComponent(
+        redirectUri
+      )}&scope=openid%20email%20profile&response_type=code&state=${encodeURIComponent(
+        state
+      )}&access_type=offline&prompt=consent`;
+
+      window.location.href = authUrl;
     },
   };
 }

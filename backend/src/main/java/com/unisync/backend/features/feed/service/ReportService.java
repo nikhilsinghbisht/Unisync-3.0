@@ -1,5 +1,6 @@
 package com.unisync.backend.features.feed.service;
 
+import com.unisync.backend.features.feed.Constant;
 import com.unisync.backend.features.feed.dto.ReportRequestDTO;
 import com.unisync.backend.features.feed.model.Comment;
 import com.unisync.backend.features.feed.model.Post;
@@ -13,8 +14,11 @@ import java.util.Objects;
 @Service
 public class ReportService {
 
+<<<<<<< HEAD
     private static final int REPORT_THRESHOLD = 100;
 
+=======
+>>>>>>> 9f27949a8dd93234bb7f62a5f53fa2e9f24d6232
     @Autowired
     private PostRepository postRepository;
 
@@ -27,12 +31,12 @@ public class ReportService {
                     .orElseThrow(() -> new IllegalArgumentException("Post not found with ID: " + requestDTO.getPostId()));
 
             post.setReportCount(Objects.requireNonNullElse(post.getReportCount(), 0L) + 1);
-            if (post.getReportCount() >= REPORT_THRESHOLD) {
-                post.setIsVisible(true);
+            if (post.getReportCount() >= Constant.REPORT_THRESHOLD) {
+                post.setIsVisible(false);
             }
 
             postRepository.save(post);
-            return post.getReportCount() >= REPORT_THRESHOLD
+            return post.getReportCount() >= Constant.REPORT_THRESHOLD
                     ? "Post reported and hidden."
                     : "Post reported. Current report count: " + post.getReportCount();
         }
@@ -41,13 +45,13 @@ public class ReportService {
             Comment comment = commentRepository.findById(requestDTO.getCommentId())
                     .orElseThrow(() -> new IllegalArgumentException("Comment not found with ID: " + requestDTO.getCommentId()));
 
-            comment.setReportCount(comment.getReportCount() + 1);
-            if (comment.getReportCount() >= REPORT_THRESHOLD) {
-                comment.setIsVisible(true);
+            comment.setReportCount(comment.getReportCount() + 1L);
+            if (comment.getReportCount() >= Constant.REPORT_THRESHOLD) {
+                comment.setIsVisible(false);
             }
 
             commentRepository.save(comment);
-            return comment.getReportCount() >= REPORT_THRESHOLD
+            return comment.getReportCount() >= Constant.REPORT_THRESHOLD
                     ? "Comment reported and hidden."
                     : "Comment reported. Current report count: " + comment.getReportCount();
         }

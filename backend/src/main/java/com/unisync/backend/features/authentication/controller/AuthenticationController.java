@@ -6,13 +6,21 @@ import com.unisync.backend.features.authentication.dto.AuthenticationRequestBody
 import com.unisync.backend.features.authentication.dto.AuthenticationResponseBody;
 import com.unisync.backend.features.authentication.model.User;
 import com.unisync.backend.features.authentication.service.AuthenticationService;
+import com.unisync.backend.features.feed.Constant;
+import io.jsonwebtoken.ExpiredJwtException;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseCookie;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.io.IOException;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api/v1/authentication")
@@ -36,6 +44,29 @@ public class AuthenticationController {
     @PostMapping("/register")
     public AuthenticationResponseBody registerPage(@Valid @RequestBody AuthenticationRequestBody registerRequestBody) {
         return authenticationUserService.register(registerRequestBody);
+    }
+
+    @PostMapping("/refresh")
+    public ResponseEntity<Map<String, String>> refreshToken(HttpServletRequest request, HttpServletResponse response) {
+        try {
+            Map<String, String> tokens = authenticationUserService.refreshToken(request);
+            String refreshToken = tokens.get(Constant.REFRESH_TOKEN);
+            String accessToken = tokens.get(Constant.ACCESS_TOKEN);
+            ResponseCookie refreshTokenCookie = ResponseCookie.from(Constant.REFRESH_TOKEN, refreshToken)
+                    .httpOnly(true)
+                    .secure(true)
+                    .path("/")
+                    .sameSite("Strict")
+                    .maxAge(3 * 24 * 60 * 60L) // 3 days
+                    .build();
+            response.addHeader(HttpHeaders.SET_COOKIE, refreshTokenCookie.toString());
+            return ResponseEntity.ok(Map.of(Constant.ACCESS_TOKEN,accessToken));
+
+        } catch (ExpiredJwtException e) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(Map.of("error", "Refresh token expired"));
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(Map.of("error", e.getMessage()));
+        }
     }
 
     @DeleteMapping("/delete")

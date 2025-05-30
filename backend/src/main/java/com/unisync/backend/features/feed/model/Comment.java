@@ -3,9 +3,7 @@ package com.unisync.backend.features.feed.model;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.unisync.backend.features.authentication.model.User;
 import jakarta.persistence.*;
-import lombok.Builder;
 import org.hibernate.annotations.CreationTimestamp;
-
 import java.time.LocalDateTime;
 
 @Entity(name = "comments")
@@ -23,7 +21,7 @@ public class Comment {
     private User author;
     private Boolean isVisible = true;
     @Column(name = "report_count")
-    private int reportCount = 0;
+    private Long reportCount = 0L;
     @Column(nullable = false)
     private String content;
 
@@ -94,11 +92,11 @@ public class Comment {
         this.updatedDate = updatedDate;
     }
     public void setIsVisible(Boolean value) { this.isVisible = value;}
-    public int getReportCount() {
+    public Long getReportCount() {
         return reportCount;
     }
 
-    public void setReportCount(int reportCount) {
+    public void setReportCount(Long reportCount) {
         this.reportCount = reportCount;
     }
 }
