@@ -2,17 +2,9 @@ package com.unisync.backend.features.feed.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
-import lombok.Builder;
-import lombok.Data;
 import org.hibernate.annotations.CreationTimestamp;
-
 import com.unisync.backend.features.authentication.model.User;
-
-import jakarta.persistence.*;
 import jakarta.validation.constraints.NotEmpty;
-import lombok.Builder;
-import org.hibernate.annotations.CreationTimestamp;
-
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Set;

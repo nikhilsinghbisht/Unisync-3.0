@@ -8,11 +8,18 @@ import com.unisync.backend.features.authentication.repository.UserRepository;
 import com.unisync.backend.features.authentication.utils.EmailService;
 import com.unisync.backend.features.authentication.utils.Encoder;
 import com.unisync.backend.features.authentication.utils.JsonWebToken;
+import com.unisync.backend.features.authentication.utils.TokenBlacklistUtil;
+import com.unisync.backend.features.feed.Constant;
 import com.unisync.backend.features.storage.service.StorageService;
 import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.ExpiredJwtException;
+import io.jsonwebtoken.JwtException;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
+import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.transaction.Transactional;
+import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.core.ParameterizedTypeReference;
@@ -29,17 +36,19 @@ import java.time.LocalDateTime;
 import java.util.Map;
 import java.util.Optional;
 
+@Slf4j
 @Service
 public class AuthenticationService {
     private static final Logger logger = LoggerFactory.getLogger(AuthenticationService.class);
     private final UserRepository userRepository;
     private final int durationInMinutes = 1;
-
     private final Encoder encoder;
     private final JsonWebToken jsonWebToken;
     private final EmailService emailService;
     private final RestTemplate restTemplate;
     private final StorageService storageService;
+    private final TokenBlacklistUtil tokenBlacklistUtil;
+
 
     @PersistenceContext
     private EntityManager entityManager;
@@ -49,12 +58,13 @@ public class AuthenticationService {
 
 
     public AuthenticationService(UserRepository userRepository, Encoder encoder, JsonWebToken jsonWebToken,
-            EmailService emailService, RestTemplate restTemplate) {
+            EmailService emailService, RestTemplate restTemplate,TokenBlacklistUtil tokenBlacklistUtil) {
         this.userRepository = userRepository;
         this.encoder = encoder;
         this.jsonWebToken = jsonWebToken;
         this.emailService = emailService;
         this.restTemplate = restTemplate;
+        this.tokenBlacklistUtil = tokenBlacklistUtil;
         this.storageService = new StorageService();
     }
 
@@ -188,6 +198,53 @@ public class AuthenticationService {
         }
         String authToken = jsonWebToken.generateToken(registerRequestBody.getEmail());
         return new AuthenticationResponseBody(authToken, "User registered successfully.");
+    }
+
+    public Map<String, String> refreshToken(HttpServletRequest request) {
+        String oldRefreshToken = null;
+
+        if (request.getCookies() != null) {
+            for (Cookie cookie : request.getCookies()) {
+                if (Constant.REFRESH_TOKEN.equals(cookie.getName())) {
+                    oldRefreshToken = cookie.getValue();
+                    break;
+                }
+            }
+        }
+
+        if (oldRefreshToken == null) {
+            log.info("Missing refresh token in cookies");
+            throw new JwtException("Missing Refresh Token");
+        }
+
+        try {
+            String email = jsonWebToken.getEmailFromToken(oldRefreshToken);
+
+
+            if (jsonWebToken.isTokenExpired(oldRefreshToken)) {
+                tokenBlacklistUtil.blacklistToken(oldRefreshToken);
+                log.info("Refresh token expired: {}", oldRefreshToken);
+                throw new ExpiredJwtException(null, null, "Refresh token expired");
+            }
+
+            tokenBlacklistUtil.blacklistToken(oldRefreshToken);
+
+            String newAccessToken = jsonWebToken.generateToken(email);
+            String newRefreshToken = jsonWebToken.generateRefreshToken(email);
+
+            return Map.of(
+                    Constant.ACCESS_TOKEN, newAccessToken,
+                    Constant.REFRESH_TOKEN, newRefreshToken
+            );
+
+        }
+        catch (JwtException e) {
+            tokenBlacklistUtil.blacklistToken(oldRefreshToken);
+            throw e;
+        }
+        catch (Exception e) {
+            throw new RuntimeException("Invalid refresh token");
+        }
     }
 
     public User getUser(String email) {
