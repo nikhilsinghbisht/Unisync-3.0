@@ -13,7 +13,7 @@ import java.util.Objects;
 @Service
 public class ReportService {
 
-    private static final int REPORT_THRESHOLD = 5;
+    private static final int REPORT_THRESHOLD = 100;
 
     @Autowired
     private PostRepository postRepository;

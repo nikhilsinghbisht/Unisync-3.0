@@ -66,11 +66,14 @@
   .missionSection,
   .storySection,
   .statsSection {
+    // border: 2px solid red;
+    padding: 4rem;
     margin-bottom: 3rem;
   }
 
   .introSection,
-  .missionSection {
+  .missionSection,
+  .storySection {
     display: flex;
     flex-wrap: wrap;
     gap: 2rem;
@@ -83,7 +86,8 @@
 }
 
     .imageSection,
-    .missionImage {
+    .missionImage
+    ,.storyImage {
       flex: 1;
       text-align: center;
 
@@ -94,30 +98,30 @@
     }
   }
 
-  .storySection {
-    .storyImage {
-      margin-top: 2rem;
-      .imageTextWrapper {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
+  // .storySection {
+  //   .storyImage {
+  //     margin-top: 2rem;
+  //     .imageTextWrapper {
+  //       display: flex;
+  //       flex-direction: column;
+  //       align-items: center;
 
-        .storyImg {
-          width: 80%;
-          max-width: 600px;
-          border-radius: 12px;
-          margin-bottom: 1rem;
-        }
+  //       .storyImg {
+  //         width: 80%;
+  //         max-width: 600px;
+  //         border-radius: 12px;
+  //         margin-bottom: 1rem;
+  //       }
 
-        .storyText {
-          max-width: 800px;
-          font-size: 1rem;
-          text-align: justify;
-        }
+  //       .storyText {
+  //         max-width: 800px;
+  //         font-size: 1rem;
+  //         text-align: justify;
+  //       }
         
-      }
-    }
-  }
+  //     }
+  //   }
+  // }
 
   .statsSection {
     text-align: center;

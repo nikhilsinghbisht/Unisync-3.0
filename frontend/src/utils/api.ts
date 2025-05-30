@@ -45,11 +45,28 @@ export const request = async <T>({
         return;
       }
 
-      const { message } = await response.json();
+      let message = `Error ${response.status}`;
+      try {
+        const json = await response.json();
+        message = json.message || message;
+      } catch {
+        const text = await response.text();
+        if (text) message = text;
+      }
+
       throw new Error(message);
     }
 
-    const data: T = await response.json();
+    const contentType = response.headers.get("content-type") || "";
+    let data: T;
+
+    if (contentType.includes("application/json")) {
+      data = await response.json();
+    } else {
+      const text = await response.text();
+      data = text as unknown as T; // handle string or plain responses
+    }
+
     onSuccess(data);
   } catch (error) {
     if (error instanceof Error) {
