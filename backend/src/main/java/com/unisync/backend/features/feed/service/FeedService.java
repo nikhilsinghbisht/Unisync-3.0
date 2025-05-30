@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import com.unisync.backend.features.feed.Constant;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -156,12 +157,12 @@ public class FeedService {
                         : connection.getAuthor().getId())
                 .collect(Collectors.toSet());
 
-        return postRepository.findByAuthorIdInAndReportCountLessThanOrderByCreationDateDesc(connectedUserIds, 5L);
+        return postRepository.findByAuthorIdInAndReportCountLessThanOrderByCreationDateDesc(connectedUserIds, Constant.REPORT_THRESHOLD);
     }
 
 
     public List<Post> getAllPosts() {
-        return postRepository.findByReportCountLessThanOrderByCreationDateDesc(5L);
+        return postRepository.findByReportCountLessThanOrderByCreationDateDesc(Constant.REPORT_THRESHOLD);
     }
 
     public List<Comment> getPostComments(Long postId) {
